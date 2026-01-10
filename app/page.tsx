@@ -4,45 +4,45 @@ import CursorBlur from '@/components/CursorBlur'
 const caseStudies = [
   {
     number: '01',
-    title: 'Reimagining Digital Banking',
-    description: 'Led the complete redesign of a mobile banking experience, focusing on accessibility and trust. Increased user engagement by 47%.',
-    tags: ['Mobile App', 'Fintech'],
-    slug: 'digital-banking'
+    title: 'Revolutionizing data driven freight pricing',
+    description: '0 to 1 MVP of a freight pricing platform for a startup in the trucking industry.',
+    tags: ['SaaS', 'Enterprise Software'],
+    slug: 'freight-pricing-platform'
   },
   {
     number: '02', 
-    title: 'E-Commerce Platform',
-    description: 'Crafted an intuitive shopping experience for a luxury fashion brand, blending editorial design with seamless commerce.',
-    tags: ['Web', 'E-Commerce'],
-    slug: 'ecommerce-platform'
+    title: 'Building a Load Profitability Calculator for small trucking companies',
+    description: 'A side project I built to help small trucking companies calculate the profitability of their loads.',
+    tags: ['Side Project', 'Mobile App'],
+    slug: 'load-profitability-calculator'
   },
   {
     number: '03',
-    title: 'Healthcare Dashboard',
-    description: 'Designed a comprehensive analytics platform for healthcare professionals, simplifying complex data into actionable insights.',
-    tags: ['Dashboard', 'Healthcare'],
-    slug: 'healthcare-dashboard'
+    title: 'Unifying the experience of 3 different products',
+    description: 'Led design and research efforts to create a single pane of glass for fleet managers to manage their vehicles.',
+    tags: ['Enterprise', '0 to 1 MVP'],
+    slug: 'fleet-management-platform'
   }
 ]
 
 const testimonials = [
   {
-    quote: 'An exceptional designer who brings both strategic thinking and meticulous craft to every project. The attention to detail is unparalleled.',
-    name: 'Sarah Chen',
-    role: 'VP of Product, Fintech Startup',
-    initials: 'SC'
+    quote: 'I managed Alfredo at TriumphPay and highly recommend him as a UX designer or researcher. He drove and improved the research practice at TriumphPay, adding both solid, replicable process and best practices.',
+    name: 'Rob Daffin',
+    role: 'UX Manager, TriumphPay',
+    initials: 'RD'
   },
   {
-    quote: 'Working together was transformative for our product. They have a rare ability to translate complex problems into elegant, intuitive solutions.',
-    name: 'Marcus Williams',
-    role: 'CEO, Healthcare Tech',
-    initials: 'MW'
+    quote: 'Alfredo is extremely talented in UX and not just design. Alfredo has overachieved in all aspects from ideation to production throughout product life cycles within the business vertical he supports including the support of research.',
+    name: 'John Szrejter',
+    role: 'UX Research Lead, TriumphPay',
+    initials: 'JS'
   },
   {
-    quote: 'The design work elevated our entire brand. Every interaction feels intentional, every detail considered. Truly remarkable work.',
-    name: 'Elena Rodriguez',
-    role: 'Creative Director, Agency',
-    initials: 'ER'
+    quote: 'Alfredo consistently impresses with his ability to lead in end-to-end research and design efforts. He excels in communicating across diverse audiences, from engineering to leadership.',
+    name: 'Kyle LeGrand',
+    role: 'Group Product Manager, TriumphPay',
+    initials: 'KL'
   }
 ]
 
@@ -61,7 +61,7 @@ export default function Home() {
       <CursorBlur />
       {/* Navigation */}
       <nav className={styles.nav}>
-        <div className={styles.logo}>Portfolio</div>
+        <div className={styles.logo}>Alfredo E. Domador</div>
         <div className={styles.navLinks}>
           <a href="#work" className={styles.navLink}>Work</a>
           <a href="#testimonials" className={styles.navLink}>Testimonials</a>
@@ -83,11 +83,12 @@ export default function Home() {
             <span className={styles.heroTitleAccent}>intention</span>
           </h1>
           <p className={styles.heroBio}>
-            I design products that resonate. With a focus on clarity and craft, 
-            I help companies transform complex challenges into elegant, 
+            I design software that solves complex problems. With a focus on first principles and user-centered design, 
+            I help companies transform complex workflows into elegant, 
             human-centered solutions.
           </p>
         </div>
+        <div className={styles.heroArtisticShape} />
         <div className={styles.heroScroll}>
           <span>Scroll</span>
           <div className={styles.heroScrollLine} />
@@ -162,13 +163,12 @@ export default function Home() {
           <h2 className={styles.aboutTitle}>
             Designing at the<br />
             intersection of<br />
-            <span className={styles.heroTitleAccent}>art & function</span>
+            <span className={styles.heroTitleAccent}>creativity & function</span>
           </h2>
           <p className={styles.aboutText}>
-            With over a decade of experience shaping digital products, I bring a 
-            <span className={styles.aboutHighlight}> Renaissance approach</span> to 
-            modern design—where every pixel serves a purpose and every interaction 
-            tells a story.
+          I create user-centered solutions that drive business impact. From strategy to implementation, I collaborate
+           across functions and leverage modern tools to move 
+           quickly from idea to working product.
           </p>
           <p className={styles.aboutText}>
             I believe great design is invisible. It guides without imposing, 
@@ -181,7 +181,7 @@ export default function Home() {
         </div>
         
         <div className={styles.tools}>
-          <h3 className={styles.toolsTitle}>Tools & Technologies</h3>
+          <h3 className={styles.toolsTitle}>My Toolbox</h3>
           <div className={styles.toolsGrid}>
             {tools.map((tool) => (
               <div key={tool.name} className={styles.toolItem}>
@@ -196,7 +196,7 @@ export default function Home() {
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerLeft}>
-          <span className={styles.footerName}>Product Designer</span>
+          <span className={styles.footerName}>Alfredo E. Domador</span>
           <span className={styles.footerCopy}>© {new Date().getFullYear()} All rights reserved</span>
         </div>
         <div className={styles.footerLinks}>
