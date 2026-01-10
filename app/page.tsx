@@ -1,5 +1,4 @@
 'use client'
-import { useEffect } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 
@@ -10,95 +9,37 @@ const caseStudies = [
     description: '0 to 1 MVP of a freight pricing platform for a startup in the trucking industry.',
     tags: ['SaaS', 'Enterprise Software'],
     slug: 'freight-pricing-platform',
-    image: '/trochi-image.svg'
+    image: '/trochi-logo.svg'
   },
   {
     number: '02', 
     title: 'Diezl',
     description: 'A side project I built to help small trucking companies calculate the profitability of their loads.',
     tags: ['Side Project', 'Mobile App'],
-    slug: 'load-profitability-calculator'
+    slug: 'load-profitability-calculator',
+    image: '/diezl-logo.svg'
   },
   {
     number: '03',
     title: 'Fleetworthy',
     description: 'Led design and research efforts to create a single pane of glass for fleet managers to manage their vehicles.',
     tags: ['Enterprise', '0 to 1 MVP'],
-    slug: 'fleet-management-platform'
+    slug: 'fleet-management-platform',
+    image: '/fleetworthy-logo.svg'
   }
 ]
 
 const tools = [
-  { name: 'Figma', icon: '◈' },
-  { name: 'Cursor', icon: '◐' },
-  { name: 'Miro', icon: '△' },
-  { name: 'Anthropic', icon: '◉' },
-  { name: 'Notion', icon: '◎' },
-  { name: 'GitHub', icon: '▢' },
+  { name: 'Figma', icon: '◈', image: '/Figma-logo.svg' },
+  { name: 'Cursor', icon: '◐', image: '/CUBE_2D_DARK.svg' },
+  { name: 'Miro', icon: '△', image: '/miro-logo.svg' },
+  { name: 'Anthropic', icon: '◉', image: '/anthropic-1.svg' },
+  { name: 'Notion', icon: '◎', image: '/notion-logo.svg' },
+  { name: 'GitHub', icon: '▢', image: '/github-logo.webp' },
 ]
 
 export default function Home() {
-  // #region agent log
-  useEffect(() => {
-    const btn = document.querySelector(`.${styles.aboutCta}`);
-    if (!btn) {
-      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:41',message:'Button not found',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'F'})}).catch(()=>{});
-      return;
-    }
-    
-    // Get all CSS rules that match the button
-    const allRules = Array.from(document.styleSheets).flatMap(sheet => {
-      try {
-        return Array.from(sheet.cssRules).filter(rule => {
-          if (rule.type === CSSRule.STYLE_RULE) {
-            try { return btn.matches(rule.selectorText); } catch(e) { return false; }
-          }
-          return false;
-        }).map(r => ({ selector: r.selectorText, style: r.style.cssText.substring(0, 200) }));
-      } catch(e) { return []; }
-    });
-    
-    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:57',message:'Matching CSS rules for button',data:{rulesCount:allRules.length,rules:allRules},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'G'})}).catch(()=>{});
-    
-    const beforeEl = window.getComputedStyle(btn, '::before');
-    const initialClipPath = beforeEl.clipPath;
-    
-    const handleMouseEnter = () => {
-      // Check if hover class is applied to the button itself
-      const btnStyle = window.getComputedStyle(btn);
-      const btnColor = btnStyle.color;
-      
-      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:68',message:'Hover - button itself',data:{color:btnColor,matches:btn.matches(':hover')},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'F'})}).catch(()=>{});
-      
-      setTimeout(() => {
-        const hoverBeforeEl = window.getComputedStyle(btn, '::before');
-        const hoverClipPath = hoverBeforeEl.clipPath;
-        const hoverAnimationName = hoverBeforeEl.animationName;
-        const hoverAnimationDuration = hoverBeforeEl.animationDuration;
-        
-        // Try to find any rules matching ::before on hover
-        const beforeRules = Array.from(document.styleSheets).flatMap(sheet => {
-          try {
-            return Array.from(sheet.cssRules).filter(rule => {
-              if (rule.type === CSSRule.STYLE_RULE && rule.selectorText && (rule.selectorText.includes('::before') || rule.selectorText.includes(':before'))) {
-                return true;
-              }
-              return false;
-            }).map(r => ({ selector: r.selectorText, animation: r.style.animation || 'none', animationName: r.style.animationName || 'none' }));
-          } catch(e) { return []; }
-        });
-        
-        fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:88',message:'During hover (100ms)',data:{clipPath:hoverClipPath,animationName:hoverAnimationName,animationDuration:hoverAnimationDuration,changed:hoverClipPath!==initialClipPath,beforeRulesCount:beforeRules.length,beforeRules:beforeRules.filter(r=>r.selector.includes('aboutCta'))},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'F,G'})}).catch(()=>{});
-      }, 100);
-    };
-    
-    btn.addEventListener('mouseenter', handleMouseEnter);
-    
-    return () => {
-      btn.removeEventListener('mouseenter', handleMouseEnter);
-    };
-  }, []);
-  // #endregion
+  
   
   return (
     <>
@@ -116,32 +57,43 @@ export default function Home() {
       {/* Hero Section */}
       <section id="work" className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={styles.heroTagline}>
-            <span className={styles.heroTaglineText}>Designer | Builder </span>
+          <div className={styles.heroTextColumn}>
+            <div className={styles.heroTagline}>
+              <span className={styles.heroTaglineText}>Designer | Builder </span>
+            </div>
+            <h1 className={styles.heroHeading}>
+              I design software that makes complex enterprise workflows feel easy to use.
+            </h1>
+            <p className={styles.heroBody}>
+              Through first principles thinking and a bias toward action, I help companies transform ambiguous problems 
+              into elegant systems humans actually enjoy using.
+            </p>
           </div>
-          <p className={styles.heroBio}>
-          I design software that makes complex enterprise workflows feel easy to use. 
-          Through first principles thinking and a bias toward action, I help companies transform tangled problems 
-          into elegant systems humans actually enjoy using.
-          </p>
           
-          <div className={styles.heroCaseStudiesGrid}>
-            {caseStudies.map((study, index) => (
-              <article key={study.slug} className={styles.caseStudyCard} style={{ animationDelay: `${index * 150}ms` }}>
-                <div className={styles.caseStudyImageWrapper}>
-                  <div className={styles.caseStudyImage}>
-                    {study.image ? (
-                      <img src={study.image} alt={study.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      <div className={styles.caseStudyImagePlaceholder}>
-                        Image
-                      </div>
-                    )}
+          <div className={styles.heroCaseStudiesColumn}>
+            <div className={styles.heroCaseStudiesGrid}>
+              {caseStudies.map((study, index) => (
+                <article 
+                  key={study.slug} 
+                  className={styles.caseStudyCard} 
+                  data-slug={study.slug}
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  <div className={styles.caseStudyImageWrapper}>
+                    <div className={styles.caseStudyImage}>
+                      {study.image ? (
+                        <img src={study.image} alt={study.title} />
+                      ) : (
+                        <div className={styles.caseStudyImagePlaceholder}>
+                          Image
+                        </div>
+                      )}
+                    </div>
+                    <h3 className={styles.caseStudyTitle}>{study.title}</h3>
                   </div>
-                  <h3 className={styles.caseStudyTitle}>{study.title}</h3>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
         </div>
         <div className={styles.heroArtisticShape} />
@@ -173,7 +125,13 @@ export default function Home() {
           <div className={styles.toolsGrid}>
             {tools.map((tool) => (
               <div key={tool.name} className={styles.toolItem}>
-                <span className={styles.toolIcon}>{tool.icon}</span>
+                <span className={styles.toolIcon}>
+                  {tool.image ? (
+                    <img src={tool.image} alt={tool.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  ) : (
+                    tool.icon
+                  )}
+                </span>
                 <span className={styles.toolName}>{tool.name}</span>
               </div>
             ))}

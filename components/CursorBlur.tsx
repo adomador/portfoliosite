@@ -31,8 +31,8 @@ export default function CursorBlur() {
 
       // Remove element after animation completes
       setTimeout(() => {
-        if (trail.parentNode) {
-          trail.parentNode.removeChild(trail)
+        if (trail.isConnected) {
+          trail.remove()
         }
         const index = trailElements.indexOf(trail)
         if (index > -1) {
@@ -59,8 +59,8 @@ export default function CursorBlur() {
     const handleMouseLeave = () => {
       // Clear all trail elements when mouse leaves
       trailElements.forEach(trail => {
-        if (trail.parentNode) {
-          trail.parentNode.removeChild(trail)
+        if (trail.isConnected) {
+          trail.remove()
         }
       })
       trailElements.length = 0
@@ -80,8 +80,8 @@ export default function CursorBlur() {
       }
       // Clean up all trail elements
       trailElements.forEach(trail => {
-        if (trail.parentNode) {
-          trail.parentNode.removeChild(trail)
+        if (trail.isConnected) {
+          trail.remove()
         }
       })
     }
