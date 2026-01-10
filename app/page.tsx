@@ -97,32 +97,21 @@ export default function Home() {
       {/* Case Studies Section */}
       <section id="work" className={styles.caseStudies}>
         <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionLabel}>Selected Work</p>
-            <h2 className={styles.sectionTitle}>Case Studies</h2>
-          </div>
-          <span className={styles.sectionCount}>03 Projects</span>
+          <p className={styles.sectionLabel}>Selected Work</p>
+          <h2 className={styles.sectionTitle}>Case Studies</h2>
         </div>
         
         <div className={styles.caseStudiesGrid}>
-          {caseStudies.map((study) => (
-            <article key={study.slug} className={styles.caseStudyCard}>
-              <div className={styles.caseStudyImage}>
-                <div className={styles.caseStudyImagePlaceholder}>
-                  Image
+          {caseStudies.map((study, index) => (
+            <article key={study.slug} className={styles.caseStudyCard} style={{ animationDelay: `${index * 150}ms` }}>
+              <div className={styles.caseStudyImageWrapper}>
+                <div className={styles.caseStudyImage}>
+                  <div className={styles.caseStudyImagePlaceholder}>
+                    Image
+                  </div>
                 </div>
-              </div>
-              <div className={styles.caseStudyContent}>
-                <span className={styles.caseStudyNumber}>{study.number}</span>
                 <h3 className={styles.caseStudyTitle}>{study.title}</h3>
-                <p className={styles.caseStudyDescription}>{study.description}</p>
-                <div className={styles.caseStudyMeta}>
-                  {study.tags.map((tag) => (
-                    <span key={tag} className={styles.caseStudyTag}>{tag}</span>
-                  ))}
-                </div>
               </div>
-              <span className={styles.caseStudyArrow}>→</span>
             </article>
           ))}
         </div>
