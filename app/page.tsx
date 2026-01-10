@@ -25,27 +25,6 @@ const caseStudies = [
   }
 ]
 
-const testimonials = [
-  {
-    quote: 'I managed Alfredo at TriumphPay and highly recommend him as a UX designer or researcher. He drove and improved the research practice at TriumphPay, adding both solid, replicable process and best practices.',
-    name: 'Rob Daffin',
-    role: 'UX Manager, TriumphPay',
-    initials: 'RD'
-  },
-  {
-    quote: 'Alfredo is extremely talented in UX and not just design. Alfredo has overachieved in all aspects from ideation to production throughout product life cycles within the business vertical he supports including the support of research.',
-    name: 'John Szrejter',
-    role: 'UX Research Lead, TriumphPay',
-    initials: 'JS'
-  },
-  {
-    quote: 'Alfredo consistently impresses with his ability to lead in end-to-end research and design efforts. He excels in communicating across diverse audiences, from engineering to leadership.',
-    name: 'Kyle LeGrand',
-    role: 'Group Product Manager, TriumphPay',
-    initials: 'KL'
-  }
-]
-
 const tools = [
   { name: 'Figma', icon: '◈' },
   { name: 'Cursor', icon: '◐' },
@@ -64,7 +43,6 @@ export default function Home() {
         <div className={styles.logo}>Alfredo E. Domador</div>
         <div className={styles.navLinks}>
           <a href="#work" className={styles.navLink}>Work</a>
-          <a href="#testimonials" className={styles.navLink}>Testimonials</a>
           <a href="#about" className={styles.navLink}>About</a>
           <a href="mailto:hello@example.com" className={styles.navLink}>Contact</a>
         </div>
@@ -117,46 +95,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section id="testimonials" className={styles.testimonials}>
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionLabel}>What People Say</p>
-            <h2 className={styles.sectionTitle}>Testimonials</h2>
-          </div>
-        </div>
-        
-        <div className={styles.testimonialsGrid}>
-          {testimonials.map((testimonial, index) => (
-            <article key={index} className={styles.testimonialCard}>
-              <p className={styles.testimonialQuote}>{testimonial.quote}</p>
-              <div className={styles.testimonialAuthor}>
-                <div className={styles.testimonialAvatar}>
-                  {testimonial.initials}
-                </div>
-                <div className={styles.testimonialInfo}>
-                  <span className={styles.testimonialName}>{testimonial.name}</span>
-                  <span className={styles.testimonialRole}>{testimonial.role}</span>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {/* About & Tools Section */}
       <section id="about" className={styles.about}>
         <div className={styles.aboutContent}>
           <p className={styles.sectionLabel}>About</p>
           <h2 className={styles.aboutTitle}>
-            Designing at the<br />
-            intersection of<br />
-            <span className={styles.heroTitleAccent}>creativity & function</span>
+            Born in Venezuela<br />
+            Raised in Miami, FL<br />
+            Based in Pennsylvania<br />
           </h2>
           <p className={styles.aboutText}>
-          I create user-centered solutions that drive business impact. From strategy to implementation, I collaborate
-           across functions and leverage modern tools to move 
-           quickly from idea to working product.
+          Currently leading design efforts at Fleetworthy.
           </p>
           <p className={styles.aboutText}>
             In my free time, I enjoy playing chess, reading fiction, and walking..
@@ -187,10 +136,8 @@ export default function Home() {
           <span className={styles.footerCopy}>© {new Date().getFullYear()} All rights reserved</span>
         </div>
         <div className={styles.footerLinks}>
-          <a href="https://linkedin.com" className={styles.footerLink} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://dribbble.com" className={styles.footerLink} target="_blank" rel="noopener noreferrer">Dribbble</a>
-          <a href="https://twitter.com" className={styles.footerLink} target="_blank" rel="noopener noreferrer">Twitter</a>
-          <a href="mailto:hello@example.com" className={styles.footerLink}>Email</a>
+          <a href="https://linkedin.com/in/adomador13" className={styles.footerLink} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="mailto:alfredo.domador13@gmail.com" className={styles.footerLink}>Email</a>
         </div>
       </footer>
     </>
