@@ -1,3 +1,5 @@
+'use client'
+import { useEffect } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 
@@ -7,7 +9,8 @@ const caseStudies = [
     title: 'Trochi',
     description: '0 to 1 MVP of a freight pricing platform for a startup in the trucking industry.',
     tags: ['SaaS', 'Enterprise Software'],
-    slug: 'freight-pricing-platform'
+    slug: 'freight-pricing-platform',
+    image: '/trochi-image.svg'
   },
   {
     number: '02', 
@@ -35,6 +38,68 @@ const tools = [
 ]
 
 export default function Home() {
+  // #region agent log
+  useEffect(() => {
+    const btn = document.querySelector(`.${styles.aboutCta}`);
+    if (!btn) {
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:41',message:'Button not found',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'F'})}).catch(()=>{});
+      return;
+    }
+    
+    // Get all CSS rules that match the button
+    const allRules = Array.from(document.styleSheets).flatMap(sheet => {
+      try {
+        return Array.from(sheet.cssRules).filter(rule => {
+          if (rule.type === CSSRule.STYLE_RULE) {
+            try { return btn.matches(rule.selectorText); } catch(e) { return false; }
+          }
+          return false;
+        }).map(r => ({ selector: r.selectorText, style: r.style.cssText.substring(0, 200) }));
+      } catch(e) { return []; }
+    });
+    
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:57',message:'Matching CSS rules for button',data:{rulesCount:allRules.length,rules:allRules},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'G'})}).catch(()=>{});
+    
+    const beforeEl = window.getComputedStyle(btn, '::before');
+    const initialClipPath = beforeEl.clipPath;
+    
+    const handleMouseEnter = () => {
+      // Check if hover class is applied to the button itself
+      const btnStyle = window.getComputedStyle(btn);
+      const btnColor = btnStyle.color;
+      
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:68',message:'Hover - button itself',data:{color:btnColor,matches:btn.matches(':hover')},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'F'})}).catch(()=>{});
+      
+      setTimeout(() => {
+        const hoverBeforeEl = window.getComputedStyle(btn, '::before');
+        const hoverClipPath = hoverBeforeEl.clipPath;
+        const hoverAnimationName = hoverBeforeEl.animationName;
+        const hoverAnimationDuration = hoverBeforeEl.animationDuration;
+        
+        // Try to find any rules matching ::before on hover
+        const beforeRules = Array.from(document.styleSheets).flatMap(sheet => {
+          try {
+            return Array.from(sheet.cssRules).filter(rule => {
+              if (rule.type === CSSRule.STYLE_RULE && rule.selectorText && (rule.selectorText.includes('::before') || rule.selectorText.includes(':before'))) {
+                return true;
+              }
+              return false;
+            }).map(r => ({ selector: r.selectorText, animation: r.style.animation || 'none', animationName: r.style.animationName || 'none' }));
+          } catch(e) { return []; }
+        });
+        
+        fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:88',message:'During hover (100ms)',data:{clipPath:hoverClipPath,animationName:hoverAnimationName,animationDuration:hoverAnimationDuration,changed:hoverClipPath!==initialClipPath,beforeRulesCount:beforeRules.length,beforeRules:beforeRules.filter(r=>r.selector.includes('aboutCta'))},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'F,G'})}).catch(()=>{});
+      }, 100);
+    };
+    
+    btn.addEventListener('mouseenter', handleMouseEnter);
+    
+    return () => {
+      btn.removeEventListener('mouseenter', handleMouseEnter);
+    };
+  }, []);
+  // #endregion
+  
   return (
     <>
       <CursorBlur />
@@ -65,9 +130,13 @@ export default function Home() {
               <article key={study.slug} className={styles.caseStudyCard} style={{ animationDelay: `${index * 150}ms` }}>
                 <div className={styles.caseStudyImageWrapper}>
                   <div className={styles.caseStudyImage}>
-                    <div className={styles.caseStudyImagePlaceholder}>
-                      Image
-                    </div>
+                    {study.image ? (
+                      <img src={study.image} alt={study.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div className={styles.caseStudyImagePlaceholder}>
+                        Image
+                      </div>
+                    )}
                   </div>
                   <h3 className={styles.caseStudyTitle}>{study.title}</h3>
                 </div>
@@ -93,10 +162,10 @@ export default function Home() {
           <p className={styles.aboutText}>
             In my free time, I enjoy playing chess, reading fiction, and walking.
           </p>
-          <button className={styles.aboutCta}>
+          <a href="https://www.dropbox.com/scl/fi/b2ofldaawe48whvrqus1d/Domador_Alfredo_Resume_2025.pdf?rlkey=wybkx2aj9f45xzi85r7kwiafr&e=1&st=mbevta12&dl=0" className={styles.aboutCta} target="_blank" rel="noopener noreferrer">
             <span>Download Resume</span>
             <span>↓</span>
-          </button>
+          </a>
         </div>
         
         <div className={styles.tools}>

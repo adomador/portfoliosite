@@ -449,15 +449,24 @@
   padding: var(--space-md) var(--space-lg);
   background: transparent;
   border: 1px solid var(--accent-gold);
+  border-bottom: 1px solid var(--accent-gold);
   color: var(--accent-gold);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-out-expo);
+  transition: color var(--duration-normal) var(--ease-out-expo);
   position: relative;
   overflow: hidden;
+  opacity: 1;
+  box-shadow: none;
+  z-index: 1;
+}
+
+.aboutCta > * {
+  position: relative;
+  z-index: 1;
 }
 
 .aboutCta::before {
@@ -465,17 +474,34 @@
   position: absolute;
   inset: 0;
   background: var(--accent-gold);
-  transform: translateX(-100%);
-  transition: transform var(--duration-normal) var(--ease-out-expo);
-  z-index: -1;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 4px,
+      transparent 4px,
+      transparent 8px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  clip-path: polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%);
+  transition: clip-path 0.8s ease-in-out;
+  z-index: 0;
+  will-change: clip-path;
 }
 
 .aboutCta:hover {
   color: var(--bg-deep);
+  font-weight: 700;
 }
 
 .aboutCta:hover::before {
-  transform: translateX(0);
+  transition: none;
 }
 
 /* Tools Section */
