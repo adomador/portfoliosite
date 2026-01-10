@@ -75,7 +75,7 @@ export default function Home() {
         <div className={styles.heroContent}>
           <div className={styles.heroTagline}>
             <div className={`accent-line ${styles.accentLine}`} />
-            <span className={styles.heroTaglineText}>Product Designer</span>
+            <span className={styles.heroTaglineText}>Software Designer | Builder </span>
           </div>
           <h1 className={styles.heroTitle}>
             Crafting digital<br />
