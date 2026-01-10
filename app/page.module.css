@@ -86,24 +86,11 @@
   justify-content: center;
   padding: var(--space-3xl) var(--space-lg);
   position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.heroBackground {
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201, 162, 39, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 38, 53, 0.05) 0%, transparent 50%),
-    var(--bg-deep);
-  z-index: -1;
 }
 
 .heroContent {
   max-width: 900px;
   position: relative;
-  z-index: 2;
 }
 
 .heroTagline {
@@ -174,8 +161,6 @@
 /* Case Studies Section */
 .caseStudies {
   padding: var(--space-3xl) var(--space-lg);
-  position: relative;
-  z-index: 1;
 }
 
 .sectionHeader {
@@ -355,10 +340,6 @@
 /* Testimonials Section */
 .testimonials {
   padding: var(--space-3xl) var(--space-lg);
-  background: var(--bg-elevated);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
 }
 
 .testimonials::before {
@@ -456,8 +437,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3xl);
-  position: relative;
-  z-index: 1;
 }
 
 .aboutContent {

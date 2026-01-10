@@ -48,11 +48,11 @@ const testimonials = [
 
 const tools = [
   { name: 'Figma', icon: '◈' },
-  { name: 'Framer', icon: '◐' },
-  { name: 'Principle', icon: '△' },
-  { name: 'After Effects', icon: '◉' },
-  { name: 'Webflow', icon: '◎' },
-  { name: 'Notion', icon: '▢' },
+  { name: 'Cursor', icon: '◐' },
+  { name: 'Miro', icon: '△' },
+  { name: 'Anthropic', icon: '◉' },
+  { name: 'Notion', icon: '◎' },
+  { name: 'GitHub', icon: '▢' },
 ]
 
 export default function Home() {
@@ -72,7 +72,6 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className={styles.hero}>
-        <div className={styles.heroBackground} />
         <div className={styles.heroContent}>
           <div className={styles.heroTagline}>
             <div className={`accent-line ${styles.accentLine}`} />
