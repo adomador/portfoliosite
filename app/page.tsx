@@ -4,21 +4,21 @@ import CursorBlur from '@/components/CursorBlur'
 const caseStudies = [
   {
     number: '01',
-    title: 'Revolutionizing data driven freight pricing',
+    title: 'Trochi',
     description: '0 to 1 MVP of a freight pricing platform for a startup in the trucking industry.',
     tags: ['SaaS', 'Enterprise Software'],
     slug: 'freight-pricing-platform'
   },
   {
     number: '02', 
-    title: 'Building a Load Profitability Calculator for small trucking companies',
+    title: 'Diezl',
     description: 'A side project I built to help small trucking companies calculate the profitability of their loads.',
     tags: ['Side Project', 'Mobile App'],
     slug: 'load-profitability-calculator'
   },
   {
     number: '03',
-    title: 'Unifying the experience of 3 different products',
+    title: 'Fleetworthy',
     description: 'Led design and research efforts to create a single pane of glass for fleet managers to manage their vehicles.',
     tags: ['Enterprise', '0 to 1 MVP'],
     slug: 'fleet-management-platform'
@@ -49,66 +49,49 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className={styles.hero}>
+      <section id="work" className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroTagline}>
-            <span className={styles.heroTaglineText}>Software Designer | Builder </span>
+            <span className={styles.heroTaglineText}>Designer | Builder </span>
           </div>
-          <h1 className={styles.heroTitle}>
-            Crafting digital<br />
-            experiences with<br />
-            <span className={styles.heroTitleAccent}>intention</span>
-          </h1>
           <p className={styles.heroBio}>
-          I design software that makes complex enterprise problems feel manageable. 
-          Through first principles thinking and a bias toward action, I help companies transform tangled workflows 
-          into elegant systems their teams actually enjoy using.
+          I design software that makes complex enterprise workflows feel easy to use. 
+          Through first principles thinking and a bias toward action, I help companies transform tangled problems 
+          into elegant systems humans actually enjoy using.
           </p>
+          
+          <div className={styles.heroCaseStudiesGrid}>
+            {caseStudies.map((study, index) => (
+              <article key={study.slug} className={styles.caseStudyCard} style={{ animationDelay: `${index * 150}ms` }}>
+                <div className={styles.caseStudyImageWrapper}>
+                  <div className={styles.caseStudyImage}>
+                    <div className={styles.caseStudyImagePlaceholder}>
+                      Image
+                    </div>
+                  </div>
+                  <h3 className={styles.caseStudyTitle}>{study.title}</h3>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
         <div className={styles.heroArtisticShape} />
-        <div className={styles.heroScroll}>
-          <span>Scroll</span>
-          <div className={styles.heroScrollLine} />
-        </div>
-      </section>
-
-      {/* Case Studies Section */}
-      <section id="work" className={styles.caseStudies}>
-        <div className={styles.sectionHeader}>
-          <p className={styles.sectionLabel}>Selected Work</p>
-          <h2 className={styles.sectionTitle}>Case Studies</h2>
-        </div>
-        
-        <div className={styles.caseStudiesGrid}>
-          {caseStudies.map((study, index) => (
-            <article key={study.slug} className={styles.caseStudyCard} style={{ animationDelay: `${index * 150}ms` }}>
-              <div className={styles.caseStudyImageWrapper}>
-                <div className={styles.caseStudyImage}>
-                  <div className={styles.caseStudyImagePlaceholder}>
-                    Image
-                  </div>
-                </div>
-                <h3 className={styles.caseStudyTitle}>{study.title}</h3>
-              </div>
-            </article>
-          ))}
-        </div>
       </section>
 
       {/* About & Tools Section */}
-      <section id="about" className={styles.about}>
+      <section id="about me" className={styles.about}>
         <div className={styles.aboutContent}>
-          <p className={styles.sectionLabel}>About</p>
+          <p className={styles.sectionLabel}>About Me</p>
           <h2 className={styles.aboutTitle}>
             Born in Venezuela<br />
             Raised in Miami, FL<br />
             Based in Pennsylvania<br />
           </h2>
           <p className={styles.aboutText}>
-          Currently leading design efforts at Fleetworthy.
+          Currently solving problems at <a href="https://fleetworthy.com/" className={styles.link} target="_blank" rel="noopener noreferrer">Fleetworthy</a>.
           </p>
           <p className={styles.aboutText}>
-            In my free time, I enjoy playing chess, reading fiction, and walking..
+            In my free time, I enjoy playing chess, reading fiction, and walking.
           </p>
           <button className={styles.aboutCta}>
             <span>Download Resume</span>
@@ -117,7 +100,7 @@ export default function Home() {
         </div>
         
         <div className={styles.tools}>
-          <h3 className={styles.toolsTitle}>My Toolbox</h3>
+          <h3 className={styles.toolsTitle}>My Tools</h3>
           <div className={styles.toolsGrid}>
             {tools.map((tool) => (
               <div key={tool.name} className={styles.toolItem}>
@@ -133,7 +116,7 @@ export default function Home() {
       <footer className={styles.footer}>
         <div className={styles.footerLeft}>
           <span className={styles.footerName}>Alfredo E. Domador</span>
-          <span className={styles.footerCopy}>© {new Date().getFullYear()} All rights reserved</span>
+          <span className={styles.footerCopy}>© {new Date().getFullYear()} Built with Cursor</span>
         </div>
         <div className={styles.footerLinks}>
           <a href="https://linkedin.com/in/adomador13" className={styles.footerLink} target="_blank" rel="noopener noreferrer">LinkedIn</a>
