@@ -87,6 +87,7 @@
   padding: var(--space-3xl) var(--space-lg);
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .heroBackground {
@@ -101,6 +102,8 @@
 
 .heroContent {
   max-width: 900px;
+  position: relative;
+  z-index: 2;
 }
 
 .heroTagline {
@@ -117,12 +120,12 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent-gold);
+  color: var(--text-primary);
 }
 
 .heroTitle {
   font-size: clamp(3rem, 10vw, 6rem);
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
   margin-bottom: var(--space-lg);
@@ -131,9 +134,8 @@
 }
 
 .heroTitleAccent {
-  color: var(--accent-amber);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .heroBio {
@@ -173,6 +175,7 @@
 .caseStudies {
   padding: var(--space-3xl) var(--space-lg);
   position: relative;
+  z-index: 1;
 }
 
 .sectionHeader {
@@ -302,11 +305,6 @@
   font-weight: 400;
   margin-bottom: var(--space-md);
   line-height: 1.2;
-  transition: color var(--duration-fast) var(--ease-out-expo);
-}
-
-.caseStudyCard:hover .caseStudyTitle {
-  color: var(--accent-amber);
 }
 
 .caseStudyDescription {
@@ -360,6 +358,7 @@
   background: var(--bg-elevated);
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .testimonials::before {
@@ -457,6 +456,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3xl);
+  position: relative;
+  z-index: 1;
 }
 
 .aboutContent {
@@ -467,7 +468,7 @@
 
 .aboutTitle {
   font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 300;
+  font-weight: 700;
   margin-bottom: var(--space-lg);
   line-height: 1.2;
 }
@@ -480,7 +481,7 @@
 }
 
 .aboutHighlight {
-  color: var(--accent-amber);
+  color: var(--text-primary);
   font-weight: 500;
 }
 

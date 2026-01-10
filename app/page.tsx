@@ -1,4 +1,5 @@
 import styles from './page.module.css'
+import CursorBlur from '@/components/CursorBlur'
 
 const caseStudies = [
   {
@@ -57,6 +58,7 @@ const tools = [
 export default function Home() {
   return (
     <>
+      <CursorBlur />
       {/* Navigation */}
       <nav className={styles.nav}>
         <div className={styles.logo}>Portfolio</div>
