@@ -74,7 +74,6 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroTagline}>
-            <div className={`accent-line ${styles.accentLine}`} />
             <span className={styles.heroTaglineText}>Software Designer | Builder </span>
           </div>
           <h1 className={styles.heroTitle}>
@@ -83,9 +82,9 @@ export default function Home() {
             <span className={styles.heroTitleAccent}>intention</span>
           </h1>
           <p className={styles.heroBio}>
-            I design software that solves complex problems. With a focus on first principles and user-centered design, 
-            I help companies transform complex workflows into elegant, 
-            human-centered solutions.
+          I design software that makes complex enterprise problems feel manageable. 
+          Through first principles thinking and a bias toward action, I help companies transform tangled workflows 
+          into elegant systems their teams actually enjoy using.
           </p>
         </div>
         <div className={styles.heroArtisticShape} />
@@ -171,8 +170,7 @@ export default function Home() {
            quickly from idea to working product.
           </p>
           <p className={styles.aboutText}>
-            I believe great design is invisible. It guides without imposing, 
-            delights without distracting, and always, always serves the user first.
+            In my free time, I enjoy playing chess, reading fiction, and walking..
           </p>
           <button className={styles.aboutCta}>
             <span>Download Resume</span>
