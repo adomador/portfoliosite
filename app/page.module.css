@@ -135,7 +135,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3xl);
-  max-width: 1400px;
   width: 100%;
   position: relative;
   z-index: 2;
@@ -201,7 +200,9 @@
 
 .heroCaseStudiesColumn {
   display: flex;
+  flex-direction: column;
   align-items: start;
+  justify-content: start;
 }
 
 .heroCaseStudiesGrid {
@@ -210,6 +211,7 @@
   gap: var(--space-md);
   width: 100%;
   align-items: start;
+  justify-items: start;
 }
 
 .heroScroll {
