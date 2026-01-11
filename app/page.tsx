@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 
@@ -9,7 +10,8 @@ const caseStudies = [
     description: '0 to 1 MVP of a freight pricing platform for a startup in the trucking industry.',
     tags: ['SaaS', 'Enterprise Software'],
     slug: 'freight-pricing-platform',
-    image: '/trochi-logo.svg'
+    image: '/trochi-logo.svg',
+    visual: '/trochi-visual.svg'
   },
   {
     number: '02', 
@@ -17,7 +19,8 @@ const caseStudies = [
     description: 'A side project I built to help small trucking companies calculate the profitability of their loads.',
     tags: ['Side Project', 'Mobile App'],
     slug: 'load-profitability-calculator',
-    image: '/diezl-logo.svg'
+    image: '/diezl-logo.svg',
+    visual: null
   },
   {
     number: '03',
@@ -25,7 +28,8 @@ const caseStudies = [
     description: 'Led design and research efforts to create a single pane of glass for fleet managers to manage their vehicles.',
     tags: ['Enterprise', '0 to 1 MVP'],
     slug: 'fleet-management-platform',
-    image: '/fleetworthy-logo.svg'
+    image: '/fleetworthy-logo.svg',
+    visual: null
   }
 ]
 
@@ -39,7 +43,7 @@ const tools = [
 ]
 
 export default function Home() {
-  
+  const [activeCaseStudy, setActiveCaseStudy] = useState(0)
   
   return (
     <>
@@ -59,24 +63,39 @@ export default function Home() {
         <div className={styles.heroContent}>
           <div className={styles.heroTextColumn}>
             <div className={styles.heroTagline}>
-              <span className={styles.heroTaglineText}>Designer | Builder </span>
+              <span className={styles.heroTaglineText}>Designer / Builder • Specializing in 🌐 Supply Chain & Logistics 🚚 </span>
             </div>
             <h1 className={styles.heroHeading}>
-              I design software that makes complex enterprise workflows feel easy to use.
+              I design software that transforms complex enterprise workflows into easy to use systems.
             </h1>
             <p className={styles.heroBody}>
               Through first principles thinking and a bias toward action, I help companies transform ambiguous problems 
-              into elegant systems humans actually enjoy using.
+              into elegant experiences humans enjoy using.
             </p>
           </div>
           
           <div className={styles.heroCaseStudiesColumn}>
+            <div className={styles.caseStudyCarousel}>
+              {caseStudies[activeCaseStudy].visual ? (
+                <img 
+                  src={caseStudies[activeCaseStudy].visual} 
+                  alt={caseStudies[activeCaseStudy].title}
+                  className={styles.caseStudyVisual}
+                />
+              ) : (
+                <div className={styles.caseStudyVisualPlaceholder}>
+                  Visual coming soon
+                </div>
+              )}
+            </div>
             <div className={styles.heroCaseStudiesGrid}>
               {caseStudies.map((study, index) => (
                 <article 
                   key={study.slug} 
                   className={styles.caseStudyCard} 
                   data-slug={study.slug}
+                  data-active={index === activeCaseStudy}
+                  onClick={() => setActiveCaseStudy(index)}
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className={styles.caseStudyImageWrapper}>
