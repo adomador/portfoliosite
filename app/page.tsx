@@ -30,6 +30,15 @@ const caseStudies = [
     slug: 'fleet-management-platform',
     image: '/fleetworthy-logo.svg',
     visual: null
+  },
+  {
+    number: '04',
+    title: 'Triumph',
+    description: 'Case study description for Triumph.',
+    tags: [],
+    slug: 'triumph',
+    image: '/triumph-logo.svg',
+    visual: null
   }
 ]
 
