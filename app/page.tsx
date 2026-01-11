@@ -1,5 +1,4 @@
 'use client'
-import { useState } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 
@@ -52,8 +51,6 @@ const tools = [
 ]
 
 export default function Home() {
-  const [activeCaseStudy, setActiveCaseStudy] = useState(0)
-  
   return (
     <>
       <CursorBlur />
@@ -84,27 +81,12 @@ export default function Home() {
           </div>
           
           <div className={styles.heroCaseStudiesColumn}>
-            <div className={styles.caseStudyCarousel}>
-              {caseStudies[activeCaseStudy].visual ? (
-                <img 
-                  src={caseStudies[activeCaseStudy].visual} 
-                  alt={caseStudies[activeCaseStudy].title}
-                  className={styles.caseStudyVisual}
-                />
-              ) : (
-                <div className={styles.caseStudyVisualPlaceholder}>
-                  Visual coming soon
-                </div>
-              )}
-            </div>
             <div className={styles.heroCaseStudiesGrid}>
               {caseStudies.map((study, index) => (
                 <article 
                   key={study.slug} 
                   className={styles.caseStudyCard} 
                   data-slug={study.slug}
-                  data-active={index === activeCaseStudy}
-                  onClick={() => setActiveCaseStudy(index)}
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className={styles.caseStudyImageWrapper}>
