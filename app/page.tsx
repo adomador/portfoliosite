@@ -1,6 +1,8 @@
 'use client'
+import { useState, useEffect } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
+import Lottie from 'lottie-react'
 
 const caseStudies = [
   {
@@ -51,6 +53,19 @@ const tools = [
 ]
 
 export default function Home() {
+  const [hoveredCaseStudy, setHoveredCaseStudy] = useState<string | null>(null)
+  const [animationData, setAnimationData] = useState<any>(null)
+
+  // Load animation data for Trochi when hovered
+  useEffect(() => {
+    if (hoveredCaseStudy === 'freight-pricing-platform' && !animationData) {
+      fetch('/lane-results-animation.json')
+        .then(res => res.json())
+        .then(data => setAnimationData(data))
+        .catch(err => console.error('Failed to load animation:', err))
+    }
+  }, [hoveredCaseStudy, animationData])
+
   return (
     <>
       <CursorBlur />
@@ -90,10 +105,19 @@ export default function Home() {
               className={styles.caseStudyCard} 
               data-slug={study.slug}
               style={{ animationDelay: `${index * 150}ms` }}
+              onMouseEnter={() => study.slug === 'freight-pricing-platform' && setHoveredCaseStudy(study.slug)}
+              onMouseLeave={() => setHoveredCaseStudy(null)}
             >
               <div className={styles.caseStudyImageWrapper}>
                 <div className={styles.caseStudyImage}>
-                  {study.image ? (
+                  {study.slug === 'freight-pricing-platform' && hoveredCaseStudy === study.slug && animationData ? (
+                    <Lottie 
+                      animationData={animationData} 
+                      loop={true}
+                      autoplay={true}
+                      style={{ width: '100%', height: '100%' }}
+                    />
+                  ) : study.image ? (
                     <img src={study.image} alt={study.title} />
                   ) : (
                     <div className={styles.caseStudyImagePlaceholder}>
