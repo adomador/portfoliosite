@@ -67,46 +67,45 @@ export default function Home() {
       {/* Hero Section */}
       <section id="work" className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={styles.heroTextColumn}>
-            <div className={styles.heroTagline}>
-              <span className={styles.heroTaglineText}>Designer / Builder • Specializing in 🌐 Supply Chain & Logistics 🚚 </span>
-            </div>
-            <h1 className={styles.heroHeading}>
-              I design software that transforms complex enterprise workflows into easy to use systems.
-            </h1>
-            <p className={styles.heroBody}>
-              Through first principles thinking and a bias toward action, I help companies transform ambiguous problems 
-              into elegant experiences humans enjoy using.
-            </p>
+          <div className={styles.heroTagline}>
+            <span className={styles.heroTaglineText}>Designer / Builder • Specializing in 🌐 Supply Chain & Logistics 🚚 </span>
           </div>
-          
-          <div className={styles.heroCaseStudiesColumn}>
-            <div className={styles.heroCaseStudiesGrid}>
-              {caseStudies.map((study, index) => (
-                <article 
-                  key={study.slug} 
-                  className={styles.caseStudyCard} 
-                  data-slug={study.slug}
-                  style={{ animationDelay: `${index * 150}ms` }}
-                >
-                  <div className={styles.caseStudyImageWrapper}>
-                    <div className={styles.caseStudyImage}>
-                      {study.image ? (
-                        <img src={study.image} alt={study.title} />
-                      ) : (
-                        <div className={styles.caseStudyImagePlaceholder}>
-                          Image
-                        </div>
-                      )}
-                    </div>
-                    <h3 className={styles.caseStudyTitle}>{study.title}</h3>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
+          <h1 className={styles.heroHeading}>
+            I design software that transforms complex enterprise workflows into easy to use systems.
+          </h1>
+          <p className={styles.heroBody}>
+            Through first principles thinking and a bias toward action, I help companies transform ambiguous problems 
+            into elegant experiences humans enjoy using.
+          </p>
         </div>
         <div className={styles.heroArtisticShape} />
+      </section>
+
+      {/* Case Studies Section */}
+      <section id="case-studies" className={styles.caseStudiesSection}>
+        <div className={styles.caseStudiesGrid}>
+          {caseStudies.map((study, index) => (
+            <article 
+              key={study.slug} 
+              className={styles.caseStudyCard} 
+              data-slug={study.slug}
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              <div className={styles.caseStudyImageWrapper}>
+                <div className={styles.caseStudyImage}>
+                  {study.image ? (
+                    <img src={study.image} alt={study.title} />
+                  ) : (
+                    <div className={styles.caseStudyImagePlaceholder}>
+                      Image
+                    </div>
+                  )}
+                </div>
+                <h3 className={styles.caseStudyTitle}>{study.title}</h3>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
 
       {/* About & Tools Section */}

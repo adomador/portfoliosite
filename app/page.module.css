@@ -132,12 +132,12 @@
 }
 
 .heroContent {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
   width: 100%;
   position: relative;
   z-index: 2;
+  max-width: 800px;
 }
 
 .heroTagline {
@@ -172,12 +172,6 @@
   font-weight: 700;
 }
 
-.heroTextColumn {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .heroHeading {
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
@@ -196,24 +190,6 @@
   color: var(--text-secondary);
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
   opacity: 0;
-}
-
-.heroCaseStudiesColumn {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: center;
-  max-width: 600px;
-  width: 100%;
-}
-
-.heroCaseStudiesGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
-  width: 100%;
-  align-items: start;
-  justify-items: stretch;
 }
 
 .heroScroll {
@@ -343,13 +319,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.caseStudiesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: clamp(var(--space-xl), 4vw, var(--space-2xl));
-  grid-auto-rows: auto;
-}
-
 /* Case Study Card - Refined Grid Layout */
 .caseStudyCard {
   display: flex;
@@ -416,6 +385,21 @@
 
 .caseStudyTitle {
   display: none;
+}
+
+/* Case Studies Section */
+.caseStudiesSection {
+  padding: var(--space-3xl) var(--space-lg);
+  position: relative;
+  z-index: 2;
+}
+
+.caseStudiesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  width: 100%;
+  align-items: stretch;
 }
 
 /* About Section */
@@ -625,11 +609,6 @@
 
 /* Responsive */
 @media (max-width: 900px) {
-  .heroContent {
-    grid-template-columns: 1fr;
-    gap: var(--space-2xl);
-  }
-  
   .heroArtisticShape {
     width: min(280px, 38vw);
     height: min(380px, 48vw);
@@ -637,9 +616,9 @@
     opacity: 0.18;
   }
   
-  .heroCaseStudiesGrid {
+  .caseStudiesGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-sm);
+    gap: var(--space-md);
   }
   
   .about {
@@ -667,7 +646,7 @@
     display: none;
   }
   
-  .heroCaseStudiesGrid {
+  .caseStudiesGrid {
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
