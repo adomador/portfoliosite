@@ -394,6 +394,11 @@
   padding: 6px;
 }
 
+.caseStudyCard[data-slug="freight-pricing-platform"] .caseStudyImage img,
+.caseStudyCard[data-slug="fleet-management-platform"] .caseStudyImage img {
+  transform: scale(0.8);
+}
+
 .caseStudyImagePlaceholder {
   width: 100%;
   height: 100%;
