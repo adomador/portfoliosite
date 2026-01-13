@@ -98,6 +98,7 @@ export default function Home() {
 
       {/* Case Studies Section */}
       <section id="case-studies" className={styles.caseStudiesSection}>
+        <h3 className={styles.caseStudiesTitle}>Some work</h3>
         <div className={styles.caseStudiesGrid}>
           {caseStudies.map((study, index) => (
             <article 
@@ -111,12 +112,26 @@ export default function Home() {
               <div className={styles.caseStudyImageWrapper}>
                 <div className={styles.caseStudyImage}>
                   {study.slug === 'freight-pricing-platform' && hoveredCaseStudy === study.slug && animationData ? (
-                    <Lottie 
-                      animationData={animationData} 
-                      loop={true}
-                      autoplay={true}
-                      style={{ width: '100%', height: '100%' }}
-                    />
+                    <>
+                      <Lottie 
+                        animationData={animationData} 
+                        loop={true}
+                        autoplay={true}
+                        className={styles.caseStudyAnimation}
+                      />
+                      <div className={styles.trochiOverlay}>
+                        <div className={styles.trochiOverlayContent}>
+                          <img src="/trochi-logo-overlay.svg" alt="Trochi" className={styles.trochiLogo} />
+                          <span className={styles.trochiText}>Trochi.ai</span>
+                          <button className={styles.trochiButton} aria-label="View Trochi.ai">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6 4L10 8L6 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              <circle cx="8" cy="8" r="7" stroke="white" strokeWidth="1" fill="none" strokeDasharray="3 4"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   ) : study.image ? (
                     <img src={study.image} alt={study.title} />
                   ) : (
