@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 import Lottie from 'lottie-react'
@@ -54,18 +54,78 @@ const tools = [
 
 export default function Home() {
   const [hoveredCaseStudy, setHoveredCaseStudy] = useState<string | null>(null)
-  const [animationData, setAnimationData] = useState<any>(null)
+  const [animationData, setAnimationData] = useState<Record<string, any>>({})
   const [isFadingOut, setIsFadingOut] = useState(false)
+  const trochiLottieRef = useRef<any>(null)
+  const diezlLottieRef = useRef<any>(null)
+  const triumphLottieRef = useRef<any>(null)
 
-  // Load animation data for Trochi when hovered
+  // Load animation data for case studies when hovered
   useEffect(() => {
-    if (hoveredCaseStudy === 'freight-pricing-platform' && !animationData) {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:loadEffect',message:'Load effect triggered',data:{hoveredCaseStudy,hasData:!!animationData[hoveredCaseStudy||'']},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,D'})}).catch(()=>{});
+    // #endregion
+    if (hoveredCaseStudy === 'freight-pricing-platform' && !animationData['freight-pricing-platform']) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:fetchTrochi',message:'Starting Trochi fetch',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
       fetch('/lane-results-animation.json')
         .then(res => res.json())
-        .then(data => setAnimationData(data))
-        .catch(err => console.error('Failed to load animation:', err))
+        .then(data => {
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:fetchTrochiDone',message:'Trochi data loaded',data:{dataLoaded:!!data},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+          // #endregion
+          setAnimationData(prev => ({ ...prev, 'freight-pricing-platform': data }))
+        })
+        .catch(err => console.error('Failed to load Trochi animation:', err))
+    }
+    if (hoveredCaseStudy === 'load-profitability-calculator' && !animationData['load-profitability-calculator']) {
+      fetch('/diezl-animation.json')
+        .then(res => res.json())
+        .then(data => setAnimationData(prev => ({ ...prev, 'load-profitability-calculator': data })))
+        .catch(err => console.error('Failed to load Diezl animation:', err))
+    }
+    if (hoveredCaseStudy === 'triumph' && !animationData['triumph']) {
+      fetch('/triumph-animation.json')
+        .then(res => res.json())
+        .then(data => setAnimationData(prev => ({ ...prev, 'triumph': data })))
+        .catch(err => console.error('Failed to load Triumph animation:', err))
     }
   }, [hoveredCaseStudy, animationData])
+
+  // Control animation playback based on hover state
+  useEffect(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:playbackEffect',message:'Playback effect triggered',data:{hoveredCaseStudy,isFadingOut,hasRef:!!trochiLottieRef.current,hasData:!!animationData[hoveredCaseStudy||'']},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C,E'})}).catch(()=>{});
+    // #endregion
+    if (hoveredCaseStudy === 'freight-pricing-platform' && trochiLottieRef.current) {
+      if (!isFadingOut) {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:playTrochi',message:'Calling play() on Trochi',data:{refExists:!!trochiLottieRef.current},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
+        trochiLottieRef.current.play()
+      } else {
+        trochiLottieRef.current.stop()
+        trochiLottieRef.current.goToAndStop(0, true)
+      }
+    }
+    if (hoveredCaseStudy === 'load-profitability-calculator' && diezlLottieRef.current) {
+      if (!isFadingOut) {
+        diezlLottieRef.current.play()
+      } else {
+        diezlLottieRef.current.stop()
+        diezlLottieRef.current.goToAndStop(0, true)
+      }
+    }
+    if (hoveredCaseStudy === 'triumph' && triumphLottieRef.current) {
+      if (!isFadingOut) {
+        triumphLottieRef.current.play()
+      } else {
+        triumphLottieRef.current.stop()
+        triumphLottieRef.current.goToAndStop(0, true)
+      }
+    }
+  }, [hoveredCaseStudy, isFadingOut, animationData])
 
   const handleMouseLeave = () => {
     setIsFadingOut(true)
@@ -76,7 +136,10 @@ export default function Home() {
   }
 
   const handleMouseEnter = (slug: string) => {
-    if (slug === 'freight-pricing-platform') {
+    if (slug === 'freight-pricing-platform' || slug === 'load-profitability-calculator' || slug === 'triumph') {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:mouseEnter',message:'Mouse enter',data:{slug,hasData:!!animationData[slug]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,E'})}).catch(()=>{});
+      // #endregion
       setIsFadingOut(false)
       setHoveredCaseStudy(slug)
     }
@@ -102,10 +165,10 @@ export default function Home() {
             <span className={styles.heroTaglineText}>Designer / Builder • Specializing in 🌐 Supply Chain & Logistics 🚚 </span>
           </div>
           <h1 className={styles.heroHeading}>
-            I design software that transforms complex enterprise workflows into easy to use systems.
+          Designing enterprise software for the 21st century.
           </h1>
           <p className={styles.heroBody}>
-            Through first principles thinking and a bias toward action, I help companies transform ambiguous problems 
+            Through first principles thinking and a bias toward action, I transform ambiguous problems 
             into elegant experiences humans enjoy using.
           </p>
         </div>
@@ -135,12 +198,13 @@ export default function Home() {
                       Image
                     </div>
                   )}
-                  {study.slug === 'freight-pricing-platform' && animationData && (
+                  {study.slug === 'freight-pricing-platform' && animationData['freight-pricing-platform'] && (
                     <>
                       <Lottie 
-                        animationData={animationData} 
-                        loop={true}
-                        autoplay={true}
+                        lottieRef={trochiLottieRef}
+                        animationData={animationData['freight-pricing-platform']} 
+                        loop={false}
+                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
                         className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
                       />
                       <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`} ref={(el) => {
@@ -158,6 +222,41 @@ export default function Home() {
                       }}>
                         <div className={styles.trochiOverlayContent}>
                           <img src="/trochi-logo-overlay.svg" alt="Trochi" className={styles.trochiLogo} />
+                          <span className={styles.comingSoon}>Coming soon</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {study.slug === 'load-profitability-calculator' && animationData['load-profitability-calculator'] && (
+                    <>
+                      <Lottie 
+                        lottieRef={diezlLottieRef}
+                        animationData={animationData['load-profitability-calculator']} 
+                        loop={false}
+                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                      />
+                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
+                        <div className={styles.trochiOverlayContent}>
+                          <img src="/diezl-logo-overlay.svg" alt="Diezl" className={styles.diezlLogo} />
+                          <span className={styles.comingSoon}>Coming soon</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {study.slug === 'triumph' && animationData['triumph'] && (
+                    <>
+                      <Lottie 
+                        lottieRef={triumphLottieRef}
+                        animationData={animationData['triumph']} 
+                        loop={false}
+                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                      />
+                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
+                        <div className={styles.trochiOverlayContent}>
+                          <img src="/triumph-logo-overlay.svg" alt="Triumph" className={styles.triumphLogo} />
+                          <span className={styles.comingSoon}>Coming soon</span>
                         </div>
                       </div>
                     </>
@@ -175,7 +274,6 @@ export default function Home() {
         <div className={styles.aboutContent}>
           <p className={styles.sectionLabel}>About Me</p>
           <h2 className={styles.aboutTitle}>
-            Born in Venezuela<br />
             Raised in Miami, FL<br />
             Based in Pennsylvania<br />
           </h2>

@@ -435,6 +435,7 @@
 .trochiOverlayContent {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background: rgba(26, 26, 26, 0.95);
   border-radius: 6px;
   padding: 8px 12px;
@@ -445,11 +446,38 @@
 .trochiLogo {
   flex-shrink: 0;
   width: auto !important;
+  height: 40px !important;
+  max-height: 40px !important;
+  object-fit: contain !important;
+  padding: 0 !important;
+  display: block;
+}
+
+.diezlLogo {
+  flex-shrink: 0;
+  width: auto !important;
+  height: 24px !important;
+  max-height: 24px !important;
+  object-fit: contain !important;
+  padding: 0 !important;
+  display: block;
+}
+
+.triumphLogo {
+  flex-shrink: 0;
+  width: auto !important;
   height: 32px !important;
   max-height: 32px !important;
   object-fit: contain !important;
   padding: 0 !important;
   display: block;
+}
+
+.comingSoon {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-align: right;
 }
 
 .trochiText {
