@@ -55,6 +55,7 @@ const tools = [
 export default function Home() {
   const [hoveredCaseStudy, setHoveredCaseStudy] = useState<string | null>(null)
   const [animationData, setAnimationData] = useState<any>(null)
+  const [isFadingOut, setIsFadingOut] = useState(false)
 
   // Load animation data for Trochi when hovered
   useEffect(() => {
@@ -65,6 +66,21 @@ export default function Home() {
         .catch(err => console.error('Failed to load animation:', err))
     }
   }, [hoveredCaseStudy, animationData])
+
+  const handleMouseLeave = () => {
+    setIsFadingOut(true)
+    setTimeout(() => {
+      setHoveredCaseStudy(null)
+      setIsFadingOut(false)
+    }, 300) // Match CSS transition duration
+  }
+
+  const handleMouseEnter = (slug: string) => {
+    if (slug === 'freight-pricing-platform') {
+      setIsFadingOut(false)
+      setHoveredCaseStudy(slug)
+    }
+  }
 
   return (
     <>
@@ -106,38 +122,45 @@ export default function Home() {
               className={styles.caseStudyCard} 
               data-slug={study.slug}
               style={{ animationDelay: `${index * 150}ms` }}
-              onMouseEnter={() => study.slug === 'freight-pricing-platform' && setHoveredCaseStudy(study.slug)}
-              onMouseLeave={() => setHoveredCaseStudy(null)}
+              onMouseEnter={() => handleMouseEnter(study.slug)}
+              onMouseLeave={handleMouseLeave}
             >
               <div className={styles.caseStudyImageWrapper}>
                 <div className={styles.caseStudyImage}>
-                  {study.slug === 'freight-pricing-platform' && hoveredCaseStudy === study.slug && animationData ? (
+                  {study.image && (
+                    <img src={study.image} alt={study.title} />
+                  )}
+                  {!study.image && (
+                    <div className={styles.caseStudyImagePlaceholder}>
+                      Image
+                    </div>
+                  )}
+                  {study.slug === 'freight-pricing-platform' && animationData && (
                     <>
                       <Lottie 
                         animationData={animationData} 
                         loop={true}
                         autoplay={true}
-                        className={styles.caseStudyAnimation}
+                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
                       />
-                      <div className={styles.trochiOverlay}>
+                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`} ref={(el) => {
+                        // #region agent log
+                        if (el) {
+                          const overlayRect = el.getBoundingClientRect();
+                          const contentEl = el.querySelector('[class*="trochiOverlayContent"]');
+                          const logoEl = el.querySelector('[class*="trochiLogo"]');
+                          const contentRect = contentEl?.getBoundingClientRect();
+                          const logoRect = logoEl?.getBoundingClientRect();
+                          const logoStyles = logoEl ? window.getComputedStyle(logoEl) : null;
+                          fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:overlay-ref',message:'Overlay dimensions',data:{overlayWidth:overlayRect.width,overlayHeight:overlayRect.height,contentWidth:contentRect?.width,contentHeight:contentRect?.height,logoWidth:logoRect?.width,logoHeight:logoRect?.height,logoComputedWidth:logoStyles?.width,logoComputedHeight:logoStyles?.height,logoMaxWidth:logoStyles?.maxWidth,logoObjectFit:logoStyles?.objectFit},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
+                        }
+                        // #endregion
+                      }}>
                         <div className={styles.trochiOverlayContent}>
                           <img src="/trochi-logo-overlay.svg" alt="Trochi" className={styles.trochiLogo} />
-                          <span className={styles.trochiText}>Trochi.ai</span>
-                          <button className={styles.trochiButton} aria-label="View Trochi.ai">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M6 4L10 8L6 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                              <circle cx="8" cy="8" r="7" stroke="white" strokeWidth="1" fill="none" strokeDasharray="3 4"/>
-                            </svg>
-                          </button>
                         </div>
                       </div>
                     </>
-                  ) : study.image ? (
-                    <img src={study.image} alt={study.title} />
-                  ) : (
-                    <div className={styles.caseStudyImagePlaceholder}>
-                      Image
-                    </div>
                   )}
                 </div>
                 <h3 className={styles.caseStudyTitle}>{study.title}</h3>
