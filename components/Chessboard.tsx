@@ -65,6 +65,7 @@ export default function Chessboard() {
           setIsVisitorTurn(data.turn === 'white')
           setSelectedSquare(null)
           setValidMoves([])
+          
           return {
             fen: data.fen,
             turn: data.turn,
@@ -184,13 +185,6 @@ export default function Chessboard() {
   const makeMove = async (from: string, to: string) => {
     if (!Chess || !game) return
     
-    // #region agent log
-    const clientFen = game.fen()
-    const clientTurn = game.turn() === 'w' ? 'white' : 'black'
-    const localValidMoves = game.moves({ verbose: true }).filter(m => m.from === from && m.to === to)
-    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Chessboard.tsx:makeMove:before',message:'Client attempting move',data:{from,to,clientFen,clientTurn,localValidMovesCount:localValidMoves.length,isVisitorTurn},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
-    // #endregion
-    
     setIsLoading(true)
     setError(null)
 
@@ -208,10 +202,6 @@ export default function Chessboard() {
         throw new Error(`Server error: ${response.status} ${response.statusText}`)
       }
 
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Chessboard.tsx:makeMove:response',message:'Server response received',data:{status:response.status,ok:response.ok,error:data.error,message:data.message,serverFen:data.fen,serverTurn:data.turn},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
-      // #endregion
-
       if (!response.ok) {
         throw new Error(data.error || data.message || 'Invalid move')
       }
@@ -228,10 +218,6 @@ export default function Chessboard() {
         isStalemate: data.isStalemate || false
       })
       setIsVisitorTurn(data.turn === 'white')
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Chessboard.tsx:makeMove:after-update',message:'State updated after successful move',data:{newFen:data.fen,newTurn:data.turn,gameInstanceFen:newGame.fen(),gameInstanceTurn:newGame.turn()==='w'?'white':'black'},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
     } catch (err: any) {
       setError(err.message || 'Failed to make move')
     } finally {
@@ -240,7 +226,7 @@ export default function Chessboard() {
   }
 
   // Show loading state while chess.js is loading
-  if (!Chess || !game) {
+  if (!Chess || !gameState.fen) {
     return (
       <div className={styles.chessSection}>
         <div className={styles.chessHeader}>
