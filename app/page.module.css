@@ -756,6 +756,12 @@
   color: var(--accent-gold);
 }
 
+/* Chess Section Wrapper */
+.chessSectionWrapper {
+  width: 100%;
+  padding: var(--space-3xl) 0;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .heroArtisticShape {

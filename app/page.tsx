@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 import Lottie from 'lottie-react'
+import Chessboard from '@/components/Chessboard'
 
 const caseStudies = [
   {
@@ -306,6 +307,11 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Chess Section */}
+      <section id="chess" className={styles.chessSectionWrapper}>
+        <Chessboard />
       </section>
 
       {/* Footer */}
