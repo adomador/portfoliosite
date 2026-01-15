@@ -66,6 +66,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // #region agent log
+    const serverFen = game.fen()
+    const serverTurn = game.turn() === 'w' ? 'white' : 'black'
+    const allMoves = game.moves({ verbose: true })
+    const validMovesFrom = allMoves.filter(m => m.from === from)
+    const validMovesTo = allMoves.filter(m => m.to === to)
+    const specificMove = allMoves.find(m => m.from === from && m.to === to)
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:POST:before-move',message:'Server received move request',data:{from,to,promotion,serverFen,serverTurn,allMovesCount:allMoves.length,validMovesFromCount:validMovesFrom.length,validMovesToCount:validMovesTo.length,hasSpecificMove:!!specificMove},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,E'})}).catch(()=>{});
+    // #endregion
+
     // Validate move
     let move
     try {
@@ -75,6 +85,9 @@ export async function POST(request: NextRequest) {
         promotion: promotion || 'q' // Default to queen promotion
       })
     } catch (err: any) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:POST:move-exception',message:'Move validation threw exception',data:{from,to,error:err.message,serverFen,serverTurn},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
       console.error('Error making move:', err)
       return NextResponse.json(
         { error: 'Invalid move', message: err.message },
@@ -83,6 +96,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (!move) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:POST:move-null',message:'Move validation returned null',data:{from,to,serverFen,serverTurn,allMovesCount:allMoves.length,validMovesFromSample:validMovesFrom.slice(0,3).map(m=>`${m.from}-${m.to}`),hasSpecificMove:!!specificMove},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,C,E'})}).catch(()=>{});
+      // #endregion
       return NextResponse.json(
         { error: 'Invalid move' },
         { status: 400 }

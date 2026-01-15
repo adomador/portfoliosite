@@ -50,7 +50,7 @@ export default function Chessboard() {
 
   // Fetch game state from API
   const fetchGameState = useCallback(async () => {
-    if (!Chess || !game) return
+    if (!Chess) return
     
     try {
       const response = await fetch('/api/chess/game')
@@ -79,7 +79,7 @@ export default function Chessboard() {
     } catch (err) {
       console.error('Error fetching game state:', err)
     }
-  }, [Chess, game])
+  }, [Chess])
 
   // Poll for game state updates every 2.5 seconds
   useEffect(() => {
@@ -90,10 +90,11 @@ export default function Chessboard() {
 
   // Get board representation
   const getBoard = (): Board => {
-    if (!game) return Array(8).fill(null).map(() => Array(8).fill(null))
+    if (!Chess) return Array(8).fill(null).map(() => Array(8).fill(null))
     
+    // Use gameState.fen instead of game.fen() to avoid stale state
     const board: Board = []
-    const fen = game.fen()
+    const fen = gameState.fen
     const parts = fen.split(' ')
     const position = parts[0]
     
@@ -124,7 +125,10 @@ export default function Chessboard() {
 
   // Handle square click
   const handleSquareClick = async (row: number, col: number) => {
-    if (!game) return
+    if (!Chess) return
+    
+    // Use gameState.turn instead of game.turn() to avoid stale state issues
+    const currentTurn = gameState.turn === 'white' ? 'w' : 'b'
     
     if (!isVisitorTurn) {
       setError("It's not your turn. Waiting for opponent's move...")
@@ -144,7 +148,7 @@ export default function Chessboard() {
         setValidMoves([])
       } else {
         // If clicking on another piece of the same color, select it
-        if (piece && piece === piece.toUpperCase() && game.turn() === 'w') {
+        if (piece && piece === piece.toUpperCase() && currentTurn === 'w') {
           selectSquare(row, col)
         } else {
           // Deselect
@@ -154,7 +158,7 @@ export default function Chessboard() {
       }
     } else {
       // Select a piece
-      if (piece && piece === piece.toUpperCase() && game.turn() === 'w') {
+      if (piece && piece === piece.toUpperCase() && currentTurn === 'w') {
         selectSquare(row, col)
       }
     }
@@ -162,21 +166,30 @@ export default function Chessboard() {
 
   // Select a square and show valid moves
   const selectSquare = (row: number, col: number) => {
-    if (!game) return
+    if (!Chess) return
     
+    // Use gameState.fen to create a fresh game instance to avoid stale state
+    const freshGame = new Chess(gameState.fen)
     const squareName = getSquareName(row, col)
     setSelectedSquare(squareName)
     setError(null)
 
-    // Get valid moves for this piece
-    const moves = game.moves({ square: squareName as any, verbose: true })
+    // Get valid moves for this piece using fresh game instance
+    const moves = freshGame.moves({ square: squareName as any, verbose: true })
     const destinations = moves.map(move => move.to)
     setValidMoves(destinations)
   }
 
   // Make a move
   const makeMove = async (from: string, to: string) => {
-    if (!Chess) return
+    if (!Chess || !game) return
+    
+    // #region agent log
+    const clientFen = game.fen()
+    const clientTurn = game.turn() === 'w' ? 'white' : 'black'
+    const localValidMoves = game.moves({ verbose: true }).filter(m => m.from === from && m.to === to)
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Chessboard.tsx:makeMove:before',message:'Client attempting move',data:{from,to,clientFen,clientTurn,localValidMovesCount:localValidMoves.length,isVisitorTurn},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
+    // #endregion
     
     setIsLoading(true)
     setError(null)
@@ -195,11 +208,15 @@ export default function Chessboard() {
         throw new Error(`Server error: ${response.status} ${response.statusText}`)
       }
 
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Chessboard.tsx:makeMove:response',message:'Server response received',data:{status:response.status,ok:response.ok,error:data.error,message:data.message,serverFen:data.fen,serverTurn:data.turn},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
+      // #endregion
+
       if (!response.ok) {
         throw new Error(data.error || data.message || 'Invalid move')
       }
 
-      // Update local game state
+      // Update local game state immediately
       const newGame = new Chess(data.fen)
       setGame(newGame)
       setGameState({
@@ -211,6 +228,10 @@ export default function Chessboard() {
         isStalemate: data.isStalemate || false
       })
       setIsVisitorTurn(data.turn === 'white')
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Chessboard.tsx:makeMove:after-update',message:'State updated after successful move',data:{newFen:data.fen,newTurn:data.turn,gameInstanceFen:newGame.fen(),gameInstanceTurn:newGame.turn()==='w'?'white':'black'},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
     } catch (err: any) {
       setError(err.message || 'Failed to make move')
     } finally {
