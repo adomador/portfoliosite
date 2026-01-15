@@ -6,8 +6,16 @@ let gameInstance: any = null
 
 async function getChess() {
   if (!Chess) {
-    const chessModule = await import('chess.js')
-    Chess = chessModule.Chess
+    try {
+      const chessModule = await import('chess.js')
+      Chess = chessModule.Chess
+      if (!Chess) {
+        throw new Error('Chess class not found in chess.js module')
+      }
+    } catch (err: any) {
+      console.error('Failed to import chess.js:', err)
+      throw new Error(`Failed to load chess.js: ${err.message}`)
+    }
   }
   return Chess
 }
@@ -23,7 +31,23 @@ async function getGame() {
 
 export async function GET() {
   try {
-    const game = await getGame()
+    let game
+    try {
+      game = await getGame()
+    } catch (err: any) {
+      console.error('Error getting game instance:', err)
+      return NextResponse.json(
+        { error: 'Failed to initialize game', message: err.message },
+        { status: 500 }
+      )
+    }
+
+    if (!game) {
+      return NextResponse.json(
+        { error: 'Game instance is null' },
+        { status: 500 }
+      )
+    }
     const fen = game.fen()
     const turn = game.turn() === 'w' ? 'white' : 'black'
     

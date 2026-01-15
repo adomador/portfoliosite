@@ -188,10 +188,15 @@ export default function Chessboard() {
         body: JSON.stringify({ from, to })
       })
 
-      const data = await response.json()
+      let data
+      try {
+        data = await response.json()
+      } catch (e) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`)
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Invalid move')
+        throw new Error(data.error || data.message || 'Invalid move')
       }
 
       // Update local game state
@@ -218,7 +223,7 @@ export default function Chessboard() {
     return (
       <div className={styles.chessSection}>
         <div className={styles.chessHeader}>
-          <h3 className={styles.chessTitle}>Play Chess</h3>
+          <h3 className={styles.chessTitle}>Play Chess with me</h3>
         </div>
         <div className={styles.loadingMessage}>Loading chessboard...</div>
       </div>
@@ -230,7 +235,7 @@ export default function Chessboard() {
   return (
     <div className={styles.chessSection}>
       <div className={styles.chessHeader}>
-        <h3 className={styles.chessTitle}>Play Chess</h3>
+        <h3 className={styles.chessTitle}>Play Chess with me</h3>
         <div className={styles.gameStatus}>
           {gameState.isCheckmate && (
             <span className={styles.statusMessage}>
