@@ -8,6 +8,11 @@ const GAME_STATE_KEY = 'chess-game-state'
 const MOVE_HISTORY_KEY = 'chess-move-history'
 const STARTING_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
+// In-memory fallback for local development (when Redis is not configured)
+// Note: This will reset on server restart, but works for local testing
+let inMemoryFen: string = STARTING_FEN
+let inMemoryHistory: string[] = []
+
 // Initialize Redis client
 let redis: Redis | null = null
 
@@ -45,74 +50,82 @@ async function getChess() {
   return Chess
 }
 
-// Read game state from Redis
+// Read game state from Redis (with in-memory fallback)
 async function getGameFromKV(): Promise<string> {
   try {
     const redisClient = getRedis()
     if (!redisClient) {
-      // Redis not configured, return starting position
-      return STARTING_FEN
+      // Redis not configured, use in-memory fallback
+      console.log('[getGameFromKV] Using in-memory FEN:', inMemoryFen.substring(0, 50))
+      return inMemoryFen
     }
     const fen = await redisClient.get<string>(GAME_STATE_KEY)
     return fen || STARTING_FEN
   } catch (err: any) {
-    console.error('Error reading from KV, using default:', err)
-    // If KV read fails, default to starting position
-    return STARTING_FEN
+    console.error('Error reading from KV, using in-memory:', err)
+    return inMemoryFen
   }
 }
 
-// Save game state to Redis
+// Save game state to Redis (with in-memory fallback)
 export async function saveGameToKV(fen: string): Promise<void> {
+  // Always update in-memory as fallback
+  inMemoryFen = fen
+  console.log('[saveGameToKV] Saved to in-memory FEN:', fen.substring(0, 50))
+  
   try {
     const redisClient = getRedis()
     if (!redisClient) {
-      // Redis not configured, skip save (game still works without persistence)
+      // Redis not configured, using in-memory only
       return
     }
     await redisClient.set(GAME_STATE_KEY, fen)
   } catch (err: any) {
-    // Log error but don't throw - game still works in memory for this request
     console.error('Error saving to KV:', err)
   }
 }
 
-// Save move history to Redis
+// Save move history to Redis (with in-memory fallback)
 export async function saveMoveHistoryToKV(history: string[]): Promise<void> {
+  // Always update in-memory as fallback
+  inMemoryHistory = [...history]
+  console.log('[saveMoveHistoryToKV] Saved to in-memory history:', JSON.stringify(inMemoryHistory), 'Length:', inMemoryHistory.length)
+  
   try {
     const redisClient = getRedis()
     if (!redisClient) {
-      console.warn('[saveMoveHistoryToKV] Redis not configured, skipping save')
+      // Redis not configured, using in-memory only
       return
     }
     const historyStr = JSON.stringify(history)
     await redisClient.set(MOVE_HISTORY_KEY, historyStr)
-    console.log('[saveMoveHistoryToKV] Saved history to Redis:', historyStr, 'Length:', history.length)
+    console.log('[saveMoveHistoryToKV] Also saved to Redis:', historyStr)
   } catch (err: any) {
     console.error('[saveMoveHistoryToKV] Error saving move history to KV:', err)
   }
 }
 
-// Get move history from Redis
+// Get move history from Redis (with in-memory fallback)
 export async function getMoveHistoryFromKV(): Promise<string[]> {
   try {
     const redisClient = getRedis()
     if (!redisClient) {
-      console.warn('[getMoveHistoryFromKV] Redis not configured, returning empty history')
-      return []
+      // Redis not configured, use in-memory fallback
+      console.log('[getMoveHistoryFromKV] Using in-memory history:', JSON.stringify(inMemoryHistory), 'Length:', inMemoryHistory.length)
+      return [...inMemoryHistory]
     }
     const historyStr = await redisClient.get<string>(MOVE_HISTORY_KEY)
     if (!historyStr || historyStr === null) {
-      console.log('[getMoveHistoryFromKV] No history found in Redis, returning empty array')
-      return []
+      console.log('[getMoveHistoryFromKV] No history in Redis, returning in-memory:', JSON.stringify(inMemoryHistory))
+      return [...inMemoryHistory]
     }
     // Handle case where Redis returns the string directly
     const history = typeof historyStr === 'string' ? JSON.parse(historyStr) : historyStr
-    console.log('[getMoveHistoryFromKV] Retrieved history from Redis:', JSON.stringify(history), 'Type:', typeof history, 'Length:', Array.isArray(history) ? history.length : 'not an array')
+    console.log('[getMoveHistoryFromKV] Retrieved history from Redis:', JSON.stringify(history), 'Length:', Array.isArray(history) ? history.length : 'not an array')
     return Array.isArray(history) ? history : []
   } catch (err: any) {
-    console.error('[getMoveHistoryFromKV] Error reading move history from KV:', err)
-    return []
+    console.error('[getMoveHistoryFromKV] Error reading from KV, using in-memory:', err)
+    return [...inMemoryHistory]
   }
 }
 
@@ -147,10 +160,14 @@ export async function getGameWithHistory() {
 export async function resetGame() {
   const ChessClass = await getChess()
   const gameInstance = new ChessClass(STARTING_FEN)
+  // Reset in-memory state
+  inMemoryFen = STARTING_FEN
+  inMemoryHistory = []
   // Save reset state to KV
   await saveGameToKV(STARTING_FEN)
   // Clear move history
   await saveMoveHistoryToKV([])
+  console.log('[resetGame] Game reset to starting position, history cleared')
   return gameInstance
 }
 
