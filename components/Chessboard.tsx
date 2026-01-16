@@ -261,7 +261,7 @@ export default function Chessboard() {
           )}
           {!gameState.isCheckmate && !gameState.isStalemate && (
             <span className={styles.turnIndicator}>
-              {isVisitorTurn ? 'Your turn' : "Waiting for opponent's move..."}
+              {isVisitorTurn ? 'Your turn' : 'My move'}
             </span>
           )}
         </div>
