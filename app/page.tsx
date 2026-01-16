@@ -191,7 +191,7 @@ export default function Home() {
 
       {/* Case Studies Section */}
       <section id="case-studies" className={styles.caseStudiesSection}>
-        <h3 className={styles.caseStudiesTitle}>Some work</h3>
+        <h3 className={styles.caseStudiesTitle}>Some work coming soon...</h3>
         <div className={styles.caseStudiesGrid}>
           {caseStudies.map((study, index) => (
             <article 
