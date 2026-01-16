@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import styles from './page.module.css'
 import CursorBlur from '@/components/CursorBlur'
 import Lottie from 'lottie-react'
+import Chessboard from '@/components/Chessboard'
 
 const caseStudies = [
   {
@@ -59,6 +60,7 @@ export default function Home() {
   const trochiLottieRef = useRef<any>(null)
   const diezlLottieRef = useRef<any>(null)
   const triumphLottieRef = useRef<any>(null)
+  const fleetworthyLottieRef = useRef<any>(null)
 
   // Load animation data for case studies when hovered
   useEffect(() => {
@@ -90,6 +92,12 @@ export default function Home() {
         .then(res => res.json())
         .then(data => setAnimationData(prev => ({ ...prev, 'triumph': data })))
         .catch(err => console.error('Failed to load Triumph animation:', err))
+    }
+    if (hoveredCaseStudy === 'fleet-management-platform' && !animationData['fleet-management-platform']) {
+      fetch('/fw-animation.json')
+        .then(res => res.json())
+        .then(data => setAnimationData(prev => ({ ...prev, 'fleet-management-platform': data })))
+        .catch(err => console.error('Failed to load Fleetworthy animation:', err))
     }
   }, [hoveredCaseStudy, animationData])
 
@@ -125,6 +133,14 @@ export default function Home() {
         triumphLottieRef.current.goToAndStop(0, true)
       }
     }
+    if (hoveredCaseStudy === 'fleet-management-platform' && fleetworthyLottieRef.current) {
+      if (!isFadingOut) {
+        fleetworthyLottieRef.current.play()
+      } else {
+        fleetworthyLottieRef.current.stop()
+        fleetworthyLottieRef.current.goToAndStop(0, true)
+      }
+    }
   }, [hoveredCaseStudy, isFadingOut, animationData])
 
   const handleMouseLeave = () => {
@@ -136,7 +152,7 @@ export default function Home() {
   }
 
   const handleMouseEnter = (slug: string) => {
-    if (slug === 'freight-pricing-platform' || slug === 'load-profitability-calculator' || slug === 'triumph') {
+    if (slug === 'freight-pricing-platform' || slug === 'load-profitability-calculator' || slug === 'triumph' || slug === 'fleet-management-platform') {
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:mouseEnter',message:'Mouse enter',data:{slug,hasData:!!animationData[slug]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,E'})}).catch(()=>{});
       // #endregion
@@ -152,9 +168,7 @@ export default function Home() {
       <nav className={styles.nav}>
         <div className={styles.logo}>Alfredo E. Domador</div>
         <div className={styles.navLinks}>
-          <a href="#work" className={styles.navLink}>Work</a>
-          <a href="#about" className={styles.navLink}>About</a>
-          <a href="mailto:hello@example.com" className={styles.navLink}>Contact</a>
+          <a href="mailto:alfredo.domador13@gmail.com" className={styles.navLink}>Let's Talk: alfredo.domador13@gmail.com</a>
         </div>
       </nav>
 
@@ -162,13 +176,13 @@ export default function Home() {
       <section id="work" className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroTagline}>
-            <span className={styles.heroTaglineText}>Designer / Builder • Specializing in 🌐 Supply Chain & Logistics 🚚 </span>
+            <span className={styles.heroTaglineText}>Designer • Builder • Specializing in Supply Chain & Logistics 🌐 🚚</span>
           </div>
           <h1 className={styles.heroHeading}>
           Designing enterprise software for the 21st century.
           </h1>
           <p className={styles.heroBody}>
-            Through first principles thinking and a bias toward action, I transform ambiguous problems 
+            Through first principles, strategic systems thinking, and a bias toward action, I transform ambiguous problems 
             into elegant experiences humans enjoy using.
           </p>
         </div>
@@ -177,7 +191,7 @@ export default function Home() {
 
       {/* Case Studies Section */}
       <section id="case-studies" className={styles.caseStudiesSection}>
-        <h3 className={styles.caseStudiesTitle}>Some work</h3>
+        <h3 className={styles.caseStudiesTitle}>Some work coming soon...</h3>
         <div className={styles.caseStudiesGrid}>
           {caseStudies.map((study, index) => (
             <article 
@@ -199,67 +213,40 @@ export default function Home() {
                     </div>
                   )}
                   {study.slug === 'freight-pricing-platform' && animationData['freight-pricing-platform'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={trochiLottieRef}
-                        animationData={animationData['freight-pricing-platform']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`} ref={(el) => {
-                        // #region agent log
-                        if (el) {
-                          const overlayRect = el.getBoundingClientRect();
-                          const contentEl = el.querySelector('[class*="trochiOverlayContent"]');
-                          const logoEl = el.querySelector('[class*="trochiLogo"]');
-                          const contentRect = contentEl?.getBoundingClientRect();
-                          const logoRect = logoEl?.getBoundingClientRect();
-                          const logoStyles = logoEl ? window.getComputedStyle(logoEl) : null;
-                          fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:overlay-ref',message:'Overlay dimensions',data:{overlayWidth:overlayRect.width,overlayHeight:overlayRect.height,contentWidth:contentRect?.width,contentHeight:contentRect?.height,logoWidth:logoRect?.width,logoHeight:logoRect?.height,logoComputedWidth:logoStyles?.width,logoComputedHeight:logoStyles?.height,logoMaxWidth:logoStyles?.maxWidth,logoObjectFit:logoStyles?.objectFit},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
-                        }
-                        // #endregion
-                      }}>
-                        <div className={styles.trochiOverlayContent}>
-                          <img src="/trochi-logo-overlay.svg" alt="Trochi" className={styles.trochiLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={trochiLottieRef}
+                      animationData={animationData['freight-pricing-platform']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                   {study.slug === 'load-profitability-calculator' && animationData['load-profitability-calculator'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={diezlLottieRef}
-                        animationData={animationData['load-profitability-calculator']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
-                        <div className={styles.trochiOverlayContent}>
-                          <img src="/diezl-logo-overlay.svg" alt="Diezl" className={styles.diezlLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={diezlLottieRef}
+                      animationData={animationData['load-profitability-calculator']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                   {study.slug === 'triumph' && animationData['triumph'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={triumphLottieRef}
-                        animationData={animationData['triumph']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
-                        <div className={styles.trochiOverlayContent}>
-                          <img src="/triumph-logo-overlay.svg" alt="Triumph" className={styles.triumphLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={triumphLottieRef}
+                      animationData={animationData['triumph']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
+                  )}
+                  {study.slug === 'fleet-management-platform' && animationData['fleet-management-platform'] && (
+                    <Lottie 
+                      lottieRef={fleetworthyLottieRef}
+                      animationData={animationData['fleet-management-platform']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                 </div>
                 <h3 className={styles.caseStudyTitle}>{study.title}</h3>
@@ -306,6 +293,11 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Chess Section */}
+      <section id="chess" className={styles.chessSectionWrapper}>
+        <Chessboard />
       </section>
 
       {/* Footer */}
