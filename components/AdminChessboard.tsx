@@ -71,6 +71,10 @@ export default function AdminChessboard() {
       if (!response.ok) throw new Error('Failed to fetch game state')
       const data = await response.json()
       
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:69',message:'API response received (admin)',data:{hasHistory:!!data.history,historyLength:data.history?.length||0,history:data.history,fen:data.fen?.substring(0,30)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
+      
       // Only update if FEN has changed
       setGameState(prev => {
         if (data.fen !== prev.fen) {
@@ -80,6 +84,14 @@ export default function AdminChessboard() {
           setSelectedSquare(null)
           setValidMoves([])
           
+          // Update move history from API if available
+          if (data.history && Array.isArray(data.history)) {
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:85',message:'Updating moveHistory from fetchGameState',data:{historyLength:data.history.length,history:data.history,fenChanged:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+            // #endregion
+            setMoveHistory(data.history)
+          }
+          
           return {
             fen: data.fen,
             turn: data.turn,
@@ -88,13 +100,27 @@ export default function AdminChessboard() {
             isCheckmate: data.isCheckmate || false,
             isStalemate: data.isStalemate || false
           }
+        } else {
+          // FEN hasn't changed, but check if history was updated
+          if (data.history && Array.isArray(data.history)) {
+            setMoveHistory(prevHistory => {
+              const historyChanged = JSON.stringify(prevHistory) !== JSON.stringify(data.history)
+              // #region agent log
+              fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:99',message:'Updating moveHistory from fetchGameState (FEN unchanged)',data:{historyLength:data.history.length,history:data.history,prevLength:prevHistory.length,historyChanged},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+              // #endregion
+              if (historyChanged) {
+                return data.history
+              }
+              return prevHistory
+            })
+          }
         }
         return prev
       })
     } catch (err) {
       console.error('Error fetching game state:', err)
     }
-  }, [Chess])
+  }, [Chess, gameState.fen])
 
   // Poll for game state updates every 2.5 seconds
   useEffect(() => {
@@ -203,6 +229,9 @@ export default function AdminChessboard() {
 
   // Get formatted move history
   const getMoveHistory = (): Array<{ moveNumber: number; white: string | null; black: string | null }> => {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:220',message:'getMoveHistory called',data:{moveHistoryLength:moveHistory.length,moveHistory:moveHistory,rawHistory:JSON.stringify(moveHistory)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     if (moveHistory.length === 0) return []
     
     const formattedHistory: Array<{ moveNumber: number; white: string | null; black: string | null }> = []
@@ -214,6 +243,9 @@ export default function AdminChessboard() {
       formattedHistory.push({ moveNumber, white, black })
     }
     
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:234',message:'getMoveHistory formatted',data:{formattedLength:formattedHistory.length,formattedHistory:formattedHistory.map(h=>({num:h.moveNumber,white:h.white,black:h.black}))},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     return formattedHistory
   }
 
@@ -270,8 +302,17 @@ export default function AdminChessboard() {
       })
       setIsAdminTurn(data.turn === 'black')
       
-      // Update move history if move data is available
-      if (data.move && data.move.san) {
+      // Update move history from API response (contains full history)
+      if (data.history && Array.isArray(data.history)) {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:290',message:'Updating moveHistory from makeMove response',data:{historyLength:data.history.length,history:data.history,hasMoveData:!!data.move},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        setMoveHistory(data.history)
+      } else if (data.move && data.move.san) {
+        // Fallback: append move if history not provided
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AdminChessboard.tsx:294',message:'Fallback: appending move to history',data:{san:data.move.san,prevLength:moveHistory.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
         setMoveHistory(prev => [...prev, data.move.san])
       }
     } catch (err: any) {
@@ -327,7 +368,7 @@ export default function AdminChessboard() {
           isStalemate: data.isStalemate || false
         })
         setIsAdminTurn(data.turn === 'black')
-        setMoveHistory([])
+        setMoveHistory(data.history || [])
         setSelectedSquare(null)
         setValidMoves([])
       }

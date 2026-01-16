@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getGame, resetGame, saveGameToKV } from '../gameState'
+import { getGame, resetGame, saveGameToKV, getMoveHistoryFromKV, saveMoveHistoryToKV } from '../gameState'
 
 // Validate admin authentication token
 function isValidToken(token: string): boolean {
@@ -90,6 +90,14 @@ export async function POST(request: NextRequest) {
       status = 'check'
     }
 
+    // Get current move history and add the new move
+    const currentHistory = await getMoveHistoryFromKV()
+    const updatedHistory = [...currentHistory, move.san]
+    
+    console.log('[POST /api/chess/move] Current history:', JSON.stringify(currentHistory), 'Adding:', move.san, 'New history:', JSON.stringify(updatedHistory))
+    
+    await saveMoveHistoryToKV(updatedHistory)
+
     // Save game state to KV after move
     await saveGameToKV(fen)
 
@@ -107,6 +115,7 @@ export async function POST(request: NextRequest) {
       isCheckmate,
       isStalemate,
       isDraw,
+      history: updatedHistory,
       move: {
         from: move.from,
         to: move.to,
@@ -137,7 +146,7 @@ export async function PUT(request: NextRequest) {
 
     // Allow resetting the game
     if (reset) {
-      const game = await resetGame() // This already saves to KV
+      const game = await resetGame() // This already saves to KV and clears history
       return NextResponse.json({
         fen: game.fen(),
         turn: 'white',
@@ -145,7 +154,8 @@ export async function PUT(request: NextRequest) {
         isCheck: false,
         isCheckmate: false,
         isStalemate: false,
-        isDraw: false
+        isDraw: false,
+        history: []
       })
     }
 
@@ -192,6 +202,14 @@ export async function PUT(request: NextRequest) {
       status = 'check'
     }
 
+    // Get current move history and add the new move
+    const currentHistory = await getMoveHistoryFromKV()
+    const updatedHistory = [...currentHistory, move.san]
+    
+    console.log('[PUT /api/chess/move] Current history:', JSON.stringify(currentHistory), 'Adding:', move.san, 'New history:', JSON.stringify(updatedHistory))
+    
+    await saveMoveHistoryToKV(updatedHistory)
+
     // Save game state to KV after move
     await saveGameToKV(fen)
 
@@ -203,6 +221,7 @@ export async function PUT(request: NextRequest) {
       isCheckmate,
       isStalemate,
       isDraw,
+      history: updatedHistory,
       move: {
         from: move.from,
         to: move.to,

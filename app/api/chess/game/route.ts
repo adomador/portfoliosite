@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getGame } from '../gameState'
+import { getGame, getMoveHistoryFromKV, getGameWithHistory } from '../gameState'
 
 export async function GET() {
   try {
@@ -40,6 +40,17 @@ export async function GET() {
       status = 'check'
     }
 
+    // Get move history - try Redis first, fallback to game instance history
+    let history = await getMoveHistoryFromKV()
+    
+    // If Redis is empty but game has history, use game history (shouldn't happen with FEN, but just in case)
+    if (history.length === 0) {
+      const gameHistory = game.history()
+      history = gameHistory.length > 0 ? gameHistory : []
+    }
+    
+    console.log('[GET /api/chess/game] History:', JSON.stringify(history), 'Length:', history.length, 'FEN:', fen.substring(0, 50))
+
     return NextResponse.json({
       fen,
       turn,
@@ -47,7 +58,8 @@ export async function GET() {
       isCheck,
       isCheckmate,
       isStalemate,
-      isDraw
+      isDraw,
+      history
     })
   } catch (error: any) {
     return NextResponse.json(
