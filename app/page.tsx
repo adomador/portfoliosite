@@ -60,6 +60,7 @@ export default function Home() {
   const trochiLottieRef = useRef<any>(null)
   const diezlLottieRef = useRef<any>(null)
   const triumphLottieRef = useRef<any>(null)
+  const fleetworthyLottieRef = useRef<any>(null)
 
   // Load animation data for case studies when hovered
   useEffect(() => {
@@ -91,6 +92,12 @@ export default function Home() {
         .then(res => res.json())
         .then(data => setAnimationData(prev => ({ ...prev, 'triumph': data })))
         .catch(err => console.error('Failed to load Triumph animation:', err))
+    }
+    if (hoveredCaseStudy === 'fleet-management-platform' && !animationData['fleet-management-platform']) {
+      fetch('/fw-animation.json')
+        .then(res => res.json())
+        .then(data => setAnimationData(prev => ({ ...prev, 'fleet-management-platform': data })))
+        .catch(err => console.error('Failed to load Fleetworthy animation:', err))
     }
   }, [hoveredCaseStudy, animationData])
 
@@ -126,6 +133,14 @@ export default function Home() {
         triumphLottieRef.current.goToAndStop(0, true)
       }
     }
+    if (hoveredCaseStudy === 'fleet-management-platform' && fleetworthyLottieRef.current) {
+      if (!isFadingOut) {
+        fleetworthyLottieRef.current.play()
+      } else {
+        fleetworthyLottieRef.current.stop()
+        fleetworthyLottieRef.current.goToAndStop(0, true)
+      }
+    }
   }, [hoveredCaseStudy, isFadingOut, animationData])
 
   const handleMouseLeave = () => {
@@ -137,7 +152,7 @@ export default function Home() {
   }
 
   const handleMouseEnter = (slug: string) => {
-    if (slug === 'freight-pricing-platform' || slug === 'load-profitability-calculator' || slug === 'triumph') {
+    if (slug === 'freight-pricing-platform' || slug === 'load-profitability-calculator' || slug === 'triumph' || slug === 'fleet-management-platform') {
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:mouseEnter',message:'Mouse enter',data:{slug,hasData:!!animationData[slug]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,E'})}).catch(()=>{});
       // #endregion
@@ -257,6 +272,23 @@ export default function Home() {
                       <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
                         <div className={styles.trochiOverlayContent}>
                           <img src="/triumph-logo-overlay.svg" alt="Triumph" className={styles.triumphLogo} />
+                          <span className={styles.comingSoon}>Coming soon</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {study.slug === 'fleet-management-platform' && animationData['fleet-management-platform'] && (
+                    <>
+                      <Lottie 
+                        lottieRef={fleetworthyLottieRef}
+                        animationData={animationData['fleet-management-platform']} 
+                        loop={false}
+                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                      />
+                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
+                        <div className={styles.fleetworthyOverlayContent}>
+                          <img src="/fleetworthy-logo-overlay.svg" alt="Fleetworthy" className={styles.fleetworthyLogo} />
                           <span className={styles.comingSoon}>Coming soon</span>
                         </div>
                       </div>
