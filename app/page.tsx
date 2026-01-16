@@ -163,13 +163,13 @@ export default function Home() {
       <section id="work" className={styles.hero}>
         <div className={styles.heroContent}>
           <div className={styles.heroTagline}>
-            <span className={styles.heroTaglineText}>Designer / Builder • Specializing in 🌐 Supply Chain & Logistics 🚚 </span>
+            <span className={styles.heroTaglineText}>Designer • Builder • Specializing in Supply Chain & Logistics 🌐 🚚</span>
           </div>
           <h1 className={styles.heroHeading}>
           Designing enterprise software for the 21st century.
           </h1>
           <p className={styles.heroBody}>
-            Through first principles thinking and a bias toward action, I transform ambiguous problems 
+            Through first principles, strategic systems thinking, and a bias toward action, I transform ambiguous problems 
             into elegant experiences humans enjoy using.
           </p>
         </div>
