@@ -23,6 +23,11 @@ const PIECE_SYMBOLS: Record<string, string> = {
   'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
 }
 
+// Map for notation (uppercase for white pieces)
+const NOTATION_SYMBOLS: Record<string, string> = {
+  'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘'
+}
+
 export default function Chessboard() {
   const [Chess, setChess] = useState<ChessClass | null>(null)
   const [game, setGame] = useState<ChessInstance | null>(null)
@@ -40,6 +45,7 @@ export default function Chessboard() {
   const [error, setError] = useState<string | null>(null)
   const [isVisitorTurn, setIsVisitorTurn] = useState(true) // Visitor plays white
   const [isMounted, setIsMounted] = useState(false)
+  const [moveHistory, setMoveHistory] = useState<string[]>([])
 
   // Track when component is mounted to prevent hydration mismatches
   useEffect(() => {
@@ -71,6 +77,10 @@ export default function Chessboard() {
           setIsVisitorTurn(data.turn === 'white')
           setSelectedSquare(null)
           setValidMoves([])
+          
+          // Reconstruct move history from game instance if available
+          // Note: This only works if the game instance on server has history
+          // For now, we'll rely on moveHistory state being updated via makeMove
           
           return {
             fen: data.fen,
@@ -187,6 +197,35 @@ export default function Chessboard() {
     setValidMoves(destinations)
   }
 
+  // Format move notation with Unicode symbols
+  const formatMoveNotation = (move: string): string => {
+    // Replace piece letters with Unicode symbols
+    let formatted = move
+    for (const [letter, symbol] of Object.entries(NOTATION_SYMBOLS)) {
+      // Match piece at start of move (e.g., "Nf3" -> "♘f3")
+      formatted = formatted.replace(new RegExp(`^${letter}`, 'g'), symbol)
+      // Match piece in captures (e.g., "Nxf3" -> "♘xf3")
+      formatted = formatted.replace(new RegExp(`${letter}x`, 'g'), `${symbol}x`)
+    }
+    return formatted
+  }
+
+  // Get formatted move history
+  const getMoveHistory = (): Array<{ moveNumber: number; white: string | null; black: string | null }> => {
+    if (moveHistory.length === 0) return []
+    
+    const formattedHistory: Array<{ moveNumber: number; white: string | null; black: string | null }> = []
+    
+    for (let i = 0; i < moveHistory.length; i += 2) {
+      const moveNumber = Math.floor(i / 2) + 1
+      const white = moveHistory[i] ? formatMoveNotation(moveHistory[i]) : null
+      const black = moveHistory[i + 1] ? formatMoveNotation(moveHistory[i + 1]) : null
+      formattedHistory.push({ moveNumber, white, black })
+    }
+    
+    return formattedHistory
+  }
+
   // Make a move
   const makeMove = async (from: string, to: string) => {
     if (!Chess || !game) return
@@ -224,6 +263,11 @@ export default function Chessboard() {
         isStalemate: data.isStalemate || false
       })
       setIsVisitorTurn(data.turn === 'white')
+      
+      // Update move history if move data is available
+      if (data.move && data.move.san) {
+        setMoveHistory(prev => [...prev, data.move.san])
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to make move')
     } finally {
@@ -270,35 +314,49 @@ export default function Chessboard() {
       {error && <div className={styles.errorMessage}>{error}</div>}
 
       <div className={styles.chessboardContainer}>
-        <div className={styles.chessboard}>
-          {board.map((row, rowIndex) => (
-            <div key={rowIndex} className={styles.chessRow}>
-              {row.map((piece, colIndex) => {
-                const squareName = getSquareName(rowIndex, colIndex)
-                const isLight = (rowIndex + colIndex) % 2 === 0
-                const isSelected = selectedSquare === squareName
-                const isValidMove = validMoves.includes(squareName)
-                const isLastMove = false // Could track last move for highlighting
+        <div className={styles.chessboardWrapper}>
+          <div className={styles.chessboard}>
+            {board.map((row, rowIndex) => (
+              <div key={rowIndex} className={styles.chessRow}>
+                {row.map((piece, colIndex) => {
+                  const squareName = getSquareName(rowIndex, colIndex)
+                  const isLight = (rowIndex + colIndex) % 2 === 0
+                  const isSelected = selectedSquare === squareName
+                  const isValidMove = validMoves.includes(squareName)
+                  const isLastMove = false // Could track last move for highlighting
 
-                return (
-                  <div
-                    key={colIndex}
-                    className={`${styles.chessSquare} ${isLight ? styles.light : styles.dark} ${isSelected ? styles.selected : ''} ${isValidMove ? styles.validMove : ''}`}
-                    onClick={() => handleSquareClick(rowIndex, colIndex)}
-                  >
-                    {piece && (
-                      <span className={`${styles.chessPiece} ${piece === piece.toUpperCase() ? styles.whitePiece : styles.blackPiece}`}>
-                        {PIECE_SYMBOLS[piece]}
-                      </span>
-                    )}
-                    {isValidMove && !piece && (
-                      <div className={styles.moveIndicator} />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ))}
+                  return (
+                    <div
+                      key={colIndex}
+                      className={`${styles.chessSquare} ${isLight ? styles.light : styles.dark} ${isSelected ? styles.selected : ''} ${isValidMove ? styles.validMove : ''}`}
+                      onClick={() => handleSquareClick(rowIndex, colIndex)}
+                    >
+                      {piece && (
+                        <span className={`${styles.chessPiece} ${piece === piece.toUpperCase() ? styles.whitePiece : styles.blackPiece}`}>
+                          {PIECE_SYMBOLS[piece]}
+                        </span>
+                      )}
+                      {isValidMove && !piece && (
+                        <div className={styles.moveIndicator} />
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className={styles.notationPanel}>
+          <div className={styles.notationList}>
+            {getMoveHistory().map((entry) => (
+              <div key={entry.moveNumber} className={styles.notationRow}>
+                <div className={styles.moveNumber}>{entry.moveNumber}.</div>
+                <div className={styles.whiteMove}>{entry.white || ''}</div>
+                <div className={styles.blackMove}>{entry.black || ''}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
