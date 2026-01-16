@@ -168,9 +168,7 @@ export default function Home() {
       <nav className={styles.nav}>
         <div className={styles.logo}>Alfredo E. Domador</div>
         <div className={styles.navLinks}>
-          <a href="#work" className={styles.navLink}>Work</a>
-          <a href="#about" className={styles.navLink}>About</a>
-          <a href="mailto:hello@example.com" className={styles.navLink}>Contact</a>
+          <a href="mailto:alfredo.domador13@gmail.com" className={styles.navLink}>Let's Talk: alfredo.domador13@gmail.com</a>
         </div>
       </nav>
 
@@ -215,84 +213,40 @@ export default function Home() {
                     </div>
                   )}
                   {study.slug === 'freight-pricing-platform' && animationData['freight-pricing-platform'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={trochiLottieRef}
-                        animationData={animationData['freight-pricing-platform']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`} ref={(el) => {
-                        // #region agent log
-                        if (el) {
-                          const overlayRect = el.getBoundingClientRect();
-                          const contentEl = el.querySelector('[class*="trochiOverlayContent"]');
-                          const logoEl = el.querySelector('[class*="trochiLogo"]');
-                          const contentRect = contentEl?.getBoundingClientRect();
-                          const logoRect = logoEl?.getBoundingClientRect();
-                          const logoStyles = logoEl ? window.getComputedStyle(logoEl) : null;
-                          fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:overlay-ref',message:'Overlay dimensions',data:{overlayWidth:overlayRect.width,overlayHeight:overlayRect.height,contentWidth:contentRect?.width,contentHeight:contentRect?.height,logoWidth:logoRect?.width,logoHeight:logoRect?.height,logoComputedWidth:logoStyles?.width,logoComputedHeight:logoStyles?.height,logoMaxWidth:logoStyles?.maxWidth,logoObjectFit:logoStyles?.objectFit},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
-                        }
-                        // #endregion
-                      }}>
-                        <div className={styles.trochiOverlayContent}>
-                          <img src="/trochi-logo-overlay.svg" alt="Trochi" className={styles.trochiLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={trochiLottieRef}
+                      animationData={animationData['freight-pricing-platform']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                   {study.slug === 'load-profitability-calculator' && animationData['load-profitability-calculator'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={diezlLottieRef}
-                        animationData={animationData['load-profitability-calculator']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
-                        <div className={styles.trochiOverlayContent}>
-                          <img src="/diezl-logo-overlay.svg" alt="Diezl" className={styles.diezlLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={diezlLottieRef}
+                      animationData={animationData['load-profitability-calculator']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                   {study.slug === 'triumph' && animationData['triumph'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={triumphLottieRef}
-                        animationData={animationData['triumph']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
-                        <div className={styles.trochiOverlayContent}>
-                          <img src="/triumph-logo-overlay.svg" alt="Triumph" className={styles.triumphLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={triumphLottieRef}
+                      animationData={animationData['triumph']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                   {study.slug === 'fleet-management-platform' && animationData['fleet-management-platform'] && (
-                    <>
-                      <Lottie 
-                        lottieRef={fleetworthyLottieRef}
-                        animationData={animationData['fleet-management-platform']} 
-                        loop={false}
-                        autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
-                        className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
-                      />
-                      <div className={`${styles.trochiOverlay} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.trochiOverlayFadeOut}`}>
-                        <div className={styles.fleetworthyOverlayContent}>
-                          <img src="/fleetworthy-logo-overlay.svg" alt="Fleetworthy" className={styles.fleetworthyLogo} />
-                          <span className={styles.comingSoon}>Coming soon</span>
-                        </div>
-                      </div>
-                    </>
+                    <Lottie 
+                      lottieRef={fleetworthyLottieRef}
+                      animationData={animationData['fleet-management-platform']} 
+                      loop={false}
+                      autoplay={hoveredCaseStudy === study.slug && !isFadingOut}
+                      className={`${styles.caseStudyAnimation} ${(hoveredCaseStudy === study.slug && !isFadingOut) ? '' : styles.caseStudyAnimationFadeOut}`}
+                    />
                   )}
                 </div>
                 <h3 className={styles.caseStudyTitle}>{study.title}</h3>
