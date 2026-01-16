@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getGame, resetGame } from '../gameState'
+import { getGame, resetGame, saveGameToKV } from '../gameState'
 
 export async function POST(request: NextRequest) {
   try {
@@ -74,6 +74,9 @@ export async function POST(request: NextRequest) {
       status = 'check'
     }
 
+    // Save game state to KV after move
+    await saveGameToKV(fen)
+
     // If game is over, reset for next game
     if (isCheckmate || isStalemate || isDraw) {
       // Don't reset immediately - let users see the final state
@@ -110,7 +113,7 @@ export async function PUT(request: NextRequest) {
 
     // Allow resetting the game
     if (reset) {
-      const game = await resetGame()
+      const game = await resetGame() // This already saves to KV
       return NextResponse.json({
         fen: game.fen(),
         turn: 'white',
@@ -164,6 +167,9 @@ export async function PUT(request: NextRequest) {
     } else if (isCheck) {
       status = 'check'
     }
+
+    // Save game state to KV after move
+    await saveGameToKV(fen)
 
     return NextResponse.json({
       fen,

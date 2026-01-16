@@ -302,7 +302,7 @@ export default function Chessboard() {
 
       <div className={styles.chessFooter}>
         <p className={styles.chessDescription}>
-          Make your move! Visitors play as white, and I play as black. The game updates automatically.
+          Make your move. Visitors play as white, and I play as black. Good luck! 
         </p>
       </div>
     </div>
