@@ -39,6 +39,12 @@ export default function Chessboard() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isVisitorTurn, setIsVisitorTurn] = useState(true) // Visitor plays white
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Track when component is mounted to prevent hydration mismatches
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Load chess.js only on client side
   useEffect(() => {
@@ -225,8 +231,8 @@ export default function Chessboard() {
     }
   }
 
-  // Show loading state while chess.js is loading
-  if (!Chess || !gameState.fen) {
+  // Show loading state while chess.js is loading or component is not mounted
+  if (!isMounted || !Chess || !gameState.fen) {
     return (
       <div className={styles.chessSection}>
         <div className={styles.chessHeader}>
