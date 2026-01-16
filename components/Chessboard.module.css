@@ -13,7 +13,9 @@
 
 .chessHeader {
   width: 100%;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--space-md);
 }
 
@@ -30,6 +32,31 @@
   align-items: center;
   gap: var(--space-sm);
   min-height: 2rem;
+  flex: 1;
+  text-align: center;
+}
+
+.resetButton {
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: 1px solid var(--bg-subtle);
+  border-radius: 2px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  font-family: inherit;
+}
+
+.resetButton:hover:not(:disabled) {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.resetButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .statusMessage {

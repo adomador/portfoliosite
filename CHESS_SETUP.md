@@ -15,9 +15,10 @@ The chess game now uses **Upstash Redis** for persistent game state across serve
 
 1. Go to your Netlify site dashboard
 2. Navigate to **Site settings** → **Environment variables**
-3. Add these two variables:
+3. Add these variables:
    - `UPSTASH_REDIS_REST_URL` - Your Upstash Redis REST URL
    - `UPSTASH_REDIS_REST_TOKEN` - Your Upstash Redis REST Token
+   - `ADMIN_CHESS_PASSWORD` - Password for accessing the admin panel (choose a strong password)
 
 ### 3. Redeploy
 
@@ -32,6 +33,16 @@ After adding the environment variables, trigger a new deployment:
 - If Redis is unavailable, the game falls back to starting position (graceful degradation)
 - The game will work without Redis, but state won't persist across function restarts
 
+## Admin Panel
+
+The chess game includes an admin panel where you can manually make moves as black. Access it at `/admin/chess`.
+
+- **Login**: Enter the password set in `ADMIN_CHESS_PASSWORD` environment variable
+- **Features**: 
+  - Make moves as black when it's your turn
+  - Reset the game at any time
+  - View the same game state as visitors
+
 ## Local Development
 
 For local development, create a `.env.local` file:
@@ -39,6 +50,7 @@ For local development, create a `.env.local` file:
 ```env
 UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token-here
+ADMIN_CHESS_PASSWORD=your-secure-password-here
 ```
 
 ## Cost
