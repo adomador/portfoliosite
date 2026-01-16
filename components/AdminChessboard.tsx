@@ -28,13 +28,15 @@ const NOTATION_SYMBOLS: Record<string, string> = {
   'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘'
 }
 
-export default function Chessboard() {
+const ADMIN_SESSION_KEY = 'chess_admin_session'
+
+export default function AdminChessboard() {
   const [Chess, setChess] = useState<ChessClass | null>(null)
   const [game, setGame] = useState<ChessInstance | null>(null)
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
   const [validMoves, setValidMoves] = useState<string[]>([])
   const [gameState, setGameState] = useState<GameState>({
-    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', // Starting position
+    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     turn: 'white',
     status: 'active',
     isCheck: false,
@@ -43,7 +45,7 @@ export default function Chessboard() {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isVisitorTurn, setIsVisitorTurn] = useState(true) // Visitor plays white
+  const [isAdminTurn, setIsAdminTurn] = useState(false) // Admin plays black
   const [isMounted, setIsMounted] = useState(false)
   const [moveHistory, setMoveHistory] = useState<string[]>([])
 
@@ -74,13 +76,9 @@ export default function Chessboard() {
         if (data.fen !== prev.fen) {
           const newGame = new Chess(data.fen)
           setGame(newGame)
-          setIsVisitorTurn(data.turn === 'white')
+          setIsAdminTurn(data.turn === 'black')
           setSelectedSquare(null)
           setValidMoves([])
-          
-          // Reconstruct move history from game instance if available
-          // Note: This only works if the game instance on server has history
-          // For now, we'll rely on moveHistory state being updated via makeMove
           
           return {
             fen: data.fen,
@@ -109,7 +107,6 @@ export default function Chessboard() {
   const getBoard = (): Board => {
     if (!Chess) return Array(8).fill(null).map(() => Array(8).fill(null))
     
-    // Use gameState.fen instead of game.fen() to avoid stale state
     const board: Board = []
     const fen = gameState.fen
     const parts = fen.split(' ')
@@ -120,7 +117,6 @@ export default function Chessboard() {
       const boardRow: Square[] = []
       for (const char of row) {
         if (/\d/.test(char)) {
-          // Number represents empty squares
           for (let i = 0; i < parseInt(char); i++) {
             boardRow.push(null)
           }
@@ -144,10 +140,9 @@ export default function Chessboard() {
   const handleSquareClick = async (row: number, col: number) => {
     if (!Chess) return
     
-    // Use gameState.turn instead of game.turn() to avoid stale state issues
     const currentTurn = gameState.turn === 'white' ? 'w' : 'b'
     
-    if (!isVisitorTurn) {
+    if (!isAdminTurn) {
       setError("It's not your turn. Waiting for opponent's move...")
       return
     }
@@ -164,8 +159,8 @@ export default function Chessboard() {
         setSelectedSquare(null)
         setValidMoves([])
       } else {
-        // If clicking on another piece of the same color, select it
-        if (piece && piece === piece.toUpperCase() && currentTurn === 'w') {
+        // If clicking on another black piece, select it
+        if (piece && piece === piece.toLowerCase() && currentTurn === 'b') {
           selectSquare(row, col)
         } else {
           // Deselect
@@ -174,8 +169,8 @@ export default function Chessboard() {
         }
       }
     } else {
-      // Select a piece
-      if (piece && piece === piece.toUpperCase() && currentTurn === 'w') {
+      // Select a black piece
+      if (piece && piece === piece.toLowerCase() && currentTurn === 'b') {
         selectSquare(row, col)
       }
     }
@@ -185,7 +180,6 @@ export default function Chessboard() {
   const selectSquare = (row: number, col: number) => {
     if (!Chess) return
     
-    // Use gameState.fen to create a fresh game instance to avoid stale state
     const freshGame = new Chess(gameState.fen)
     const squareName = getSquareName(row, col)
     setSelectedSquare(squareName)
@@ -199,12 +193,9 @@ export default function Chessboard() {
 
   // Format move notation with Unicode symbols
   const formatMoveNotation = (move: string): string => {
-    // Replace piece letters with Unicode symbols
     let formatted = move
     for (const [letter, symbol] of Object.entries(NOTATION_SYMBOLS)) {
-      // Match piece at start of move (e.g., "Nf3" -> "♘f3")
       formatted = formatted.replace(new RegExp(`^${letter}`, 'g'), symbol)
-      // Match piece in captures (e.g., "Nxf3" -> "♘xf3")
       formatted = formatted.replace(new RegExp(`${letter}x`, 'g'), `${symbol}x`)
     }
     return formatted
@@ -226,17 +217,26 @@ export default function Chessboard() {
     return formattedHistory
   }
 
-  // Make a move
+  // Make a move using PUT endpoint (admin move)
   const makeMove = async (from: string, to: string) => {
     if (!Chess || !game) return
+    
+    const sessionToken = localStorage.getItem(ADMIN_SESSION_KEY)
+    if (!sessionToken) {
+      setError('Session expired. Please log in again.')
+      return
+    }
     
     setIsLoading(true)
     setError(null)
 
     try {
       const response = await fetch('/api/chess/move', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionToken}`
+        },
         body: JSON.stringify({ from, to })
       })
 
@@ -248,7 +248,13 @@ export default function Chessboard() {
       }
 
       if (!response.ok) {
-        throw new Error(data.error || data.message || 'Invalid move')
+        if (response.status === 401) {
+          setError('Authentication failed. Please log in again.')
+          localStorage.removeItem(ADMIN_SESSION_KEY)
+        } else {
+          throw new Error(data.error || data.message || 'Invalid move')
+        }
+        return
       }
 
       // Update local game state immediately
@@ -262,7 +268,7 @@ export default function Chessboard() {
         isCheckmate: data.isCheckmate || false,
         isStalemate: data.isStalemate || false
       })
-      setIsVisitorTurn(data.turn === 'white')
+      setIsAdminTurn(data.turn === 'black')
       
       // Update move history if move data is available
       if (data.move && data.move.san) {
@@ -270,6 +276,63 @@ export default function Chessboard() {
       }
     } catch (err: any) {
       setError(err.message || 'Failed to make move')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Reset game
+  const resetGame = async () => {
+    const sessionToken = localStorage.getItem(ADMIN_SESSION_KEY)
+    if (!sessionToken) {
+      setError('Session expired. Please log in again.')
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch('/api/chess/move', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionToken}`
+        },
+        body: JSON.stringify({ reset: true })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          setError('Authentication failed. Please log in again.')
+          localStorage.removeItem(ADMIN_SESSION_KEY)
+        } else {
+          throw new Error(data.error || 'Failed to reset game')
+        }
+        return
+      }
+
+      // Update local game state
+      if (Chess) {
+        const newGame = new Chess(data.fen)
+        setGame(newGame)
+        setGameState({
+          fen: data.fen,
+          turn: data.turn,
+          status: data.status,
+          isCheck: data.isCheck || false,
+          isCheckmate: data.isCheckmate || false,
+          isStalemate: data.isStalemate || false
+        })
+        setIsAdminTurn(data.turn === 'black')
+        setMoveHistory([])
+        setSelectedSquare(null)
+        setValidMoves([])
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to reset game')
     } finally {
       setIsLoading(false)
     }
@@ -305,10 +368,17 @@ export default function Chessboard() {
           )}
           {!gameState.isCheckmate && !gameState.isStalemate && (
             <span className={styles.turnIndicator}>
-              {isVisitorTurn ? 'Your turn' : 'My move'}
+              {isAdminTurn ? 'Your turn (Black)' : 'Waiting for white...'}
             </span>
           )}
         </div>
+        <button 
+          onClick={resetGame} 
+          className={styles.resetButton}
+          disabled={isLoading}
+        >
+          Reset Game
+        </button>
       </div>
 
       {error && <div className={styles.errorMessage}>{error}</div>}
@@ -323,7 +393,6 @@ export default function Chessboard() {
                   const isLight = (rowIndex + colIndex) % 2 === 0
                   const isSelected = selectedSquare === squareName
                   const isValidMove = validMoves.includes(squareName)
-                  const isLastMove = false // Could track last move for highlighting
 
                   return (
                     <div
@@ -364,7 +433,7 @@ export default function Chessboard() {
 
       <div className={styles.chessFooter}>
         <p className={styles.chessDescription}>
-          Make your move. Visitors play as white, and I play as black. Good luck! 
+          Admin panel - You play as black. Click on black pieces to make moves.
         </p>
       </div>
     </div>

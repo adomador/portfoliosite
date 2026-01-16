@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGame, resetGame, saveGameToKV } from '../gameState'
 
+// Validate admin authentication token
+function isValidToken(token: string): boolean {
+  // Simple validation - token should be a hex string of reasonable length
+  // In production, you'd verify against stored sessions in Redis/database
+  return /^[a-f0-9]{64}$/.test(token)
+}
+
+function verifyAdminAuth(request: NextRequest): boolean {
+  const authHeader = request.headers.get('authorization')
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return false
+  }
+  const token = authHeader.substring(7)
+  return isValidToken(token)
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -108,6 +124,14 @@ export async function POST(request: NextRequest) {
 // PUT endpoint for admin moves (your moves)
 export async function PUT(request: NextRequest) {
   try {
+    // Verify admin authentication
+    if (!verifyAdminAuth(request)) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Valid admin token required.' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     const { from, to, promotion, reset } = body
 

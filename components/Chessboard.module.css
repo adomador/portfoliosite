@@ -1,16 +1,21 @@
 .chessSection {
-  padding: var(--space-3xl) var(--space-lg);
-  max-width: 800px;
+  padding-top: 40px;
+  padding-right: 0px;
+  padding-left: 0px;
+  padding-bottom: var(--space-3xl);
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-lg);
+  gap: 24px;
 }
 
 .chessHeader {
   width: 100%;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--space-md);
 }
 
@@ -27,6 +32,31 @@
   align-items: center;
   gap: var(--space-sm);
   min-height: 2rem;
+  flex: 1;
+  text-align: center;
+}
+
+.resetButton {
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: 1px solid var(--bg-subtle);
+  border-radius: 2px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out-expo);
+  font-family: inherit;
+}
+
+.resetButton:hover:not(:disabled) {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.resetButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .statusMessage {
@@ -38,9 +68,9 @@
 }
 
 .turnIndicator {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 400;
+  font-size: 24px;
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .errorMessage {
@@ -57,18 +87,28 @@
 .chessboardContainer {
   width: 100%;
   display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
   justify-content: center;
+}
+
+.chessboardWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: var(--space-md);
   background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(201, 162, 39, 0.05) 0%, transparent 50%),
               var(--bg-deep);
   border-radius: 8px;
   border: 1px solid rgba(201, 162, 39, 0.1);
+  flex-shrink: 0;
+  width: fit-content;
 }
 
 .chessboard {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 600px;
   max-width: 600px;
   aspect-ratio: 1;
   border: 3px solid rgba(0, 0, 0, 0.5);
@@ -192,16 +232,105 @@
 }
 
 .chessDescription {
-  font-size: 0.875rem;
+  font-size: 16px;
   color: var(--text-secondary);
   line-height: 1.6;
   max-width: 600px;
   margin: 0 auto;
 }
 
+.notationPanel {
+  flex: 1;
+  min-width: 280px;
+  max-width: 400px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  border: 1px solid rgba(201, 162, 39, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.notationList {
+  overflow-y: auto;
+  max-height: 600px;
+  padding: var(--space-sm);
+}
+
+.notationRow {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  line-height: 1.5;
+}
+
+.moveNumber {
+  min-width: 2.5rem;
+  color: var(--text-secondary);
+  text-align: right;
+  padding-right: var(--space-sm);
+  background: var(--bg-subtle);
+  margin-right: var(--space-sm);
+  padding-left: var(--space-xs);
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  border-radius: 2px;
+}
+
+.whiteMove {
+  min-width: 4rem;
+  padding-right: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.blackMove {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+/* Scrollbar styling for notation panel */
+.notationList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notationList::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+.notationList::-webkit-scrollbar-thumb {
+  background: var(--bg-subtle);
+  border-radius: 3px;
+}
+
+.notationList::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .chessboard {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chessboardContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .notationPanel {
+    width: 100%;
+    max-width: 100%;
+    max-height: 300px;
+  }
+  
+  .chessboard {
+    width: 100%;
     max-width: 100%;
   }
   
