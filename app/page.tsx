@@ -61,22 +61,14 @@ export default function Home() {
   const diezlLottieRef = useRef<any>(null)
   const triumphLottieRef = useRef<any>(null)
   const fleetworthyLottieRef = useRef<any>(null)
+  const fadeOutTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Load animation data for case studies when hovered
   useEffect(() => {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:loadEffect',message:'Load effect triggered',data:{hoveredCaseStudy,hasData:!!animationData[hoveredCaseStudy||'']},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,D'})}).catch(()=>{});
-    // #endregion
     if (hoveredCaseStudy === 'freight-pricing-platform' && !animationData['freight-pricing-platform']) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:fetchTrochi',message:'Starting Trochi fetch',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
       fetch('/lane-results-animation.json')
         .then(res => res.json())
         .then(data => {
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:fetchTrochiDone',message:'Trochi data loaded',data:{dataLoaded:!!data},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-          // #endregion
           setAnimationData(prev => ({ ...prev, 'freight-pricing-platform': data }))
         })
         .catch(err => console.error('Failed to load Trochi animation:', err))
@@ -103,14 +95,8 @@ export default function Home() {
 
   // Control animation playback based on hover state
   useEffect(() => {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:playbackEffect',message:'Playback effect triggered',data:{hoveredCaseStudy,isFadingOut,hasRef:!!trochiLottieRef.current,hasData:!!animationData[hoveredCaseStudy||'']},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B,C,E'})}).catch(()=>{});
-    // #endregion
     if (hoveredCaseStudy === 'freight-pricing-platform' && trochiLottieRef.current) {
       if (!isFadingOut) {
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:playTrochi',message:'Calling play() on Trochi',data:{refExists:!!trochiLottieRef.current},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
         trochiLottieRef.current.play()
       } else {
         trochiLottieRef.current.stop()
@@ -145,7 +131,7 @@ export default function Home() {
 
   const handleMouseLeave = () => {
     setIsFadingOut(true)
-    setTimeout(() => {
+    fadeOutTimeoutRef.current = setTimeout(() => {
       setHoveredCaseStudy(null)
       setIsFadingOut(false)
     }, 300) // Match CSS transition duration
@@ -153,9 +139,11 @@ export default function Home() {
 
   const handleMouseEnter = (slug: string) => {
     if (slug === 'freight-pricing-platform' || slug === 'load-profitability-calculator' || slug === 'triumph' || slug === 'fleet-management-platform') {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/a5c66397-d7ca-4c92-b3ed-299848b16726',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'page.tsx:mouseEnter',message:'Mouse enter',data:{slug,hasData:!!animationData[slug]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,E'})}).catch(()=>{});
-      // #endregion
+      // Clear any pending fade-out timeout to prevent race condition
+      if (fadeOutTimeoutRef.current) {
+        clearTimeout(fadeOutTimeoutRef.current)
+        fadeOutTimeoutRef.current = null
+      }
       setIsFadingOut(false)
       setHoveredCaseStudy(slug)
     }

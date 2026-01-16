@@ -230,7 +230,6 @@ export default function Chessboard() {
     return (
       <div className={styles.chessSection}>
         <div className={styles.chessHeader}>
-          <h3 className={styles.chessTitle}>Play Chess with me</h3>
         </div>
         <div className={styles.loadingMessage}>Loading chessboard...</div>
       </div>
@@ -242,7 +241,6 @@ export default function Chessboard() {
   return (
     <div className={styles.chessSection}>
       <div className={styles.chessHeader}>
-        <h3 className={styles.chessTitle}>Play Chess with me</h3>
         <div className={styles.gameStatus}>
           {gameState.isCheckmate && (
             <span className={styles.statusMessage}>
