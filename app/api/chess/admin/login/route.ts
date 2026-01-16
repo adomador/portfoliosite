@@ -28,6 +28,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Debug logging (remove in production)
+    console.log('Received password:', JSON.stringify(password))
+    console.log('Received password length:', password?.length)
+    console.log('Stored password:', JSON.stringify(adminPassword))
+    console.log('Stored password length:', adminPassword?.length)
+    console.log('Stored password chars:', adminPassword?.split('').map(c => c.charCodeAt(0)))
+    console.log('Passwords match:', password === adminPassword)
+
     if (password !== adminPassword) {
       return NextResponse.json(
         { error: 'Invalid password' },
