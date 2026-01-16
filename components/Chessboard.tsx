@@ -353,7 +353,7 @@ export default function Chessboard() {
               <div key={rowIndex} className={styles.chessRow}>
                 {row.map((piece, colIndex) => {
                   const squareName = getSquareName(rowIndex, colIndex)
-                  const isLight = (rowIndex + colIndex) % 2 === 0
+                  const isLight = (rowIndex + colIndex) % 2 === 1
                   const isSelected = selectedSquare === squareName
                   const isValidMove = validMoves.includes(squareName)
                   const isLastMove = false // Could track last move for highlighting
