@@ -258,7 +258,7 @@ export default function Home() {
           <p className={styles.aboutText}>
             In my free time, I enjoy playing chess, reading fiction, and walking.
           </p>
-          <a href="https://www.dropbox.com/scl/fi/b2ofldaawe48whvrqus1d/Domador_Alfredo_Resume_2025.pdf?rlkey=wybkx2aj9f45xzi85r7kwiafr&e=1&st=mbevta12&dl=0" className={styles.aboutCta} target="_blank" rel="noopener noreferrer">
+          <a href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0" className={styles.aboutCta} target="_blank" rel="noopener noreferrer">
             <span>Download Resume</span>
             <span>↓</span>
           </a>
