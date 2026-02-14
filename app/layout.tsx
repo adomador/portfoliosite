@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Portfolio — Product Designer',
-  description: 'Crafting digital experiences with intention and elegance',
+  title: 'Portfolio',
+  description: '',
 }
 
 export default function RootLayout({
@@ -13,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <div className="grain" />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
