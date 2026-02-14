@@ -1,31 +1,31 @@
 'use client'
 
-import { useEffect } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
-import styles from './page.module.css'
+import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
+import styles from './AboutSection.module.css'
 
-const TOOLS = [
+const TOOLS: Array<{ name: string; icon: string; darkIcon?: boolean }> = [
   { name: 'Figma', icon: '/Figma-logo.svg' },
   { name: 'Cursor', icon: '/cursor-icon.svg' },
   { name: 'Notion', icon: '/notion-logo.svg' },
   { name: 'Miro', icon: '/miro-logo.svg' },
   { name: 'GitHub', icon: '/Octicons-mark-github.svg', darkIcon: true },
   { name: 'Claude', icon: '/anthropic-1.svg' },
-] as const
+]
 
-export default function AboutPage() {
-  useEffect(() => {
-    document.body.classList.add('no-glow')
-    return () => document.body.classList.remove('no-glow')
-  }, [])
+export default function AboutSection() {
+  const { goTo } = useCanvasNavigation()
 
   return (
-    <main className={styles.canvas}>
+    <section className={styles.section} aria-label="About">
       <div className={styles.inner}>
-        <Link href="/" className={styles.back}>
+        <button
+          type="button"
+          className={styles.back}
+          onClick={() => goTo('home')}
+        >
           ← Back
-        </Link>
+        </button>
         <div className={styles.content}>
           <div className={styles.copy}>
             <h1 className={styles.title}>About</h1>
@@ -50,6 +50,6 @@ export default function AboutPage() {
           </ul>
         </div>
       </div>
-    </main>
+    </section>
   )
 }

@@ -1,127 +1,31 @@
 'use client'
 
+import { CanvasNavigationProvider, useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
+import AboutSection from '@/components/sections/AboutSection'
+import WorkSection from '@/components/sections/WorkSection'
+import HomeSection from '@/components/sections/HomeSection'
 import styles from './page.module.css'
-import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
-import FleeingButton from '@/components/FleeingButton'
-import VertigoSpiral from '@/components/VertigoSpiral'
-import ResumeBook from '@/components/ResumeBook'
-import AmbientLayer from '@/components/AmbientLayer'
-import { useIsMobile } from '@/hooks/useIsMobile'
-import { useAboutRiseTransition } from '@/hooks/useAboutRiseTransition'
-import { useWorkFallTransition } from '@/hooks/useWorkFallTransition'
 
-/* ── Landing spot config (% of viewport) ── */
-
-const SPOTS_DESKTOP = {
-  leaf:  { x: 28, y: 58 },
-  work:  { x: 18, y: 35 },
-  about: { x: 78, y: 30 },
-  resume: { x: 82, y: 70 },
-} as const
-
-/** Mobile: corners with safe spacing for touch (44px+ targets) */
-const SPOTS_MOBILE = {
-  leaf:  { x: 22, y: 72 },
-  work:  { x: 22, y: 18 },
-  about: { x: 78, y: 18 },
-  resume: { x: 78, y: 82 },
-} as const
-
-export default function Home() {
-  const isMobile = useIsMobile()
-  const SPOTS = isMobile ? SPOTS_MOBILE : SPOTS_DESKTOP
-  const { handleAboutClick, aboutOverlayNode } = useAboutRiseTransition()
-  const { handleWorkClick, workOverlayNode } = useWorkFallTransition()
-
+function CanvasWrapper({ children }: { children: React.ReactNode }) {
+  const { translateYVh } = useCanvasNavigation()
   return (
-    <LabyrinthProvider>
-      {aboutOverlayNode}
-      {workOverlayNode}
-      <main className={styles.canvas}>
-        {/* Background atmosphere */}
-        <AmbientLayer />
+    <div
+      className={styles.canvasWrapper}
+      style={{ transform: `translateY(${translateYVh}vh)` }}
+    >
+      {children}
+    </div>
+  )
+}
 
-        <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
-          Let&apos;s talk
-        </a>
-
-        {/* ── Center identity ── */}
-        <div className={styles.identity}>
-          <h1 className={styles.name}>Alfredo Domador</h1>
-          <p className={styles.role}>Product Designer | Builder </p>
-        </div>
-
-        {/* ── Fleeing leaf (hover when landed kicks it out to billow and reland) ── */}
-        <FleeingButton
-          id="leaf"
-          landingSpot={SPOTS.leaf}
-          startX={15}
-          startY={20}
-          kickOnLandedHover
-          className={styles.leafButton}
-        >
-          <img
-            src="/fall-leaf.svg"
-            alt="Falling leaf"
-            className={styles.leaf}
-            draggable={false}
-          />
-        </FleeingButton>
-
-        {/* ── Fleeing navigation buttons ── */}
-        <FleeingButton
-          id="work"
-          landingSpot={SPOTS.work}
-          startX={80}
-          startY={15}
-          label="Work"
-          href="/work"
-          onClick={handleWorkClick}
-          className={`${styles.navButton} ${styles.workButton}`}
-        >
-          <VertigoSpiral />
-        </FleeingButton>
-
-        <FleeingButton
-          id="about"
-          landingSpot={SPOTS.about}
-          startX={25}
-          startY={80}
-          label="About"
-          href="/about"
-          onClick={handleAboutClick}
-          className={`${styles.navButton} ${styles.aboutButton}`}
-        >
-          <div className={styles.aboutFrameWrap}>
-            <img
-              src="/about-frame.png"
-              alt=""
-              className={styles.aboutFrame}
-              draggable={false}
-            />
-            <div className={styles.aboutFrameWindow}>
-              <img
-                src="/about-hand.png"
-                alt=""
-                className={styles.aboutHand}
-                draggable={false}
-              />
-            </div>
-          </div>
-        </FleeingButton>
-
-        <FleeingButton
-          id="resume"
-          landingSpot={SPOTS.resume}
-          startX={10}
-          startY={55}
-          label="Resume"
-          href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0"
-          className={`${styles.navButton} ${styles.resumeButton}`}
-        >
-          <ResumeBook bookClassName={styles.resumeBook} />
-        </FleeingButton>
-      </main>
-    </LabyrinthProvider>
+export default function Page() {
+  return (
+    <CanvasNavigationProvider>
+      <CanvasWrapper>
+        <AboutSection />
+        <HomeSection />
+        <WorkSection />
+      </CanvasWrapper>
+    </CanvasNavigationProvider>
   )
 }

@@ -1,0 +1,108 @@
+'use client'
+
+import styles from './HomeSection.module.css'
+import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
+import FleeingButton from '@/components/FleeingButton'
+import VertigoSpiral from '@/components/VertigoSpiral'
+import ResumeBook from '@/components/ResumeBook'
+import AmbientLayer from '@/components/AmbientLayer'
+import { useIsMobile } from '@/hooks/useIsMobile'
+import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
+
+const SPOTS_DESKTOP = {
+  leaf:  { x: 28, y: 58 },
+  work:  { x: 18, y: 35 },
+  about: { x: 78, y: 30 },
+  resume: { x: 82, y: 70 },
+} as const
+
+const SPOTS_MOBILE = {
+  leaf:  { x: 22, y: 72 },
+  work:  { x: 22, y: 18 },
+  about: { x: 78, y: 18 },
+  resume: { x: 78, y: 82 },
+} as const
+
+export default function HomeSection() {
+  const isMobile = useIsMobile()
+  const SPOTS = isMobile ? SPOTS_MOBILE : SPOTS_DESKTOP
+  const { goTo } = useCanvasNavigation()
+
+  return (
+    <LabyrinthProvider>
+      <div className={styles.canvas}>
+        <AmbientLayer />
+        <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
+          Let&apos;s talk
+        </a>
+        <div className={styles.identity}>
+          <h1 className={styles.name}>Alfredo Domador</h1>
+          <p className={styles.role}>Product Designer | Builder </p>
+        </div>
+        <FleeingButton
+          id="leaf"
+          landingSpot={SPOTS.leaf}
+          startX={15}
+          startY={20}
+          kickOnLandedHover
+          className={styles.leafButton}
+        >
+          <img
+            src="/fall-leaf.svg"
+            alt="Falling leaf"
+            className={styles.leaf}
+            draggable={false}
+          />
+        </FleeingButton>
+        <FleeingButton
+          id="work"
+          landingSpot={SPOTS.work}
+          startX={80}
+          startY={15}
+          label="Work"
+          onNavigate={() => goTo('work')}
+          className={`${styles.navButton} ${styles.workButton}`}
+        >
+          <VertigoSpiral />
+        </FleeingButton>
+        <FleeingButton
+          id="about"
+          landingSpot={SPOTS.about}
+          startX={25}
+          startY={80}
+          label="About"
+          onNavigate={() => goTo('about')}
+          className={`${styles.navButton} ${styles.aboutButton}`}
+        >
+          <div className={styles.aboutFrameWrap}>
+            <img
+              src="/about-frame.png"
+              alt=""
+              className={styles.aboutFrame}
+              draggable={false}
+            />
+            <div className={styles.aboutFrameWindow}>
+              <img
+                src="/about-hand.png"
+                alt=""
+                className={styles.aboutHand}
+                draggable={false}
+              />
+            </div>
+          </div>
+        </FleeingButton>
+        <FleeingButton
+          id="resume"
+          landingSpot={SPOTS.resume}
+          startX={10}
+          startY={55}
+          label="Resume"
+          href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0"
+          className={`${styles.navButton} ${styles.resumeButton}`}
+        >
+          <ResumeBook bookClassName={styles.resumeBook} />
+        </FleeingButton>
+      </div>
+    </LabyrinthProvider>
+  )
+}

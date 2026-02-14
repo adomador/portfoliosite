@@ -12,10 +12,12 @@ interface FleeingButtonProps {
   startY?: number
   /** Optional label shown once landed */
   label?: string
-  /** Optional href to navigate when landed and clicked */
+  /** Optional href to navigate when landed and clicked (external or mailto) */
   href?: string
   /** Optional click handler for the link (e.g. custom transition before navigation) */
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  /** When set, called on click when landed; used for in-canvas navigation (no link) */
+  onNavigate?: () => void
   /** When true and landed, hovering kicks the entity out to billow and reland (e.g. leaf) */
   kickOnLandedHover?: boolean
   children: ReactNode
@@ -30,6 +32,7 @@ export default function FleeingButton({
   label,
   href,
   onClick,
+  onNavigate,
   kickOnLandedHover = false,
   children,
   className,
@@ -68,19 +71,24 @@ export default function FleeingButton({
       data-fleeing-id={id}
       onMouseEnter={handleLandedHover}
     >
-      {landed && href ? (
+      {landed && onNavigate ? (
+        <button
+          type="button"
+          className={styles.link}
+          onClick={onNavigate}
+          style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit', cursor: 'pointer', textAlign: 'inherit' }}
+        >
+          {inner}
+        </button>
+      ) : landed && href ? (
         <a
           href={href}
           className={styles.link}
           target={
-            href.startsWith('mailto:') || href.startsWith('/')
-              ? undefined
-              : '_blank'
+            href.startsWith('mailto:') ? undefined : '_blank'
           }
           rel={
-            href.startsWith('mailto:') || href.startsWith('/')
-              ? undefined
-              : 'noopener noreferrer'
+            href.startsWith('mailto:') ? undefined : 'noopener noreferrer'
           }
           onClick={onClick}
         >
