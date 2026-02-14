@@ -1,0 +1,168 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Speed lines: streak upward (we're rising, world rushes down) */
+.speedLines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.speedLine {
+  position: absolute;
+  bottom: -20%;
+  width: 1px;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 80%,
+    transparent 100%
+  );
+  animation: speedLineRise 2.5s linear infinite;
+}
+
+.speedLine:nth-child(odd) {
+  animation-delay: 0s;
+}
+.speedLine:nth-child(3n) {
+  animation-delay: 0.15s;
+}
+.speedLine:nth-child(5n) {
+  animation-delay: 0.3s;
+}
+.speedLine:nth-child(7n) {
+  animation-delay: 0.45s;
+}
+
+@keyframes speedLineRise {
+  0% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* Wind particles: move downward (we're going up, wind streams down) */
+.windParticles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.windParticle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  animation: windFall 2s linear infinite;
+}
+
+.windParticle:nth-child(1) { left: 10%; animation-delay: 0s; }
+.windParticle:nth-child(2) { left: 25%; animation-delay: 0.2s; }
+.windParticle:nth-child(3) { left: 40%; animation-delay: 0.4s; }
+.windParticle:nth-child(4) { left: 55%; animation-delay: 0.1s; }
+.windParticle:nth-child(5) { left: 70%; animation-delay: 0.3s; }
+.windParticle:nth-child(6) { left: 85%; animation-delay: 0.5s; }
+.windParticle:nth-child(7) { left: 15%; animation-delay: 0.6s; }
+.windParticle:nth-child(8) { left: 50%; animation-delay: 0.25s; }
+.windParticle:nth-child(9) { left: 90%; animation-delay: 0.45s; }
+.windParticle:nth-child(10) { left: 30%; animation-delay: 0.15s; }
+
+@keyframes windFall {
+  0% {
+    transform: translateY(-20%) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 0.1;
+  }
+  100% {
+    transform: translateY(100vh) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Leaf: tumbles upward (opposite rotation to fall) */
+.leafWrap {
+  position: fixed;
+  z-index: 5;
+  transform-origin: center center;
+  animation: leafTumbleRise 2.5s ease-in-out forwards;
+}
+
+.leafImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(201, 162, 39, 0.25));
+  display: block;
+}
+
+@keyframes leafTumbleRise {
+  0% {
+    transform: rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+  25% {
+    transform: rotate(45deg) translateX(8%);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(-20deg) translateX(-5%);
+    opacity: 1;
+  }
+  75% {
+    transform: rotate(30deg) translateX(3%);
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotate(15deg) translateX(0);
+    opacity: 0.4;
+  }
+}
+
+.dissolve {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-deep, #0a0908);
+  opacity: 0;
+  transition: opacity 0s;
+  z-index: 10;
+}
+
+.dissolve[data-active="true"] {
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speedLine,
+  .windParticle,
+  .leafWrap {
+    animation: none;
+  }
+}

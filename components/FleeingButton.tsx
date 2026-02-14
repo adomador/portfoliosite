@@ -72,8 +72,16 @@ export default function FleeingButton({
         <a
           href={href}
           className={styles.link}
-          target={href.startsWith('mailto:') ? undefined : '_blank'}
-          rel="noopener noreferrer"
+          target={
+            href.startsWith('mailto:') || href.startsWith('/')
+              ? undefined
+              : '_blank'
+          }
+          rel={
+            href.startsWith('mailto:') || href.startsWith('/')
+              ? undefined
+              : 'noopener noreferrer'
+          }
           onClick={onClick}
         >
           {inner}

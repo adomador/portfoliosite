@@ -94,6 +94,41 @@ body::before {
   }
 }
 
+/* About page: no glow layer */
+body.no-glow::before {
+  display: none;
+}
+
+/* Work transition: home canvas lifts (simulates free-fall) */
+body.freefall-lift main {
+  transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform: translateY(-150vh);
+}
+
+/* Hide original leaf so only the overlay’s leaf is visible (no duplication) */
+body.freefall-lift [data-fleeing-id="leaf"] {
+  visibility: hidden;
+}
+
+/* About transition: canvas sinks (we rise; world rushes down) */
+body.about-rise-sink main {
+  transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform: translateY(150vh);
+}
+
+body.about-rise-sink [data-fleeing-id="leaf"] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.freefall-lift main {
+    transition-duration: 0.3s;
+  }
+  body.about-rise-sink main {
+    transition-duration: 0.3s;
+  }
+}
+
 ::selection {
   background: var(--accent-gold);
   color: var(--bg-deep);

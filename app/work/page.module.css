@@ -1,0 +1,58 @@
+.canvas {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-deep);
+  position: relative;
+}
+
+.back {
+  position: fixed;
+  top: var(--space-md, 1.5rem);
+  left: var(--space-lg, 2.5rem);
+  z-index: 10;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: color 0.2s ease;
+}
+
+.back:hover {
+  color: var(--accent-gold);
+}
+
+.back:focus-visible {
+  outline-offset: 4px;
+}
+
+.leafArrival {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: leafFadeIn 0.8s ease-out 0.2s forwards;
+}
+
+.leaf {
+  width: clamp(60px, 10vw, 100px);
+  height: auto;
+  filter: drop-shadow(0 2px 8px rgba(201, 162, 39, 0.2));
+}
+
+@keyframes leafFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leafArrival {
+    animation: none;
+    opacity: 1;
+  }
+}

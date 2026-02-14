@@ -7,7 +7,8 @@ import VertigoSpiral from '@/components/VertigoSpiral'
 import ResumeBook from '@/components/ResumeBook'
 import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import { useAboutZoomTransition } from '@/hooks/useAboutZoomTransition'
+import { useAboutRiseTransition } from '@/hooks/useAboutRiseTransition'
+import { useWorkFallTransition } from '@/hooks/useWorkFallTransition'
 
 /* ── Landing spot config (% of viewport) ── */
 
@@ -29,11 +30,13 @@ const SPOTS_MOBILE = {
 export default function Home() {
   const isMobile = useIsMobile()
   const SPOTS = isMobile ? SPOTS_MOBILE : SPOTS_DESKTOP
-  const { handleAboutClick, overlayNode } = useAboutZoomTransition()
+  const { handleAboutClick, aboutOverlayNode } = useAboutRiseTransition()
+  const { handleWorkClick, workOverlayNode } = useWorkFallTransition()
 
   return (
     <LabyrinthProvider>
-      {overlayNode}
+      {aboutOverlayNode}
+      {workOverlayNode}
       <main className={styles.canvas}>
         {/* Background atmosphere */}
         <AmbientLayer />
@@ -72,6 +75,8 @@ export default function Home() {
           startX={80}
           startY={15}
           label="Work"
+          href="/work"
+          onClick={handleWorkClick}
           className={`${styles.navButton} ${styles.workButton}`}
         >
           <VertigoSpiral />
@@ -87,7 +92,7 @@ export default function Home() {
           onClick={handleAboutClick}
           className={`${styles.navButton} ${styles.aboutButton}`}
         >
-          <div className={styles.aboutFrameWrap} data-about-transition-frame>
+          <div className={styles.aboutFrameWrap}>
             <img
               src="/about-frame.png"
               alt=""
