@@ -14,6 +14,8 @@ interface FleeingButtonProps {
   label?: string
   /** Optional href to navigate when landed and clicked */
   href?: string
+  /** When true and landed, hovering kicks the entity out to billow and reland (e.g. leaf) */
+  kickOnLandedHover?: boolean
   children: ReactNode
   className?: string
 }
@@ -25,12 +27,17 @@ export default function FleeingButton({
   startY = 50,
   label,
   href,
+  kickOnLandedHover = false,
   children,
   className,
 }: FleeingButtonProps) {
   const elRef = useRef<HTMLDivElement>(null)
-  const { register, landedMap } = useLabyrinth()
+  const { register, kickEntity, landedMap } = useLabyrinth()
   const landed = landedMap[id] ?? false
+
+  const handleLandedHover = () => {
+    if (kickOnLandedHover && landed) kickEntity(id)
+  }
 
   useEffect(() => {
     if (!elRef.current) return
@@ -56,6 +63,7 @@ export default function FleeingButton({
       ref={elRef}
       className={`${styles.fleeing} ${landed ? styles.landed : ''} ${className ?? ''}`}
       data-fleeing-id={id}
+      onMouseEnter={handleLandedHover}
     >
       {landed && href ? (
         <a href={href} className={styles.link} target={href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">

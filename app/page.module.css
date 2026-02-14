@@ -102,7 +102,7 @@
 }
 
 .workButton:hover [data-vertigo-spiral] [data-vertigo-glow] {
-  opacity: 0.15;
+  opacity: 0.18;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -199,6 +199,23 @@
   filter: drop-shadow(0 2px 12px rgba(201, 162, 39, 0.35));
 }
 
+/* Resume button: ancient book image */
+.resumeBook {
+  height: clamp(40px, 8vw, 56px);
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  transition: filter 0.4s ease;
+}
+
+.resumeButton[class*="landed"] .resumeBook {
+  filter: drop-shadow(0 2px 8px rgba(201, 162, 39, 0.2));
+}
+
+.resumeButton[class*="landed"]:hover .resumeBook {
+  filter: drop-shadow(0 2px 12px rgba(201, 162, 39, 0.35));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .aboutHand {
     transition: opacity 0.25s ease, transform 0.25s ease;
@@ -247,6 +264,10 @@
   }
 
   .aboutFrame {
+    height: clamp(44px, 10vw, 52px);
+  }
+
+  .resumeBook {
     height: clamp(44px, 10vw, 52px);
   }
 

@@ -4,6 +4,7 @@ import styles from './page.module.css'
 import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
 import FleeingButton from '@/components/FleeingButton'
 import VertigoSpiral from '@/components/VertigoSpiral'
+import ResumeBook from '@/components/ResumeBook'
 import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 
@@ -44,12 +45,13 @@ export default function Home() {
           <p className={styles.role}>Product Designer | Builder </p>
         </div>
 
-        {/* ── Fleeing leaf ── */}
+        {/* ── Fleeing leaf (hover when landed kicks it out to billow and reland) ── */}
         <FleeingButton
           id="leaf"
           landingSpot={SPOTS.leaf}
           startX={15}
           startY={20}
+          kickOnLandedHover
           className={styles.leafButton}
         >
           <img
@@ -106,9 +108,9 @@ export default function Home() {
           startY={55}
           label="Resume"
           href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0"
-          className={styles.navButton}
+          className={`${styles.navButton} ${styles.resumeButton}`}
         >
-          <span className={styles.navIcon}>R</span>
+          <ResumeBook bookClassName={styles.resumeBook} />
         </FleeingButton>
       </main>
     </LabyrinthProvider>

@@ -32,6 +32,18 @@ interface FleeingEntity {
   landed: boolean
 }
 
+/** Valid landing spots for the leaf only (avoid center + nav buttons) */
+const LEAF_SPOTS: LandingSpot[] = [
+  { x: 22, y: 55 },
+  { x: 28, y: 60 },
+  { x: 25, y: 68 },
+  { x: 20, y: 62 },
+  { x: 30, y: 52 },
+  { x: 26, y: 58 },
+]
+
+const KICK_IMPULSE = 28
+
 interface LabyrinthContextValue {
   /** Register a DOM element as a fleeing entity. Returns unregister fn. */
   register: (
@@ -41,6 +53,8 @@ interface LabyrinthContextValue {
     startX: number,
     startY: number,
   ) => () => void
+  /** Kick entity out of its spot (leaf only); it will billow and reland elsewhere. */
+  kickEntity: (id: string) => void
   /** Map of id → landed boolean (triggers React re-renders when buttons land) */
   landedMap: Record<string, boolean>
 }
@@ -62,6 +76,10 @@ const LAND_DIST = 30 // px – snap threshold
 const LAND_VEL = 0.4 // px/frame – velocity threshold for landing
 const DRIFT_STRENGTH = 0.08 // gentle pull toward landing spot
 const BOUNDS_PADDING = 40 // px inset from viewport edge
+const CENTER_REPEL_RADIUS = 120 // px – leaf is pushed away from center (text zone)
+const CENTER_REPEL_STRENGTH = 0.4
+const BUTTON_REPEL_RADIUS = 80 // px – leaf kept away from nav button zones
+const BUTTON_REPEL_STRENGTH = 0.35
 
 /* ── Provider ── */
 
@@ -128,6 +146,35 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
           ent.vy += (dy / dist) * force
         }
 
+        /* Leaf: repel from center and nav zones so it doesn’t cover text or buttons */
+        if (ent.id === 'leaf') {
+          const cx = vw / 2
+          const cy = vh / 2
+          const cdx = ent.x - cx
+          const cdy = ent.y - cy
+          const cdist = Math.max(Math.sqrt(cdx * cdx + cdy * cdy), 1)
+          if (cdist < CENTER_REPEL_RADIUS) {
+            const cforce = (1 - cdist / CENTER_REPEL_RADIUS) * CENTER_REPEL_STRENGTH
+            ent.vx += (cdx / cdist) * cforce
+            ent.vy += (cdy / cdist) * cforce
+          }
+          const buttonZones: [number, number][] = [
+            [(18 / 100) * vw, (35 / 100) * vh],
+            [(78 / 100) * vw, (30 / 100) * vh],
+            [(82 / 100) * vw, (70 / 100) * vh],
+          ]
+          buttonZones.forEach(([bx, by]) => {
+            const bdx = ent.x - bx
+            const bdy = ent.y - by
+            const bdist = Math.max(Math.sqrt(bdx * bdx + bdy * bdy), 1)
+            if (bdist < BUTTON_REPEL_RADIUS) {
+              const bforce = (1 - bdist / BUTTON_REPEL_RADIUS) * BUTTON_REPEL_STRENGTH
+              ent.vx += (bdx / bdist) * bforce
+              ent.vy += (bdy / bdist) * bforce
+            }
+          })
+        }
+
         /* Gentle drift toward landing spot */
         const toDx = landX - ent.x
         const toDy = landY - ent.y
@@ -178,6 +225,39 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
+  /* ── Kick entity (leaf only): unland, impulse away from cursor, new valid spot ── */
+  const kickEntity = useCallback((id: string) => {
+    if (id !== 'leaf') return
+    const ent = entitiesRef.current.get(id)
+    if (!ent || !ent.landed) return
+
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const cursor = cursorRef.current
+
+    ent.landed = false
+    setLandedMap((prev) => ({ ...prev, [id]: false }))
+
+    const landX = (ent.landingSpot.x / 100) * vw
+    const landY = (ent.landingSpot.y / 100) * vh
+
+    const dx = ent.x - cursor.x
+    const dy = ent.y - cursor.y
+    const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1)
+    ent.vx += (dx / dist) * KICK_IMPULSE
+    ent.vy += (dy / dist) * KICK_IMPULSE
+
+    const currentSpot = ent.landingSpot
+    const otherSpots = LEAF_SPOTS.filter(
+      (s) => s.x !== currentSpot.x || s.y !== currentSpot.y
+    )
+    const nextSpot = otherSpots[Math.floor(Math.random() * otherSpots.length)] ?? LEAF_SPOTS[0]
+    ent.landingSpot = nextSpot
+
+    ent.el.style.transition = 'none'
+    ent.el.style.willChange = 'transform'
+  }, [])
+
   /* ── Register / unregister ── */
   const register = useCallback(
     (
@@ -210,7 +290,7 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
   )
 
   return (
-    <LabyrinthContext.Provider value={{ register, landedMap }}>
+    <LabyrinthContext.Provider value={{ register, kickEntity, landedMap }}>
       {children}
     </LabyrinthContext.Provider>
   )
