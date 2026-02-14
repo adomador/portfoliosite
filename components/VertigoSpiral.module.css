@@ -1,14 +1,35 @@
 .wrapper {
   --vertigo-bg: var(--bg-surface);
   --vertigo-stroke: var(--text-muted);
+  position: relative;
   width: 48px;
   height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 10s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: center;
+}
+
+/* Red glow behind spiral: expands/retracts with wrapper scale, fades in/out on hover */
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 140%;
+  height: 140%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--accent-crimson);
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 10s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.wrapper:hover .glow {
+  opacity: 0.15;
 }
 
 .wrapper:hover {
@@ -49,5 +70,8 @@
   }
   .wrapper:hover {
     transform: scale(1.05);
+  }
+  .glow {
+    transition: opacity 0.3s ease;
   }
 }

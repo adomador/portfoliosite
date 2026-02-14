@@ -44,6 +44,7 @@ export default function VertigoSpiral() {
 
   return (
     <div className={styles.wrapper} data-vertigo-spiral aria-hidden>
+      <div className={styles.glow} data-vertigo-glow aria-hidden />
       <svg
         className={styles.spiral}
         viewBox={`0 0 ${VIEWBOX.w} ${VIEWBOX.h}`}

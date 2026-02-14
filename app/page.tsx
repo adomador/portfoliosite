@@ -67,9 +67,24 @@ export default function Home() {
           startY={80}
           label="About"
           href="mailto:alfredo.domador13@gmail.com"
-          className={styles.navButton}
+          className={`${styles.navButton} ${styles.aboutButton}`}
         >
-          <span className={styles.navIcon}>A</span>
+          <div className={styles.aboutFrameWrap}>
+            <img
+              src="/about-frame.png"
+              alt=""
+              className={styles.aboutFrame}
+              draggable={false}
+            />
+            <div className={styles.aboutFrameWindow}>
+              <img
+                src="/about-hand.png"
+                alt=""
+                className={styles.aboutHand}
+                draggable={false}
+              />
+            </div>
+          </div>
         </FleeingButton>
 
         <FleeingButton
