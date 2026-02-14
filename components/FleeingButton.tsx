@@ -14,6 +14,8 @@ interface FleeingButtonProps {
   label?: string
   /** Optional href to navigate when landed and clicked */
   href?: string
+  /** Optional click handler for the link (e.g. custom transition before navigation) */
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
   /** When true and landed, hovering kicks the entity out to billow and reland (e.g. leaf) */
   kickOnLandedHover?: boolean
   children: ReactNode
@@ -27,6 +29,7 @@ export default function FleeingButton({
   startY = 50,
   label,
   href,
+  onClick,
   kickOnLandedHover = false,
   children,
   className,
@@ -66,7 +69,13 @@ export default function FleeingButton({
       onMouseEnter={handleLandedHover}
     >
       {landed && href ? (
-        <a href={href} className={styles.link} target={href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">
+        <a
+          href={href}
+          className={styles.link}
+          target={href.startsWith('mailto:') ? undefined : '_blank'}
+          rel="noopener noreferrer"
+          onClick={onClick}
+        >
           {inner}
         </a>
       ) : (

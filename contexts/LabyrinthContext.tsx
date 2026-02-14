@@ -80,6 +80,7 @@ const CENTER_REPEL_RADIUS = 120 // px – leaf is pushed away from center (text 
 const CENTER_REPEL_STRENGTH = 0.4
 const BUTTON_REPEL_RADIUS = 80 // px – leaf kept away from nav button zones
 const BUTTON_REPEL_STRENGTH = 0.35
+const SETTLE_TIMEOUT_MS = 3000
 
 /* ── Provider ── */
 
@@ -282,7 +283,26 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
       el.style.transform = `translate(${startX}px, ${startY}px) rotate(${entity.rotation}deg)`
       entitiesRef.current.set(id, entity)
 
+      const settleTimeout = setTimeout(() => {
+        const ent = entitiesRef.current.get(id)
+        if (!ent || ent.landed) return
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        const landX = (ent.landingSpot.x / 100) * vw
+        const landY = (ent.landingSpot.y / 100) * vh
+        ent.x = landX
+        ent.y = landY
+        ent.vx = 0
+        ent.vy = 0
+        ent.landed = true
+        ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+        ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
+        ent.el.style.willChange = 'auto'
+        setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
+      }, SETTLE_TIMEOUT_MS)
+
       return () => {
+        clearTimeout(settleTimeout)
         entitiesRef.current.delete(id)
       }
     },
