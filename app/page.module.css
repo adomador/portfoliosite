@@ -89,6 +89,22 @@
   z-index: 11;
 }
 
+/* Work button: Vertigo spiral replaces nav icon; slow expand on hover (5s to full size) */
+.workButton [data-vertigo-spiral] {
+  transition: transform 5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+.workButton:hover [data-vertigo-spiral] {
+  transform: scale(1.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workButton:hover [data-vertigo-spiral] {
+    transform: scale(1.05);
+  }
+}
+
 .navIcon {
   display: flex;
   align-items: center;

@@ -3,6 +3,7 @@
 import styles from './page.module.css'
 import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
 import FleeingButton from '@/components/FleeingButton'
+import VertigoSpiral from '@/components/VertigoSpiral'
 import AmbientLayer from '@/components/AmbientLayer'
 
 /* ── Landing spot config (% of viewport) ── */
@@ -54,9 +55,9 @@ export default function Home() {
           startX={80}
           startY={15}
           label="Work"
-          className={styles.navButton}
+          className={`${styles.navButton} ${styles.workButton}`}
         >
-          <span className={styles.navIcon}>W</span>
+          <VertigoSpiral />
         </FleeingButton>
 
         <FleeingButton
