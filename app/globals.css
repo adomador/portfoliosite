@@ -37,6 +37,62 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow: hidden;
+  position: relative;
+}
+
+/* Glow layer: fades into bg so no visible edge; grows slowly, retracts quickly */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Blend to exact background color so there's no seam when opacity/scale change */
+  background:
+    radial-gradient(
+      ellipse 140% 100% at 50% -10%,
+      rgba(245, 240, 232, 0.055) 0%,
+      rgba(245, 240, 232, 0.02) 35%,
+      rgb(10, 9, 8) 70%
+    ),
+    radial-gradient(
+      ellipse 100% 80% at 50% 45%,
+      rgba(212, 160, 84, 0.04) 0%,
+      rgba(212, 160, 84, 0.015) 40%,
+      rgb(10, 9, 8) 75%
+    );
+  transform-origin: 50% 35%;
+  animation: glowBreathe 14s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+@keyframes glowBreathe {
+  0% {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  78% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+    opacity: 0.82;
+  }
 }
 
 ::selection {

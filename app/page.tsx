@@ -8,11 +8,10 @@ import AmbientLayer from '@/components/AmbientLayer'
 /* ── Landing spot config (% of viewport) ── */
 
 const SPOTS = {
-  leaf:    { x: 50, y: 45 },
-  work:    { x: 18, y: 35 },
-  about:   { x: 78, y: 30 },
-  contact: { x: 50, y: 75 },
-  resume:  { x: 82, y: 70 },
+  leaf:  { x: 50, y: 45 },
+  work:  { x: 18, y: 35 },
+  about: { x: 78, y: 30 },
+  resume: { x: 82, y: 70 },
 } as const
 
 export default function Home() {
@@ -21,6 +20,10 @@ export default function Home() {
       <main className={styles.canvas}>
         {/* Background atmosphere */}
         <AmbientLayer />
+
+        <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
+          Let&apos;s talk
+        </a>
 
         {/* ── Center identity ── */}
         <div className={styles.identity}>
@@ -66,18 +69,6 @@ export default function Home() {
           className={styles.navButton}
         >
           <span className={styles.navIcon}>A</span>
-        </FleeingButton>
-
-        <FleeingButton
-          id="contact"
-          landingSpot={SPOTS.contact}
-          startX={70}
-          startY={90}
-          label="Contact"
-          href="mailto:alfredo.domador13@gmail.com"
-          className={styles.navButton}
-        >
-          <span className={styles.navIcon}>C</span>
         </FleeingButton>
 
         <FleeingButton

@@ -10,6 +10,24 @@
   cursor: crosshair;
 }
 
+/* ── Top right: Let's talk ── */
+
+.letsTalk {
+  position: fixed;
+  top: var(--space-md, 1.5rem);
+  right: var(--space-lg, 2.5rem);
+  z-index: 20;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  transition: color 0.25s ease;
+}
+
+.letsTalk:hover {
+  color: var(--accent-gold);
+}
+
 /* ═══════════════════════════════════════════════
    Center identity (stays fixed)
    ═══════════════════════════════════════════════ */
