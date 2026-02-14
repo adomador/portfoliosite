@@ -67,3 +67,22 @@
     transform: none;
   }
 }
+
+/* Mobile: readable labels, 44px min touch target */
+@media (max-width: 640px) {
+  .fleeing.landed {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .link {
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+  }
+}

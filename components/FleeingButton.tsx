@@ -42,8 +42,7 @@ export default function FleeingButton({
 
     const unregister = register(id, elRef.current, landingSpot, sx, sy)
     return unregister
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, register, landingSpot.x, landingSpot.y, startX, startY])
 
   const inner = (
     <>

@@ -24,6 +24,10 @@
   transition: color 0.25s ease;
 }
 
+.letsTalk:focus-visible {
+  outline-offset: 4px;
+}
+
 .letsTalk:hover {
   color: var(--accent-gold);
 }
@@ -202,25 +206,60 @@
 }
 
 /* ═══════════════════════════════════════════════
-   Responsive
+   Responsive – ease of use & accessibility first
    ═══════════════════════════════════════════════ */
 
-@media (max-width: 600px) {
-  .leaf {
-    width: 50px;
+/* Mobile: 44px minimum touch targets, safe areas, readable text */
+@media (max-width: 640px) {
+  .canvas {
+    cursor: default;
   }
 
-  .aboutFrame {
-    height: 36px;
+  .letsTalk {
+    top: max(1rem, env(safe-area-inset-top));
+    right: max(1rem, env(safe-area-inset-right));
+    padding: 0.75rem 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
   }
 
-  .navIcon {
-    width: 36px;
-    height: 36px;
-    font-size: 0.6875rem;
+  .identity {
+    padding: 0 1rem;
+    max-width: 90vw;
   }
 
   .name {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+    line-height: 1.2;
+  }
+
+  .role {
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+  }
+
+  .leaf {
+    width: clamp(44px, 12vw, 56px);
+  }
+
+  .aboutFrame {
+    height: clamp(44px, 10vw, 52px);
+  }
+
+  .navIcon {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    font-size: 0.875rem;
+  }
+
+  .workButton [data-vertigo-spiral] {
+    min-width: 44px;
+    min-height: 44px;
   }
 }

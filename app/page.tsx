@@ -5,17 +5,29 @@ import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
 import FleeingButton from '@/components/FleeingButton'
 import VertigoSpiral from '@/components/VertigoSpiral'
 import AmbientLayer from '@/components/AmbientLayer'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 /* ── Landing spot config (% of viewport) ── */
 
-const SPOTS = {
+const SPOTS_DESKTOP = {
   leaf:  { x: 28, y: 58 },
   work:  { x: 18, y: 35 },
   about: { x: 78, y: 30 },
   resume: { x: 82, y: 70 },
 } as const
 
+/** Mobile: corners with safe spacing for touch (44px+ targets) */
+const SPOTS_MOBILE = {
+  leaf:  { x: 22, y: 72 },
+  work:  { x: 22, y: 18 },
+  about: { x: 78, y: 18 },
+  resume: { x: 78, y: 82 },
+} as const
+
 export default function Home() {
+  const isMobile = useIsMobile()
+  const SPOTS = isMobile ? SPOTS_MOBILE : SPOTS_DESKTOP
+
   return (
     <LabyrinthProvider>
       <main className={styles.canvas}>

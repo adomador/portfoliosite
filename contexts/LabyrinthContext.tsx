@@ -142,9 +142,10 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
         ent.x += ent.vx
         ent.y += ent.vy
 
-        /* Bounds (keep on screen) */
-        ent.x = Math.max(BOUNDS_PADDING, Math.min(vw - BOUNDS_PADDING, ent.x))
-        ent.y = Math.max(BOUNDS_PADDING, Math.min(vh - BOUNDS_PADDING, ent.y))
+        /* Bounds (keep on screen); larger inset on small viewports for touch */
+        const boundsPadding = vw < 640 ? 56 : BOUNDS_PADDING
+        ent.x = Math.max(boundsPadding, Math.min(vw - boundsPadding, ent.x))
+        ent.y = Math.max(boundsPadding, Math.min(vh - boundsPadding, ent.y))
 
         /* Rotation driven by horizontal velocity (leaf tumbling) */
         ent.rotation += ent.vx * 2.5
