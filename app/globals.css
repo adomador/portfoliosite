@@ -99,6 +99,10 @@ body.no-glow::before {
   display: none;
 }
 
+/* Hide home leaf during transition; the persistent overlay leaf is the same one */
+body.canvas-transitioning [data-fleeing-id="leaf"] {
+  visibility: hidden;
+}
 
 ::selection {
   background: var(--accent-gold);

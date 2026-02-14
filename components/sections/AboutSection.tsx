@@ -18,6 +18,9 @@ export default function AboutSection() {
 
   return (
     <section className={styles.section} aria-label="About">
+      <div className={styles.leafLanding} aria-hidden>
+        <img src="/fall-leaf.svg" alt="" className={styles.leaf} draggable={false} />
+      </div>
       <div className={styles.inner}>
         <button
           type="button"
