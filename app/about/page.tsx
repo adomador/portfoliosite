@@ -12,10 +12,13 @@ export default function AboutPage() {
         </Link>
         <h1 className={styles.title}>About</h1>
         <p className={styles.lead}>
-          Product designer and builder.
+          Through first principles, strategic systems thinking, and a bias toward
+          action, I transform ambiguous problems into elegant experiences humans
+          enjoy using.
         </p>
         <p className={styles.body}>
-          This is the About page. You arrived here by zooming into the frame.
+          Currently based in Pennsylvania. Enjoy playing chess, reading fiction,
+          and hiking.
         </p>
       </div>
     </main>
