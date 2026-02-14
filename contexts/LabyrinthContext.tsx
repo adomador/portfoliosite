@@ -52,6 +52,7 @@ interface LabyrinthContextValue {
     landingSpot: LandingSpot,
     startX: number,
     startY: number,
+    settleTimeoutMs?: number,
   ) => () => void
   /** Kick entity out of its spot (leaf only); it will billow and reland elsewhere. */
   kickEntity: (id: string) => void
@@ -80,15 +81,26 @@ const CENTER_REPEL_RADIUS = 120 // px – leaf is pushed away from center (text 
 const CENTER_REPEL_STRENGTH = 0.4
 const BUTTON_REPEL_RADIUS = 80 // px – leaf kept away from nav button zones
 const BUTTON_REPEL_STRENGTH = 0.35
-const SETTLE_TIMEOUT_MS = 3000
+const DEFAULT_SETTLE_TIMEOUT_MS = 2000
+const LEAF_SETTLE_TIMEOUT_MS = 7000
+
+type LeafPositionCallback = (x: number, y: number, rotation: number) => void
 
 /* ── Provider ── */
 
-export function LabyrinthProvider({ children }: { children: ReactNode }) {
+export function LabyrinthProvider({
+  children,
+  onLeafPositionChange,
+}: {
+  children: ReactNode
+  onLeafPositionChange?: LeafPositionCallback
+}) {
   const cursorRef = useRef({ x: -9999, y: -9999 })
   const entitiesRef = useRef<Map<string, FleeingEntity>>(new Map())
   const rafRef = useRef<number>(0)
   const [landedMap, setLandedMap] = useState<Record<string, boolean>>({})
+  const onLeafPositionChangeRef = useRef(onLeafPositionChange)
+  onLeafPositionChangeRef.current = onLeafPositionChange
 
   /* ── Cursor tracking (no state, just ref) ── */
   useEffect(() => {
@@ -120,7 +132,12 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
       const cursor = cursorRef.current
 
       entitiesRef.current.forEach((ent) => {
-        if (ent.landed) return
+        if (ent.landed) {
+          if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+            onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
+          }
+          return
+        }
 
         // If user prefers reduced motion, snap to landing immediately
         if (reducedMotion) {
@@ -129,6 +146,9 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
           ent.landed = true
           ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(0deg)`
           ent.el.style.willChange = 'auto'
+          if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+            onLeafPositionChangeRef.current(ent.x, ent.y, 0)
+          }
           setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
           return
         }
@@ -211,12 +231,18 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
           ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
           ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(0deg)`
           ent.el.style.willChange = 'auto'
+          if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+            onLeafPositionChangeRef.current(ent.x, ent.y, 0)
+          }
           setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
           return
         }
 
         /* Apply transform (GPU-composited) */
         ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(${ent.rotation}deg)`
+        if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+          onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
+        }
       })
 
       rafRef.current = requestAnimationFrame(tick)
@@ -267,7 +293,10 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
       landingSpot: LandingSpot,
       startX: number,
       startY: number,
+      settleTimeoutMs?: number,
     ) => {
+      const timeoutMs =
+        settleTimeoutMs ?? (id === 'leaf' ? LEAF_SETTLE_TIMEOUT_MS : DEFAULT_SETTLE_TIMEOUT_MS)
       const entity: FleeingEntity = {
         id,
         el,
@@ -282,6 +311,9 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
       el.style.willChange = 'transform'
       el.style.transform = `translate(${startX}px, ${startY}px) rotate(${entity.rotation}deg)`
       entitiesRef.current.set(id, entity)
+      if (id === 'leaf' && onLeafPositionChangeRef.current) {
+        onLeafPositionChangeRef.current(startX, startY, entity.rotation)
+      }
 
       const settleTimeout = setTimeout(() => {
         const ent = entitiesRef.current.get(id)
@@ -298,8 +330,11 @@ export function LabyrinthProvider({ children }: { children: ReactNode }) {
         ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
         ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
         ent.el.style.willChange = 'auto'
+        if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+          onLeafPositionChangeRef.current(landX, landY, 0)
+        }
         setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
-      }, SETTLE_TIMEOUT_MS)
+      }, timeoutMs)
 
       return () => {
         clearTimeout(settleTimeout)

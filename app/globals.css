@@ -94,13 +94,9 @@ body::before {
   }
 }
 
-/* About page: no glow layer */
-body.no-glow::before {
-  display: none;
-}
-
-/* Hide home leaf during transition; the persistent overlay leaf is the same one */
-body.canvas-transitioning [data-fleeing-id="leaf"] {
+/* Only one leaf is visible (SingleLeaf); hide the duplicate inside the fleeing button.
+   We target the img because CSS modules hash .visual so a global .visual selector never matches. */
+[data-fleeing-id="leaf"] img {
   visibility: hidden;
 }
 

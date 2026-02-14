@@ -3,7 +3,7 @@
   min-height: 100vh;
   height: 100vh;
   width: 100%;
-  background: var(--bg-deep);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,36 +106,3 @@
   font-weight: 400;
 }
 
-.leafLanding {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  animation: leafFadeIn 0.8s ease-out 0.2s forwards;
-  pointer-events: none;
-}
-
-.leafLanding .leaf {
-  width: clamp(60px, 10vw, 100px);
-  height: auto;
-  filter: drop-shadow(0 2px 8px rgba(201, 162, 39, 0.2));
-}
-
-@keyframes leafFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .leafLanding {
-    animation: none;
-    opacity: 1;
-  }
-}

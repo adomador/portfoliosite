@@ -8,11 +8,12 @@ import {
   useEffect,
   useRef,
   type ReactNode,
+  type MutableRefObject,
 } from 'react'
 
 export type CanvasSection = 'home' | 'about' | 'work'
 
-const TRANSITION_DURATION_MS = 4000
+export const TRANSITION_DURATION_MS = 4000
 
 /* 7 sections: About, empty, empty, Home, empty, empty, Work (each 100vh) */
 const SECTION_TO_OFFSET: Record<CanvasSection, number> = {
@@ -32,12 +33,24 @@ function sectionToHash(section: CanvasSection): string {
   return `#${section}`
 }
 
+export interface LeafPosition {
+  x: number
+  y: number
+  rotation: number
+}
+
 interface CanvasNavigationContextValue {
   activeSection: CanvasSection
-  /** translateY value in vh for the canvas wrapper */
   translateYVh: number
-  /** true while the canvas is animating between sections (one leaf overlay shown) */
   isTransitioning: boolean
+  /** Written by labyrinth every frame when on home; SingleLeaf reads this */
+  leafPositionRef: MutableRefObject<LeafPosition>
+  /** Frozen copy when transition starts; SingleLeaf uses this while isTransitioning */
+  frozenLeafPositionRef: MutableRefObject<LeafPosition>
+  /** When returning to home, which section we came from (so leaf animates from that rest position) */
+  fromSectionRef: MutableRefObject<CanvasSection | null>
+  /** When transition started (Date.now()); used to interpolate leaf on return-to-home */
+  transitionStartRef: MutableRefObject<number>
   goTo: (section: CanvasSection) => void
 }
 
@@ -54,16 +67,35 @@ function getInitialSection(): CanvasSection {
   return hashToSection(window.location.hash)
 }
 
+const DEFAULT_LEAF: LeafPosition = { x: 0, y: 0, rotation: 0 }
+
 export function CanvasNavigationProvider({ children }: { children: ReactNode }) {
   const [activeSection, setActiveSection] = useState<CanvasSection>(getInitialSection)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const transitionEndRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const leafPositionRef = useRef<LeafPosition>({ ...DEFAULT_LEAF })
+  const frozenLeafPositionRef = useRef<LeafPosition>({ ...DEFAULT_LEAF })
+  const fromSectionRef = useRef<CanvasSection | null>(null)
+  const transitionStartRef = useRef<number>(0)
+
+  useEffect(() => {
+    const cx = typeof window !== 'undefined' ? window.innerWidth / 2 : 0
+    const cy = typeof window !== 'undefined' ? window.innerHeight / 2 : 0
+    leafPositionRef.current = { x: cx, y: cy, rotation: 0 }
+    frozenLeafPositionRef.current = { x: cx, y: cy, rotation: 0 }
+  }, [])
 
   const goTo = useCallback((section: CanvasSection) => {
     if (section === activeSection) return
     if (transitionEndRef.current) clearTimeout(transitionEndRef.current)
+    transitionStartRef.current = Date.now()
+    if (section === 'home') {
+      fromSectionRef.current = activeSection
+    } else {
+      fromSectionRef.current = null
+    }
+    frozenLeafPositionRef.current = { ...leafPositionRef.current }
     setIsTransitioning(true)
-    document.body.classList.add('canvas-transitioning')
     setActiveSection(section)
     const hash = sectionToHash(section)
     const full = hash ? `${window.location.pathname}${hash}` : window.location.pathname
@@ -71,7 +103,6 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
     transitionEndRef.current = setTimeout(() => {
       transitionEndRef.current = null
       setIsTransitioning(false)
-      document.body.classList.remove('canvas-transitioning')
     }, TRANSITION_DURATION_MS)
   }, [activeSection])
 
@@ -80,12 +111,6 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
     const section = hashToSection(hash)
     setActiveSection(section)
   }, [])
-
-  useEffect(() => {
-    if (activeSection === 'about') document.body.classList.add('no-glow')
-    else document.body.classList.remove('no-glow')
-    return () => document.body.classList.remove('no-glow')
-  }, [activeSection])
 
   useEffect(() => {
     const onPopState = () => {
@@ -101,7 +126,16 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
 
   return (
     <CanvasNavigationContext.Provider
-      value={{ activeSection, translateYVh, isTransitioning, goTo }}
+      value={{
+        activeSection,
+        translateYVh,
+        isTransitioning,
+        leafPositionRef,
+        frozenLeafPositionRef,
+        fromSectionRef,
+        transitionStartRef,
+        goTo,
+      }}
     >
       {children}
     </CanvasNavigationContext.Provider>

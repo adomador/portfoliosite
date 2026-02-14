@@ -26,10 +26,14 @@ const SPOTS_MOBILE = {
 export default function HomeSection() {
   const isMobile = useIsMobile()
   const SPOTS = isMobile ? SPOTS_MOBILE : SPOTS_DESKTOP
-  const { goTo } = useCanvasNavigation()
+  const { goTo, leafPositionRef } = useCanvasNavigation()
+
+  const onLeafPositionChange = (x: number, y: number, rotation: number) => {
+    leafPositionRef.current = { x, y, rotation }
+  }
 
   return (
-    <LabyrinthProvider>
+    <LabyrinthProvider onLeafPositionChange={onLeafPositionChange}>
       <div className={styles.canvas}>
         <AmbientLayer />
         <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
@@ -42,8 +46,8 @@ export default function HomeSection() {
         <FleeingButton
           id="leaf"
           landingSpot={SPOTS.leaf}
-          startX={15}
-          startY={20}
+          startX={50}
+          startY={-18}
           kickOnLandedHover
           className={styles.leafButton}
         >
@@ -57,8 +61,8 @@ export default function HomeSection() {
         <FleeingButton
           id="work"
           landingSpot={SPOTS.work}
-          startX={80}
-          startY={15}
+          startX={-22}
+          startY={35}
           label="Work"
           onNavigate={() => goTo('work')}
           className={`${styles.navButton} ${styles.workButton}`}
@@ -68,8 +72,8 @@ export default function HomeSection() {
         <FleeingButton
           id="about"
           landingSpot={SPOTS.about}
-          startX={25}
-          startY={80}
+          startX={122}
+          startY={30}
           label="About"
           onNavigate={() => goTo('about')}
           className={`${styles.navButton} ${styles.aboutButton}`}
@@ -95,7 +99,7 @@ export default function HomeSection() {
           id="resume"
           landingSpot={SPOTS.resume}
           startX={10}
-          startY={55}
+          startY={118}
           label="Resume"
           href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0"
           className={`${styles.navButton} ${styles.resumeButton}`}

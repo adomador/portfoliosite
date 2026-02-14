@@ -5,7 +5,7 @@ import AboutSection from '@/components/sections/AboutSection'
 import WorkSection from '@/components/sections/WorkSection'
 import HomeSection from '@/components/sections/HomeSection'
 import TransitionSection from '@/components/sections/TransitionSection'
-import PersistentLeafOverlay from '@/components/PersistentLeafOverlay'
+import SingleLeaf from '@/components/SingleLeaf'
 import styles from './page.module.css'
 
 function CanvasWrapper({ children }: { children: React.ReactNode }) {
@@ -23,7 +23,7 @@ function CanvasWrapper({ children }: { children: React.ReactNode }) {
 export default function Page() {
   return (
     <CanvasNavigationProvider>
-      <PersistentLeafOverlay />
+      <SingleLeaf />
       <CanvasWrapper>
         <AboutSection />
         <TransitionSection direction="rise" />

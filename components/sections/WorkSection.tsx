@@ -15,14 +15,6 @@ export default function WorkSection() {
       >
         ← Back
       </button>
-      <div className={styles.leafArrival} aria-hidden>
-        <img
-          src="/fall-leaf.svg"
-          alt=""
-          className={styles.leaf}
-          draggable={false}
-        />
-      </div>
     </section>
   )
 }
