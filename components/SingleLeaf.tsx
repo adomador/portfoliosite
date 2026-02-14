@@ -49,10 +49,17 @@ function easeOutQuad(t: number): number {
 }
 
 const TAU = Math.PI * 2
+/** When progress is past this, lock to exact target so the transition ends with no snap */
+const LAND_THRESHOLD = 0.998
+
+/** Fade out sway/wobble as we approach 1 so we land exactly on target with no snap */
+function landEase(t: number): number {
+  return t >= 1 ? 0 : (1 - t) * (1 - t)
+}
 
 /**
  * Falling physics: tumble down toward Work rest (bottom-left) with rotation and lateral sway.
- * progress 0 = start (frozen), 1 = end at rest position.
+ * Sway and rotation fade to zero at progress=1 so the leaf eases into the exact rest position.
  */
 function applyFallingPhysics(
   progress: number,
@@ -65,22 +72,24 @@ function applyFallingPhysics(
   const wobbleCycles = 5
   const tumbleRotations = 2.2
   const wobbleAmplitude = 28
+  const fade = landEase(progress)
 
   const eased = easeInQuad(progress)
   const x =
     start.x + (target.x - start.x) * eased +
-    swayAmplitude * Math.sin(progress * TAU * wobbleCycles)
+    swayAmplitude * Math.sin(progress * TAU * wobbleCycles) * fade
   const y = start.y + (target.y - start.y) * eased
-  const rotation =
-    start.rotation +
+  const tumble =
     tumbleRotations * 360 * progress +
     wobbleAmplitude * Math.sin(progress * TAU * (wobbleCycles + 0.7))
+  const rotation = start.rotation * (1 - eased) + tumble * fade
 
   return { x, y, rotation }
 }
 
 /**
  * Rising physics: float up toward About rest (upper-left) with gentle sway and subtle rotation.
+ * Sway and rotation fade to zero at progress=1 so the leaf eases into the exact rest position.
  */
 function applyRisingPhysics(
   progress: number,
@@ -92,15 +101,15 @@ function applyRisingPhysics(
   const swayAmplitude = Math.min(32, vw * 0.05)
   const wobbleCycles = 3
   const floatRotation = 50
+  const fade = landEase(progress)
 
   const eased = easeOutQuad(progress)
   const x =
     start.x + (target.x - start.x) * eased +
-    swayAmplitude * Math.sin(progress * TAU * wobbleCycles)
+    swayAmplitude * Math.sin(progress * TAU * wobbleCycles) * fade
   const y = start.y + (target.y - start.y) * eased
-  const rotation =
-    start.rotation +
-    floatRotation * Math.sin(progress * TAU * 2)
+  const wobble = floatRotation * Math.sin(progress * TAU * 2)
+  const rotation = start.rotation * (1 - eased) + wobble * fade
 
   return { x, y, rotation }
 }
@@ -160,11 +169,17 @@ export default function SingleLeaf() {
             1,
             (Date.now() - transitionStartRef.current) / TRANSITION_DURATION_MS
           )
-          const eased = easeOutCubic(progress)
-          const pos = lerp(start, frozen, eased)
-          x = pos.x
-          y = pos.y
-          rotation = pos.rotation
+          if (progress >= LAND_THRESHOLD) {
+            x = frozen.x
+            y = frozen.y
+            rotation = frozen.rotation
+          } else {
+            const eased = easeOutCubic(progress)
+            const pos = lerp(start, frozen, eased)
+            x = pos.x
+            y = pos.y
+            rotation = pos.rotation
+          }
         } else {
           x = frozen.x
           y = frozen.y
@@ -177,10 +192,17 @@ export default function SingleLeaf() {
           1,
           (Date.now() - transitionStartRef.current) / TRANSITION_DURATION_MS
         )
-        const pos = applyFallingPhysics(progress, start, vwN, vhN)
-        x = pos.x
-        y = pos.y
-        rotation = pos.rotation
+        const restPx = getRestPositionPx('work', vwN, vhN)
+        if (progress >= LAND_THRESHOLD) {
+          x = restPx.x
+          y = restPx.y
+          rotation = restPx.rotation
+        } else {
+          const pos = applyFallingPhysics(progress, start, vwN, vhN)
+          x = pos.x
+          y = pos.y
+          rotation = pos.rotation
+        }
         arrivalRef.current = null
       } else if (activeSection === 'about' && isTransitioning) {
         const start = frozenLeafPositionRef.current
@@ -188,10 +210,17 @@ export default function SingleLeaf() {
           1,
           (Date.now() - transitionStartRef.current) / TRANSITION_DURATION_MS
         )
-        const pos = applyRisingPhysics(progress, start, vwN, vhN)
-        x = pos.x
-        y = pos.y
-        rotation = pos.rotation
+        const restPx = getRestPositionPx('about', vwN, vhN)
+        if (progress >= LAND_THRESHOLD) {
+          x = restPx.x
+          y = restPx.y
+          rotation = restPx.rotation
+        } else {
+          const pos = applyRisingPhysics(progress, start, vwN, vhN)
+          x = pos.x
+          y = pos.y
+          rotation = pos.rotation
+        }
         arrivalRef.current = null
       } else if (activeSection === 'about' && !isTransitioning) {
         const restPx = getRestPositionPx('about', vwN, vhN)

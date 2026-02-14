@@ -18,6 +18,7 @@ export default function AboutSection() {
 
   return (
     <section className={styles.section} aria-label="About">
+      <div className={styles.topLight} aria-hidden />
       <div className={styles.inner}>
         <button
           type="button"
@@ -39,7 +40,9 @@ export default function AboutSection() {
               and hiking.
             </p>
           </div>
-          <ul className={styles.toolsRow} role="list">
+          <div className={styles.toolsBlock}>
+            <h2 className={styles.toolsTitle}>My tools</h2>
+            <ul className={styles.toolsRow} role="list">
             {TOOLS.map((tool) => (
               <li key={tool.name} className={styles.toolIconWrap}>
                 <span className={`${styles.toolIcon} ${tool.darkIcon ? styles.toolIconDark : ''}`}>
@@ -47,7 +50,8 @@ export default function AboutSection() {
                 </span>
               </li>
             ))}
-          </ul>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
