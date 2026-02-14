@@ -8,7 +8,7 @@ import AmbientLayer from '@/components/AmbientLayer'
 /* ── Landing spot config (% of viewport) ── */
 
 const SPOTS = {
-  leaf:  { x: 50, y: 45 },
+  leaf:  { x: 28, y: 58 },
   work:  { x: 18, y: 35 },
   about: { x: 78, y: 30 },
   resume: { x: 82, y: 70 },
@@ -28,7 +28,7 @@ export default function Home() {
         {/* ── Center identity ── */}
         <div className={styles.identity}>
           <h1 className={styles.name}>Alfredo Domador</h1>
-          <p className={styles.role}>Product Designer</p>
+          <p className={styles.role}>Product Designer | Builder </p>
         </div>
 
         {/* ── Fleeing leaf ── */}
