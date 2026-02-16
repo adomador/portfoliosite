@@ -4,6 +4,8 @@
   min-height: 100vh;
   width: 100%;
   background: transparent;
+  --phi: 1.618;
+  --phi-inv: 0.618;
 }
 
 /* Dark glow from bottom – ember/fire, moves like flame */
@@ -74,98 +76,80 @@
   outline-offset: 4px;
 }
 
-/* Orbital layout container */
-.orbit {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.orbit > * {
-  pointer-events: auto;
-}
-
-/* Storm image container - holds GIF/PNG and subtle haze */
-.storm {
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  overflow: hidden;
-  transform-origin: center;
-  z-index: 1; /* Behind orbs */
-}
-
-.storm::after {
-  content: '';
-  position: absolute;
-  inset: -40px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(100, 50, 30, 0.15) 0%,
-    rgba(60, 30, 18, 0.08) 40%,
-    transparent 70%
-  );
-  filter: blur(20px);
-  z-index: -1;
-}
-
-.stormVideo {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Orbit container - centers the orbital system */
-.orbitContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 10; /* Above storm */
-}
-
-/* Orbiting path - each orb follows this animation */
-.orbPath {
+/* Case studies sit above the labyrinth */
+.aboveLabyrinth {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  height: calc(100% / var(--phi));
+  min-height: 38%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.aboveLabyrinth > * {
+  pointer-events: auto;
+}
+
+/* Golden-ratio grid: 4 items with phi-based spacing (1 : φ : φ : 1) */
+.goldenGrid {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 1.618fr) minmax(0, 1.618fr) 1fr;
+  gap: min(2rem, 5vw);
+  align-items: center;
+  justify-items: center;
+  max-width: min(90vw, 520px);
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+/* Case study card – orb + label, same visual language */
+.caseStudyCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  pointer-events: auto;
   cursor: pointer;
   background: none;
   border: none;
   padding: 0;
-  animation: orbit 60s linear infinite;
-  animation-delay: var(--orbit-delay, 0s);
-  transform-origin: center;
-  z-index: 10; /* Above storm */
+  transition: transform 0.25s ease;
 }
 
-@keyframes orbit {
-  from {
-    transform: rotate(0deg) translateX(180px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(180px) rotate(-360deg);
-  }
+.caseStudyCard:hover {
+  transform: scale(1.08);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .orbPath {
-    animation: none;
-    transform: rotate(0deg) translateX(180px) rotate(0deg);
-  }
+.caseStudyCard:focus-visible .orb {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+/* 3D Labyrinth container – below case studies, centered */
+.labyrinthWrap {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(320px, 85vw);
+  height: min(320px, 85vw);
+  max-height: calc(100vh - 42%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.labyrinthVideo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 /* Dark matter orb - glass-like sphere with subtle sheen */
@@ -207,7 +191,7 @@
   pointer-events: none;
 }
 
-.orbPath:hover .orb {
+.caseStudyCard:hover .orb {
   transform: scale(1.1);
   box-shadow: 
     0 6px 16px rgba(0, 0, 0, 0.5),
@@ -215,11 +199,11 @@
     0 0 20px rgba(201, 162, 39, 0.2);
 }
 
-.orbPath:hover .orb::before {
+.caseStudyCard:hover .orb::before {
   opacity: 0.6;
 }
 
-.orbPath:focus-visible .orb {
+.caseStudyCard:focus-visible .orb {
   outline: 2px solid var(--accent-gold);
   outline-offset: 4px;
 }
@@ -245,39 +229,31 @@
   transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
 }
 
-.orbPath:hover .orbLabel,
-.orbPath:focus-visible .orbLabel {
+.caseStudyCard:hover .orbLabel,
+.caseStudyCard:focus-visible .orbLabel {
   opacity: 1;
   transform: translateY(0);
   color: var(--accent-gold);
 }
 
-/* Mobile: simplified layout - 2x2 grid, no orbit */
+/* Mobile: golden ratio 2x2 grid */
 @media (max-width: 768px) {
-  .storm {
-    width: 160px;
-    height: 160px;
-    top: 25%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .orbitContainer {
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: auto;
+  .aboveLabyrinth {
     height: auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    max-width: 280px;
+    min-height: 0;
+    padding: 2rem 1rem 1rem;
   }
 
-  .orbPath {
-    position: static;
-    animation: none;
-    transform: none;
+  .goldenGrid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1.25rem;
+    max-width: 260px;
+  }
+
+  .labyrinthWrap {
+    width: min(240px, 75vw);
+    height: min(240px, 75vw);
   }
 
   .orb {

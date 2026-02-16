@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
-import { BlackholeGalaxy } from '@/src/remotion/BlackholeGalaxy'
+import { Labyrinth3D } from '@/src/remotion/Labyrinth3D'
 import styles from './WorkSection.module.css'
 
 const Player = dynamic(() => import('@remotion/player').then((mod) => ({ default: mod.Player })), {
@@ -35,30 +35,15 @@ export default function WorkSection() {
       >
         ← Back
       </button>
-      <div className={styles.orbit} aria-label="Case studies">
-        {/* Blackhole/Galaxy video at center */}
-        <div className={styles.storm} aria-hidden>
-          <Player
-            component={BlackholeGalaxy}
-            durationInFrames={300}
-            compositionWidth={260}
-            compositionHeight={260}
-            fps={30}
-            controls={false}
-            loop
-            autoPlay
-            className={styles.stormVideo}
-          />
-        </div>
 
-        {/* Orbiting orbs */}
-        <div className={styles.orbitContainer}>
-          {CASE_STUDIES.map((study, index) => (
+      {/* Case studies above labyrinth – golden-ratio layout */}
+      <div className={styles.aboveLabyrinth} aria-label="Case studies">
+        <div className={styles.goldenGrid}>
+          {CASE_STUDIES.map((study) => (
             <button
               key={study.id}
               type="button"
-              className={styles.orbPath}
-              style={{ ['--orbit-delay' as string]: `${-index * 15}s` }}
+              className={styles.caseStudyCard}
               onClick={() => onSelectCaseStudy(study.id)}
               aria-label={`View ${study.title} case study`}
             >
@@ -75,6 +60,21 @@ export default function WorkSection() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* 3D Labyrinth – maze / system of thought, Dante vibe */}
+      <div className={styles.labyrinthWrap}>
+        <Player
+          component={Labyrinth3D}
+          durationInFrames={300}
+          compositionWidth={320}
+          compositionHeight={320}
+          fps={30}
+          controls={false}
+          loop
+          autoPlay
+          className={styles.labyrinthVideo}
+        />
       </div>
     </section>
   )
