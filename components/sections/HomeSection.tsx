@@ -63,7 +63,7 @@ export default function HomeSection() {
           id="leaf"
           landingSpot={SPOTS.leaf}
           startX={50}
-          startY={-18}
+          startY={50}
           kickOnLandedHover
           className={styles.leafButton}
         >

@@ -76,9 +76,11 @@ const FRICTION = 0.92
 const LAND_DIST = 30 // px – snap threshold
 const LAND_VEL = 0.4 // px/frame – velocity threshold for landing
 const DRIFT_STRENGTH = 0.08 // gentle pull toward landing spot
+const WIND_STRENGTH = 0.32 // continuous wind on leaf so it moves across whole section
+const WIND_SPEED = 0.0018 // time scale for wind variation
 const BOUNDS_PADDING = 40 // px inset from viewport edge
-const CENTER_REPEL_RADIUS = 140 // px – leaf pushed away from center (identity)
-const CENTER_REPEL_STRENGTH = 0.4
+const CENTER_REPEL_RADIUS = 100 // px – leaf gently nudged away from center so it can roam full section
+const CENTER_REPEL_STRENGTH = 0.15
 const BUTTON_REPEL_RADIUS = 88 // px – leaf kept away from nav row
 const BUTTON_REPEL_STRENGTH = 0.35
 const DEFAULT_SETTLE_TIMEOUT_MS = 2000
@@ -125,15 +127,18 @@ export function LabyrinthProvider({
   /* ── rAF physics loop ── */
   useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const startTime = Date.now()
 
     const tick = () => {
       const vw = window.innerWidth
       const vh = window.innerHeight
       const cursor = cursorRef.current
+      const t = (Date.now() - startTime) * WIND_SPEED
 
       entitiesRef.current.forEach((ent) => {
+        const isLeaf = ent.id === 'leaf'
         if (ent.landed) {
-          if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+          if (isLeaf && onLeafPositionChangeRef.current) {
             onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
           }
           return
@@ -197,11 +202,19 @@ export function LabyrinthProvider({
           })
         }
 
-        /* Gentle drift toward landing spot */
-        const toDx = landX - ent.x
-        const toDy = landY - ent.y
-        ent.vx += toDx * DRIFT_STRENGTH * 0.01
-        ent.vy += toDy * DRIFT_STRENGTH * 0.01
+        /* Gentle drift toward landing spot (skip for leaf – wind drives it) */
+        if (!isLeaf) {
+          const toDx = landX - ent.x
+          const toDy = landY - ent.y
+          ent.vx += toDx * DRIFT_STRENGTH * 0.01
+          ent.vy += toDy * DRIFT_STRENGTH * 0.01
+        }
+
+        /* Leaf: continuous wind so it never stays still */
+        if (isLeaf) {
+          ent.vx += Math.sin(t) * WIND_STRENGTH + Math.sin(t * 1.3 + 2) * (WIND_STRENGTH * 0.5)
+          ent.vy += Math.cos(t * 0.9 + 1) * WIND_STRENGTH + Math.cos(t * 1.1) * (WIND_STRENGTH * 0.4)
+        }
 
         /* Friction */
         ent.vx *= FRICTION
@@ -219,11 +232,13 @@ export function LabyrinthProvider({
         /* Rotation driven by horizontal velocity (leaf tumbling) */
         ent.rotation += ent.vx * 2.5
 
-        /* Landing check */
+        /* Landing check (leaf never lands – always drifting in wind) */
+        const toDx = landX - ent.x
+        const toDy = landY - ent.y
         const toDist = Math.sqrt(toDx * toDx + toDy * toDy)
         const speed = Math.sqrt(ent.vx * ent.vx + ent.vy * ent.vy)
 
-        if (toDist < LAND_DIST && speed < LAND_VEL) {
+        if (!isLeaf && toDist < LAND_DIST && speed < LAND_VEL) {
           ent.x = landX
           ent.y = landY
           ent.vx = 0
@@ -316,29 +331,33 @@ export function LabyrinthProvider({
         onLeafPositionChangeRef.current(startX, startY, entity.rotation)
       }
 
-      const settleTimeout = setTimeout(() => {
-        const ent = entitiesRef.current.get(id)
-        if (!ent || ent.landed) return
-        const vw = window.innerWidth
-        const vh = window.innerHeight
-        const landX = (ent.landingSpot.x / 100) * vw
-        const landY = (ent.landingSpot.y / 100) * vh
-        ent.x = landX
-        ent.y = landY
-        ent.vx = 0
-        ent.vy = 0
-        ent.landed = true
-        ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-        ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
-        ent.el.style.willChange = 'auto'
-        if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-          onLeafPositionChangeRef.current(landX, landY, 0)
-        }
-        setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
-      }, timeoutMs)
+      /* Don't force-land the leaf – it stays in wind-driven motion forever */
+      const settleTimeout =
+        id === 'leaf'
+          ? undefined
+          : setTimeout(() => {
+              const ent = entitiesRef.current.get(id)
+              if (!ent || ent.landed) return
+              const vw = window.innerWidth
+              const vh = window.innerHeight
+              const landX = (ent.landingSpot.x / 100) * vw
+              const landY = (ent.landingSpot.y / 100) * vh
+              ent.x = landX
+              ent.y = landY
+              ent.vx = 0
+              ent.vy = 0
+              ent.landed = true
+              ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+              ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
+              ent.el.style.willChange = 'auto'
+              if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+                onLeafPositionChangeRef.current(landX, landY, 0)
+              }
+              setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
+            }, timeoutMs)
 
       return () => {
-        clearTimeout(settleTimeout)
+        if (settleTimeout !== undefined) clearTimeout(settleTimeout)
         entitiesRef.current.delete(id)
       }
     },
