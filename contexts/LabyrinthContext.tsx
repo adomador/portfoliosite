@@ -77,9 +77,9 @@ const LAND_DIST = 30 // px – snap threshold
 const LAND_VEL = 0.4 // px/frame – velocity threshold for landing
 const DRIFT_STRENGTH = 0.08 // gentle pull toward landing spot
 const BOUNDS_PADDING = 40 // px inset from viewport edge
-const CENTER_REPEL_RADIUS = 120 // px – leaf is pushed away from center (text zone)
+const CENTER_REPEL_RADIUS = 140 // px – leaf pushed away from center (identity)
 const CENTER_REPEL_STRENGTH = 0.4
-const BUTTON_REPEL_RADIUS = 80 // px – leaf kept away from nav button zones
+const BUTTON_REPEL_RADIUS = 88 // px – leaf kept away from nav row
 const BUTTON_REPEL_STRENGTH = 0.35
 const DEFAULT_SETTLE_TIMEOUT_MS = 2000
 const LEAF_SETTLE_TIMEOUT_MS = 7000
@@ -179,10 +179,11 @@ export function LabyrinthProvider({
             ent.vx += (cdx / cdist) * cforce
             ent.vy += (cdy / cdist) * cforce
           }
+          /* Nav row: Work, About, Resume (structured bottom strip) */
           const buttonZones: [number, number][] = [
-            [(18 / 100) * vw, (35 / 100) * vh],
-            [(78 / 100) * vw, (30 / 100) * vh],
-            [(82 / 100) * vw, (70 / 100) * vh],
+            [(25 / 100) * vw, (80 / 100) * vh],
+            [(50 / 100) * vw, (80 / 100) * vh],
+            [(75 / 100) * vw, (80 / 100) * vh],
           ]
           buttonZones.forEach(([bx, by]) => {
             const bdx = ent.x - bx

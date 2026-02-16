@@ -3,24 +3,24 @@
 import styles from './HomeSection.module.css'
 import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
 import FleeingButton from '@/components/FleeingButton'
-import VertigoSpiral from '@/components/VertigoSpiral'
 import ResumeBook from '@/components/ResumeBook'
 import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 
+/* Nav row: structured bottom strip. Leaf stays haphazard (varied spots in LabyrinthContext). */
 const SPOTS_DESKTOP = {
   leaf:  { x: 28, y: 58 },
-  work:  { x: 18, y: 35 },
-  about: { x: 78, y: 30 },
-  resume: { x: 82, y: 70 },
+  work:  { x: 25, y: 78 },
+  about: { x: 50, y: 78 },
+  resume: { x: 75, y: 78 },
 } as const
 
 const SPOTS_MOBILE = {
   leaf:  { x: 22, y: 72 },
-  work:  { x: 22, y: 18 },
-  about: { x: 78, y: 18 },
-  resume: { x: 78, y: 82 },
+  work:  { x: 25, y: 82 },
+  about: { x: 50, y: 82 },
+  resume: { x: 75, y: 82 },
 } as const
 
 export default function HomeSection() {
@@ -36,12 +36,28 @@ export default function HomeSection() {
     <LabyrinthProvider onLeafPositionChange={onLeafPositionChange}>
       <div className={styles.canvas}>
         <AmbientLayer />
-        <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
-          Let&apos;s talk
-        </a>
-        <div className={styles.identity}>
-          <h1 className={styles.name}>Alfredo Domador</h1>
-          <p className={styles.role}>Product Designer | Builder </p>
+        <div className={styles.homeContent}>
+          <header className={styles.homeHeader}>
+            <a
+              href="https://www.linkedin.com/in/adomador13/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.linkedInLink}
+              aria-label="LinkedIn"
+            >
+              <img src="/linkedin.svg" alt="" className={styles.linkedInIcon} />
+            </a>
+            <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
+              Let&apos;s talk
+            </a>
+          </header>
+          <main className={styles.homeMain}>
+            <div className={styles.identity}>
+              <h1 className={styles.name}>Alfredo Domador</h1>
+              <p className={styles.role}>Product Designer | Builder </p>
+            </div>
+          </main>
+          <div className={styles.homeNav} aria-hidden />
         </div>
         <FleeingButton
           id="leaf"
@@ -61,19 +77,24 @@ export default function HomeSection() {
         <FleeingButton
           id="work"
           landingSpot={SPOTS.work}
-          startX={-22}
-          startY={35}
+          startX={25}
+          startY={110}
           label="Work"
           onNavigate={() => goTo('work')}
           className={`${styles.navButton} ${styles.workButton}`}
         >
-          <VertigoSpiral />
+          <img
+            src="/work-icon.svg"
+            alt=""
+            className={styles.workIcon}
+            draggable={false}
+          />
         </FleeingButton>
         <FleeingButton
           id="about"
           landingSpot={SPOTS.about}
-          startX={122}
-          startY={30}
+          startX={50}
+          startY={110}
           label="About"
           onNavigate={() => goTo('about')}
           className={`${styles.navButton} ${styles.aboutButton}`}
@@ -98,8 +119,8 @@ export default function HomeSection() {
         <FleeingButton
           id="resume"
           landingSpot={SPOTS.resume}
-          startX={10}
-          startY={118}
+          startX={75}
+          startY={110}
           label="Resume"
           href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0"
           className={`${styles.navButton} ${styles.resumeButton}`}

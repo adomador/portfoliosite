@@ -29,7 +29,7 @@ export default function AboutSection() {
         </button>
         <div className={styles.content}>
           <div className={styles.copy}>
-            <h1 className={styles.title}>About</h1>
+            <h1 className={styles.title}>About me</h1>
             <p className={styles.lead}>
               Through first principles, strategic systems thinking, and a bias toward
               action, I transform ambiguous problems into elegant experiences humans

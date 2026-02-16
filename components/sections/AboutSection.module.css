@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-/* Simple pearl white light from the very top – subtle, static, no motion */
+/* Pearl white light from the top – glows stronger on section hover */
 .topLight {
   position: absolute;
   inset: 0;
@@ -22,6 +22,25 @@
     rgba(252, 251, 248, 0.02) 50%,
     transparent 85%
   );
+}
+
+.topLight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 110% 70% at 50% 0%,
+    rgba(252, 251, 248, 0.12) 0%,
+    rgba(252, 251, 248, 0.05) 45%,
+    rgba(252, 251, 248, 0.02) 70%,
+    transparent 90%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.section:hover .topLight::after {
+  opacity: 1;
 }
 
 .inner {
