@@ -8,18 +8,18 @@ import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 
-/* Nav row: structured bottom strip. Leaf stays haphazard (varied spots in LabyrinthContext). */
+/* Nav row: About left, Work middle, Resume right. Leaf stays haphazard (varied spots in LabyrinthContext). */
 const SPOTS_DESKTOP = {
   leaf:  { x: 28, y: 58 },
-  work:  { x: 25, y: 78 },
-  about: { x: 50, y: 78 },
+  about: { x: 25, y: 78 },
+  work:  { x: 50, y: 78 },
   resume: { x: 75, y: 78 },
 } as const
 
 const SPOTS_MOBILE = {
   leaf:  { x: 22, y: 72 },
-  work:  { x: 25, y: 82 },
-  about: { x: 50, y: 82 },
+  about: { x: 25, y: 82 },
+  work:  { x: 50, y: 82 },
   resume: { x: 75, y: 82 },
 } as const
 
@@ -75,25 +75,9 @@ export default function HomeSection() {
           />
         </FleeingButton>
         <FleeingButton
-          id="work"
-          landingSpot={SPOTS.work}
-          startX={25}
-          startY={110}
-          label="Work"
-          onNavigate={() => goTo('work')}
-          className={`${styles.navButton} ${styles.workButton}`}
-        >
-          <img
-            src="/work-icon.svg"
-            alt=""
-            className={styles.workIcon}
-            draggable={false}
-          />
-        </FleeingButton>
-        <FleeingButton
           id="about"
           landingSpot={SPOTS.about}
-          startX={50}
+          startX={25}
           startY={110}
           label="About"
           onNavigate={() => goTo('about')}
@@ -115,6 +99,22 @@ export default function HomeSection() {
               />
             </div>
           </div>
+        </FleeingButton>
+        <FleeingButton
+          id="work"
+          landingSpot={SPOTS.work}
+          startX={50}
+          startY={110}
+          label="Work"
+          onNavigate={() => goTo('work')}
+          className={`${styles.navButton} ${styles.workButton}`}
+        >
+          <img
+            src="/work-icon.svg"
+            alt=""
+            className={styles.workIcon}
+            draggable={false}
+          />
         </FleeingButton>
         <FleeingButton
           id="resume"

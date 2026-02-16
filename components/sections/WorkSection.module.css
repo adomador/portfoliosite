@@ -12,10 +12,12 @@
   inset: 0;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 100% 55% at 50% 100%,
-    rgba(90, 35, 25, 0.22) 0%,
-    rgba(60, 25, 18, 0.08) 45%,
-    transparent 80%
+    ellipse 100% 60% at 50% 100%,
+    rgba(120, 45, 30, 0.35) 0%,
+    rgba(100, 35, 22, 0.25) 30%,
+    rgba(80, 30, 20, 0.15) 50%,
+    rgba(60, 25, 18, 0.08) 70%,
+    transparent 85%
   );
   animation: fireFlicker 4s ease-in-out infinite;
 }
