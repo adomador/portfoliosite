@@ -1,14 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
-import { Labyrinth3D } from '@/src/remotion/Labyrinth3D'
 import styles from './WorkSection.module.css'
-
-const Player = dynamic(() => import('@remotion/player').then((mod) => ({ default: mod.Player })), {
-  ssr: false,
-})
 
 const CASE_STUDIES = [
   { id: 'trochi', title: 'Trochi', logo: '/work/Trochi.svg' },
@@ -62,20 +56,6 @@ export default function WorkSection() {
         </div>
       </div>
 
-      {/* 3D Labyrinth – maze / system of thought, Dante vibe */}
-      <div className={styles.labyrinthWrap}>
-        <Player
-          component={Labyrinth3D}
-          durationInFrames={300}
-          compositionWidth={320}
-          compositionHeight={320}
-          fps={30}
-          controls={false}
-          loop
-          autoPlay
-          className={styles.labyrinthVideo}
-        />
-      </div>
     </section>
   )
 }
