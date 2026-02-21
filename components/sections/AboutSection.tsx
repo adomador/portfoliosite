@@ -7,10 +7,10 @@ import styles from './AboutSection.module.css'
 const TOOLS: Array<{ name: string; icon: string; darkIcon?: boolean }> = [
   { name: 'Figma', icon: '/Figma-logo.svg' },
   { name: 'Cursor', icon: '/cursor-icon.svg' },
+  { name: 'Claude', icon: '/anthropic-1.svg' },
+  { name: 'GitHub', icon: '/Octicons-mark-github.svg', darkIcon: true },
   { name: 'Notion', icon: '/notion-logo.svg' },
   { name: 'Miro', icon: '/miro-logo.svg' },
-  { name: 'GitHub', icon: '/Octicons-mark-github.svg', darkIcon: true },
-  { name: 'Claude', icon: '/anthropic-1.svg' },
 ]
 
 export default function AboutSection() {
