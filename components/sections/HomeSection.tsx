@@ -3,6 +3,7 @@
 import styles from './HomeSection.module.css'
 import { LabyrinthProvider } from '@/contexts/LabyrinthContext'
 import FleeingButton from '@/components/FleeingButton'
+import CandleGlowWrapper from '@/components/CandleGlowWrapper'
 import ResumeBook from '@/components/ResumeBook'
 import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -100,6 +101,7 @@ export default function HomeSection() {
             </div>
           </div>
         </FleeingButton>
+        <CandleGlowWrapper />
         <FleeingButton
           id="work"
           landingSpot={SPOTS.work}
