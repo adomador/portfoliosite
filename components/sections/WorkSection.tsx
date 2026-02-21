@@ -27,16 +27,17 @@ export default function WorkSection() {
   return (
     <section className={styles.section} aria-label="Work">
       <div className={styles.fireGlow} aria-hidden />
-      <button
-        type="button"
-        className={styles.back}
-        onClick={() => goTo('home')}
-      >
-        ← Back
-      </button>
 
       <div className={styles.content}>
-        <div className={styles.grid} aria-label="Case studies">
+        <div className={styles.contentInner}>
+          <button
+            type="button"
+            className={styles.back}
+            onClick={() => goTo('home')}
+          >
+            ← Back
+          </button>
+          <div className={styles.grid} aria-label="Case studies">
           {CASE_STUDIES.map((study) => {
             const CardContent = () => (
               <div className={styles.cardFrame}>
@@ -88,6 +89,7 @@ export default function WorkSection() {
               </button>
             )
           })}
+        </div>
         </div>
       </div>
     </section>
