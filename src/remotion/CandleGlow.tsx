@@ -17,7 +17,7 @@ export const CandleGlow: React.FC = () => {
 
   // High-frequency phases for abrupt flicker (integers = seamless loop)
   const t = interpolate(frame, [0, durationInFrames], [0, Math.PI * 2], {
-    extrapolateRight: 'loop',
+    extrapolateRight: 'wrap',
     easing: Easing.linear,
   });
   const f1 = 7;

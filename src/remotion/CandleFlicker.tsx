@@ -16,25 +16,25 @@ export const CandleFlicker: React.FC = () => {
     frame,
     [0, durationInFrames],
     [0, Math.PI * 2],
-    { extrapolateRight: 'loop', easing: Easing.linear }
+    { extrapolateRight: 'wrap', easing: Easing.linear }
   );
   const phase2 = interpolate(
     frame,
     [0, durationInFrames],
     [0, Math.PI * 2 * 1.3],
-    { extrapolateRight: 'loop', easing: Easing.linear }
+    { extrapolateRight: 'wrap', easing: Easing.linear }
   );
   const phase3 = interpolate(
     frame,
     [0, durationInFrames],
     [0, Math.PI * 2 * 0.7],
-    { extrapolateRight: 'loop', easing: Easing.linear }
+    { extrapolateRight: 'wrap', easing: Easing.linear }
   );
   const phase4 = interpolate(
     frame,
     [0, durationInFrames],
     [0, Math.PI * 2 * 1.7],
-    { extrapolateRight: 'loop', easing: Easing.linear }
+    { extrapolateRight: 'wrap', easing: Easing.linear }
   );
 
   // Flame only: wind-blown flicker — tilt, sway, stretch/squash, brightness

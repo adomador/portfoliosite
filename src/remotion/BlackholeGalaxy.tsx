@@ -17,7 +17,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, 360],
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -29,7 +29,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, Math.PI * 2],
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -42,7 +42,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, 360 * 3], // 3 full rotations
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -52,7 +52,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, -360 * 2], // 2 full rotations (negative)
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -62,7 +62,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, 360 * 1.5], // 1.5 full rotations
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -73,7 +73,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, 360],
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -84,7 +84,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, Math.PI * 2 * 15], // 15 complete cycles
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -95,7 +95,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, Math.PI * 2 * 21], // 21 complete cycles
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
@@ -106,7 +106,7 @@ export const BlackholeGalaxy: React.FC = () => {
     [0, durationInFrames],
     [0, Math.PI * 2 * 9], // 9 complete cycles
     {
-      extrapolateRight: 'loop',
+      extrapolateRight: 'wrap',
       easing: Easing.linear,
     }
   );
