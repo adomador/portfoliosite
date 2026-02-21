@@ -1,5 +1,6 @@
 .canvasWrapper {
   width: 100%;
+  background: var(--bg-deep);
   transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
   will-change: transform;
 }
