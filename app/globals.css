@@ -26,6 +26,11 @@
 
 html {
   scroll-behavior: smooth;
+  overflow: hidden;
+  height: 100%;
+  overscroll-behavior: none;
+  position: fixed;
+  width: 100%;
 }
 
 body {
@@ -35,9 +40,12 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
   overflow: hidden;
-  position: relative;
+  overscroll-behavior: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Glow layer: subtle; kept minimal so text stays clearly visible */
