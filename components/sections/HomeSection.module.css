@@ -77,6 +77,37 @@
   object-fit: contain;
 }
 
+.githubLink {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.githubLink:hover {
+  color: var(--accent-gold);
+  opacity: 0.9;
+}
+
+.githubLink:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+.githubIcon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.githubLink:hover .githubIcon {
+  filter: brightness(0) invert(0.92) sepia(0.6) saturate(4) hue-rotate(8deg);
+}
+
 .letsTalk {
   pointer-events: auto;
   font-size: 0.8125rem;
@@ -343,6 +374,17 @@
   }
 
   .linkedInIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .githubLink {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem;
+  }
+
+  .githubIcon {
     width: 24px;
     height: 24px;
   }

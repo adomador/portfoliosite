@@ -48,6 +48,15 @@ export default function HomeSection() {
             >
               <img src="/linkedin.svg" alt="" className={styles.linkedInIcon} />
             </a>
+            <a
+              href="https://github.com/adomador"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.githubLink}
+              aria-label="GitHub"
+            >
+              <img src="/Octicons-mark-github.svg" alt="" className={styles.githubIcon} />
+            </a>
             <a href="mailto:alfredo.domador13@gmail.com" className={styles.letsTalk}>
               Let&apos;s talk
             </a>
