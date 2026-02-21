@@ -6,8 +6,8 @@ import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import styles from './AboutSection.module.css'
 
 const CHESS_LINKS = [
-  { label: 'Chess.com', href: 'https://www.chess.com/member/williammontagueiv' },
-  { label: 'Lichess', href: 'https://lichess.org/@/WilliamHarvey' },
+  { label: 'Chess.com', href: 'https://www.chess.com/member/williammontagueiv', icon: '/chesscom.svg' },
+  { label: 'Lichess', href: 'https://lichess.org/@/WilliamHarvey', icon: '/lichess.svg' },
 ]
 
 const TOOLS: Array<{ name: string; icon: string; darkIcon?: boolean }> = [
@@ -90,9 +90,6 @@ export default function AboutSection() {
               aria-expanded={menuOpen}
               aria-label="Let's play chess – open menu"
             >
-              <span className={styles.chessIcon}>
-                <Image src="/rook-icon.png" alt="" width={32} height={32} />
-              </span>
               Let&apos;s play
             </button>
             <div className={styles.chessMenu} role="menu">
@@ -105,6 +102,9 @@ export default function AboutSection() {
                   className={styles.chessMenuItem}
                   role="menuitem"
                 >
+                  <span className={styles.chessMenuItemIcon}>
+                    <Image src={link.icon} alt="" width={20} height={20} />
+                  </span>
                   {link.label}
                 </a>
               ))}

@@ -167,6 +167,7 @@
   align-items: center;
   gap: 10px;
   padding: 0.75rem 1.25rem;
+  border-radius: 8px;
   background: linear-gradient(
     165deg,
     var(--bg-elevated) 0%,
@@ -256,6 +257,8 @@
   top: calc(100% + 8px);
   left: 0;
   min-width: 160px;
+  border-radius: 8px;
+  overflow: hidden;
   background: linear-gradient(
     165deg,
     rgba(26, 24, 22, 0.98) 0%,
@@ -280,7 +283,9 @@
 }
 
 .chessMenuItem {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
@@ -294,6 +299,18 @@
   border: none;
   cursor: pointer;
   transition: color 0.2s ease;
+}
+
+.chessMenuItemIcon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.chessMenuItemIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .chessMenuItem:hover {
