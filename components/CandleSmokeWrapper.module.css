@@ -1,0 +1,22 @@
+.wrap {
+  position: fixed;
+  left: calc(50% + 32px);
+  top: 78%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  z-index: 15;
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    top: 82%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    display: none;
+  }
+}

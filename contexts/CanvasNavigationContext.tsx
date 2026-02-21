@@ -46,6 +46,8 @@ interface CanvasNavigationContextValue {
   isTransitioning: boolean
   /** Home section in "lights out" state (candle gone, dark overlay) */
   homeDarkened: boolean
+  /** Smoke over candle when blowing out to go to work */
+  candleSmokeVisible: boolean
   /** Written by labyrinth every frame when on home; SingleLeaf reads this */
   leafPositionRef: MutableRefObject<LeafPosition>
   /** Frozen copy when transition starts; SingleLeaf uses this while isTransitioning */
@@ -76,6 +78,7 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
   const [activeSection, setActiveSection] = useState<CanvasSection>(getInitialSection)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [homeDarkened, setHomeDarkened] = useState(false)
+  const [candleSmokeVisible, setCandleSmokeVisible] = useState(false)
   const transitionEndRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lightsOutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const leafPositionRef = useRef<LeafPosition>({ ...DEFAULT_LEAF })
@@ -100,6 +103,7 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
       fromSectionRef.current = null
       frozenLeafPositionRef.current = { ...leafPositionRef.current }
       setHomeDarkened(true)
+      setCandleSmokeVisible(true)
       setIsTransitioning(true)
       lightsOutRef.current = setTimeout(() => {
         lightsOutRef.current = null
@@ -110,6 +114,7 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
         transitionEndRef.current = setTimeout(() => {
           transitionEndRef.current = null
           setIsTransitioning(false)
+          setCandleSmokeVisible(false)
         }, TRANSITION_DURATION_MS)
       }, LIGHTS_OUT_MS)
     } else if (section === 'home') {
@@ -174,6 +179,7 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
         translateYVh,
         isTransitioning,
         homeDarkened,
+        candleSmokeVisible,
         leafPositionRef,
         frozenLeafPositionRef,
         fromSectionRef,

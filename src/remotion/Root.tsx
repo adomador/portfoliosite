@@ -2,6 +2,7 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { BlackholeGalaxy } from './BlackholeGalaxy';
 import { CandleGlow } from './CandleGlow';
+import CandleSmoke from './CandleSmoke';
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -21,6 +22,14 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={400}
         height={400}
+      />
+      <Composition
+        id="CandleSmoke"
+        component={CandleSmoke}
+        durationInFrames={90}
+        fps={30}
+        width={120}
+        height={120}
       />
     </>
   );
