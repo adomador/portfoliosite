@@ -150,8 +150,8 @@
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-/* Per-card light source positions */
-.card[data-study='trochi'] .cardGlow {
+/* Per-card light source positions – top-left Diezl gets prime golden glow */
+.card[data-study='diezl'] .cardGlow {
   top: -15%;
   left: -15%;
   background: radial-gradient(
@@ -163,7 +163,7 @@
   opacity: 0.6;
 }
 
-.card[data-study='fleetworthy'] .cardGlow {
+.card[data-study='trochi'] .cardGlow {
   top: -15%;
   right: -15%;
   left: auto;
@@ -176,7 +176,7 @@
   opacity: 0.5;
 }
 
-.card[data-study='triumph'] .cardGlow {
+.card[data-study='fleetworthy'] .cardGlow {
   bottom: -15%;
   left: -15%;
   top: auto;
@@ -189,7 +189,7 @@
   opacity: 0.5;
 }
 
-.card[data-study='diezl'] .cardGlow {
+.card[data-study='triumph'] .cardGlow {
   bottom: -15%;
   right: -15%;
   left: auto;
@@ -226,8 +226,8 @@
   transform: scale(1.15);
 }
 
-/* Trochi hover – golden wash */
-.card[data-study='trochi']:hover .cardGlow {
+/* Diezl hover – golden wash (top-left featured) */
+.card[data-study='diezl']:hover .cardGlow {
   background: radial-gradient(
     circle at 30% 30%,
     rgba(201, 162, 39, 0.22) 0%,
@@ -236,8 +236,8 @@
   );
 }
 
-/* Fleetworthy hover – amber accent */
-.card[data-study='fleetworthy']:hover .cardGlow {
+/* Trochi hover – amber accent */
+.card[data-study='trochi']:hover .cardGlow {
   background: radial-gradient(
     circle at 70% 30%,
     rgba(212, 160, 84, 0.2) 0%,
@@ -246,8 +246,8 @@
   );
 }
 
-/* Triumph hover – crimson undertone */
-.card[data-study='triumph']:hover .cardGlow {
+/* Fleetworthy hover – crimson undertone */
+.card[data-study='fleetworthy']:hover .cardGlow {
   background: radial-gradient(
     circle at 30% 70%,
     rgba(139, 38, 53, 0.18) 0%,
@@ -256,8 +256,8 @@
   );
 }
 
-/* Diezl hover – crimson (matches Triumph) */
-.card[data-study='diezl']:hover .cardGlow {
+/* Triumph hover – crimson (bottom-right) */
+.card[data-study='triumph']:hover .cardGlow {
   background: radial-gradient(
     circle at 70% 70%,
     rgba(139, 38, 53, 0.18) 0%,
