@@ -1,7 +1,6 @@
 'use client'
 
 import { CanvasNavigationProvider, useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
-import CandleSmokeWrapper from '@/components/CandleSmokeWrapper'
 import AboutSection from '@/components/sections/AboutSection'
 import WorkSection from '@/components/sections/WorkSection'
 import HomeSection from '@/components/sections/HomeSection'
@@ -25,7 +24,6 @@ export default function Page() {
   return (
     <CanvasNavigationProvider>
       <SingleLeaf />
-      <CandleSmokeWrapper />
       <CanvasWrapper>
         <AboutSection />
         <TransitionSection direction="rise" />

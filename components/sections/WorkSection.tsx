@@ -15,7 +15,6 @@ export default function WorkSection() {
   const { goTo } = useCanvasNavigation()
 
   const onSelectCaseStudy = (id: string) => {
-    // Stub: will be wired to navigate to case study section later
     console.log('Selected case study:', id)
   }
 
@@ -30,32 +29,35 @@ export default function WorkSection() {
         ← Back
       </button>
 
-      {/* Case studies above labyrinth – golden-ratio layout */}
-      <div className={styles.aboveLabyrinth} aria-label="Case studies">
-        <div className={styles.goldenGrid}>
+      <div className={styles.content}>
+        <div className={styles.grid} aria-label="Case studies">
           {CASE_STUDIES.map((study) => (
             <button
               key={study.id}
               type="button"
-              className={styles.caseStudyCard}
+              className={styles.card}
+              data-study={study.id}
               onClick={() => onSelectCaseStudy(study.id)}
               aria-label={`View ${study.title} case study`}
             >
-              <div className={styles.orb}>
-                <Image
-                  src={study.logo}
-                  alt=""
-                  width={32}
-                  height={32}
-                  className={styles.orbLogo}
-                />
+              <div className={styles.cardFrame}>
+                <div className={styles.cardGlow} aria-hidden />
+                <div className={styles.logoWrapper}>
+                  <Image
+                    src={study.logo}
+                    alt=""
+                    width={56}
+                    height={56}
+                    className={styles.logo}
+                  />
+                </div>
+                <span className={styles.cardTitle}>{study.title}</span>
+                <span className={styles.cardCta}>Coming soon…</span>
               </div>
-              <span className={styles.orbLabel}>{study.title}</span>
             </button>
           ))}
         </div>
       </div>
-
     </section>
   )
 }
