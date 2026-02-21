@@ -4,6 +4,12 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  transition: opacity 600ms ease-out;
+}
+
+.layer.layerDarkened {
+  opacity: 0;
+  transition: opacity 400ms ease-in;
 }
 
 /* ── Orbs: warm Goya-like glows ── */

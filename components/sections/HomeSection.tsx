@@ -27,7 +27,7 @@ const SPOTS_MOBILE = {
 export default function HomeSection() {
   const isMobile = useIsMobile()
   const SPOTS = isMobile ? SPOTS_MOBILE : SPOTS_DESKTOP
-  const { goTo, leafPositionRef } = useCanvasNavigation()
+  const { goTo, leafPositionRef, homeDarkened } = useCanvasNavigation()
 
   const onLeafPositionChange = (x: number, y: number, rotation: number) => {
     leafPositionRef.current = { x, y, rotation }
@@ -118,6 +118,10 @@ export default function HomeSection() {
             draggable={false}
           />
         </FleeingButton>
+        <div
+          className={`${styles.darknessOverlay} ${homeDarkened ? styles.darknessOverlayVisible : ''}`}
+          aria-hidden
+        />
         <FleeingButton
           id="resume"
           landingSpot={SPOTS.resume}

@@ -43,6 +43,7 @@ body {
 /* Glow layer: subtle; kept minimal so text stays clearly visible */
 body::before {
   content: '';
+  transition: opacity 600ms ease-out;
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -62,6 +63,11 @@ body::before {
     );
   transform-origin: 50% 35%;
   animation: glowBreathe 14s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+body.home-darkened::before {
+  opacity: 0 !important;
+  transition: opacity 400ms ease-in;
 }
 
 @keyframes glowBreathe {

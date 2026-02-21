@@ -1,5 +1,6 @@
 'use client'
 
+import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import styles from './AmbientLayer.module.css'
 
 /**
@@ -8,8 +9,9 @@ import styles from './AmbientLayer.module.css'
  * Inspired by Goya chiaroscuro: warm glows against deep dark.
  */
 export default function AmbientLayer() {
+  const { homeDarkened } = useCanvasNavigation()
   return (
-    <div className={styles.layer} aria-hidden="true">
+    <div className={`${styles.layer} ${homeDarkened ? styles.layerDarkened : ''}`} aria-hidden="true">
       <div className={`${styles.orb} ${styles.orb1}`} />
       <div className={`${styles.orb} ${styles.orb2}`} />
       <div className={`${styles.orb} ${styles.orb3}`} />

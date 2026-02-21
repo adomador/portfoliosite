@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useLabyrinth } from '@/contexts/LabyrinthContext'
+import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import { CandleGlow } from '@/src/remotion/CandleGlow'
 import styles from './sections/HomeSection.module.css'
 
@@ -12,11 +13,12 @@ const Player = dynamic(
 
 export default function CandleGlowWrapper() {
   const { landedMap } = useLabyrinth()
+  const { homeDarkened } = useCanvasNavigation()
   const workLanded = landedMap['work'] ?? false
 
   return (
     <div
-      className={`${styles.candleGlowWrap} ${workLanded ? styles.candleGlowVisible : ''}`}
+      className={`${styles.candleGlowWrap} ${workLanded ? styles.candleGlowVisible : ''} ${homeDarkened ? styles.candleGlowDarkened : ''}`}
       aria-hidden
     >
       <Player
