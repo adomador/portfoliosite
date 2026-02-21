@@ -1,8 +1,14 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import styles from './AboutSection.module.css'
+
+const CHESS_LINKS = [
+  { label: 'Chess.com', href: 'https://www.chess.com/member/williammontagueiv' },
+  { label: 'Lichess', href: 'https://lichess.org/@/WilliamHarvey' },
+]
 
 const TOOLS: Array<{ name: string; icon: string; darkIcon?: boolean }> = [
   { name: 'Figma', icon: '/Figma-logo.svg' },
@@ -15,6 +21,26 @@ const TOOLS: Array<{ name: string; icon: string; darkIcon?: boolean }> = [
 
 export default function AboutSection() {
   const { goTo } = useCanvasNavigation()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const chessBlockRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (chessBlockRef.current && !chessBlockRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [menuOpen])
 
   return (
     <section className={styles.section} aria-label="About">
@@ -51,6 +77,38 @@ export default function AboutSection() {
               </li>
             ))}
             </ul>
+          </div>
+          <div
+            ref={chessBlockRef}
+            className={`${styles.chessBlock} ${menuOpen ? styles.menuOpen : ''}`}
+          >
+            <button
+              type="button"
+              className={styles.chessButton}
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-haspopup="true"
+              aria-expanded={menuOpen}
+              aria-label="Let's play chess – open menu"
+            >
+              <span className={styles.chessIcon}>
+                <Image src="/rook-icon.png" alt="" width={32} height={32} />
+              </span>
+              Let&apos;s play
+            </button>
+            <div className={styles.chessMenu} role="menu">
+              {CHESS_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.chessMenuItem}
+                  role="menuitem"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
