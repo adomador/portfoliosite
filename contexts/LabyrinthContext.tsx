@@ -30,6 +30,12 @@ interface FleeingEntity {
   /** Accumulated rotation (degrees) – driven by velocity */
   rotation: number
   landed: boolean
+  /** When set, we're in soft-landing phase; lerp to target over this duration */
+  landingStart: number | null
+  /** Snapshot of position when landing started (for lerp) */
+  landingFromX: number
+  landingFromY: number
+  landingFromRotation: number
 }
 
 /** Valid landing spots for the leaf only (avoid center + nav buttons) */
@@ -83,6 +89,7 @@ const BUTTON_REPEL_RADIUS = 88 // px – leaf kept away from nav row
 const BUTTON_REPEL_STRENGTH = 0.35
 const DEFAULT_SETTLE_TIMEOUT_MS = 2000
 const LEAF_SETTLE_TIMEOUT_MS = 7000
+const LANDING_DURATION_MS = 500
 
 type LeafPositionCallback = (x: number, y: number, rotation: number) => void
 
@@ -139,10 +146,41 @@ export function LabyrinthProvider({
           return
         }
 
+        const landX = (ent.landingSpot.x / 100) * vw
+        const landY = (ent.landingSpot.y / 100) * vh
+
+        /* Soft-landing phase: lerp to target over LANDING_DURATION_MS */
+        if (ent.landingStart !== null) {
+          const elapsed = Date.now() - ent.landingStart
+          const progress = Math.min(1, elapsed / LANDING_DURATION_MS)
+          const eased = 1 - (1 - progress) * (1 - progress) // ease-out quad
+          ent.x = ent.landingFromX + (landX - ent.landingFromX) * eased
+          ent.y = ent.landingFromY + (landY - ent.landingFromY) * eased
+          ent.rotation = ent.landingFromRotation + (0 - ent.landingFromRotation) * eased
+          ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(${ent.rotation}deg)`
+          if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+            onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
+          }
+          if (progress >= 1) {
+            ent.x = landX
+            ent.y = landY
+            ent.rotation = 0
+            ent.landed = true
+            ent.landingStart = null
+            ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
+            ent.el.style.willChange = 'auto'
+            if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
+              onLeafPositionChangeRef.current(landX, landY, 0)
+            }
+            setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
+          }
+          return
+        }
+
         // If user prefers reduced motion, snap to landing immediately
         if (reducedMotion) {
-          ent.x = (ent.landingSpot.x / 100) * vw
-          ent.y = (ent.landingSpot.y / 100) * vh
+          ent.x = landX
+          ent.y = landY
           ent.landed = true
           ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(0deg)`
           ent.el.style.willChange = 'auto'
@@ -152,9 +190,6 @@ export function LabyrinthProvider({
           setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
           return
         }
-
-        const landX = (ent.landingSpot.x / 100) * vw
-        const landY = (ent.landingSpot.y / 100) * vh
 
         /* Repulsion from cursor */
         const dx = ent.x - cursor.x
@@ -219,23 +254,18 @@ export function LabyrinthProvider({
         /* Rotation driven by horizontal velocity (leaf tumbling) */
         ent.rotation += ent.vx * 2.5
 
-        /* Landing check */
+        /* Landing check: start soft-landing phase when close and slow */
         const toDist = Math.sqrt(toDx * toDx + toDy * toDy)
         const speed = Math.sqrt(ent.vx * ent.vx + ent.vy * ent.vy)
 
         if (toDist < LAND_DIST && speed < LAND_VEL) {
-          ent.x = landX
-          ent.y = landY
           ent.vx = 0
           ent.vy = 0
-          ent.landed = true
-          ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-          ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(0deg)`
-          ent.el.style.willChange = 'auto'
-          if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-            onLeafPositionChangeRef.current(ent.x, ent.y, 0)
-          }
-          setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
+          ent.landingStart = Date.now()
+          ent.landingFromX = ent.x
+          ent.landingFromY = ent.y
+          ent.landingFromRotation = ent.rotation
+          ent.el.style.willChange = 'transform'
           return
         }
 
@@ -264,6 +294,7 @@ export function LabyrinthProvider({
     const cursor = cursorRef.current
 
     ent.landed = false
+    ent.landingStart = null
     setLandedMap((prev) => ({ ...prev, [id]: false }))
 
     const landX = (ent.landingSpot.x / 100) * vw
@@ -308,6 +339,10 @@ export function LabyrinthProvider({
         vy: (Math.random() - 0.5) * 4,
         rotation: Math.random() * 360,
         landed: false,
+        landingStart: null,
+        landingFromX: startX,
+        landingFromY: startY,
+        landingFromRotation: 0,
       }
       el.style.willChange = 'transform'
       el.style.transform = `translate(${startX}px, ${startY}px) rotate(${entity.rotation}deg)`
@@ -318,23 +353,16 @@ export function LabyrinthProvider({
 
       const settleTimeout = setTimeout(() => {
         const ent = entitiesRef.current.get(id)
-        if (!ent || ent.landed) return
+        if (!ent || ent.landed || ent.landingStart !== null) return
         const vw = window.innerWidth
         const vh = window.innerHeight
-        const landX = (ent.landingSpot.x / 100) * vw
-        const landY = (ent.landingSpot.y / 100) * vh
-        ent.x = landX
-        ent.y = landY
         ent.vx = 0
         ent.vy = 0
-        ent.landed = true
-        ent.el.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-        ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
-        ent.el.style.willChange = 'auto'
-        if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-          onLeafPositionChangeRef.current(landX, landY, 0)
-        }
-        setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
+        ent.landingStart = Date.now()
+        ent.landingFromX = ent.x
+        ent.landingFromY = ent.y
+        ent.landingFromRotation = ent.rotation
+        ent.el.style.willChange = 'transform'
       }, timeoutMs)
 
       return () => {
