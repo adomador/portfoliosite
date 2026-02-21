@@ -1,0 +1,88 @@
+.fleeing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.fleeing.landed {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: labelReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+@keyframes labelReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  border-bottom: none !important;
+  opacity: 1 !important;
+  color: inherit;
+}
+
+.link:hover {
+  box-shadow: none !important;
+}
+
+.link:hover .label {
+  color: var(--accent-gold, #c9a227);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mobile: readable labels, 44px min touch target */
+@media (max-width: 640px) {
+  .fleeing.landed {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .link {
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
+  }
+}

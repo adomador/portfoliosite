@@ -1,0 +1,90 @@
+.wrapper {
+  position: relative;
+  display: block;
+  overflow: visible;
+  perspective: 500px;
+}
+
+.book {
+  display: block;
+  position: relative;
+  z-index: 1;
+  transform-origin: 30% 50%;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wrapper:hover .book {
+  transform: perspective(500px) rotateY(-42deg) scale(1.02);
+}
+
+.pagesLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wrapper:hover .pagesLayer {
+  opacity: 1;
+}
+
+.page {
+  position: absolute;
+  left: 26%;
+  top: 50%;
+  width: 11px;
+  height: 15px;
+  margin-left: 0;
+  margin-top: -7.5px;
+  background: linear-gradient(
+    135deg,
+    #f5f0e8 0%,
+    #e8e2d8 35%,
+    #ddd6c8 100%
+  );
+  border-radius: 0 1px 1px 0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  transform-origin: left center;
+  opacity: 0;
+  animation: flyOut 1.4s linear infinite paused;
+}
+
+.wrapper:hover .page {
+  animation-play-state: running;
+}
+
+@keyframes flyOut {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.92;
+    filter: blur(0);
+  }
+  40% {
+    opacity: 0.6;
+    filter: blur(1px);
+  }
+  100% {
+    transform: translate(165px, -115px) rotate(420deg) scale(0.6);
+    opacity: 0;
+    filter: blur(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper:hover .book {
+    transform: none;
+  }
+  .page {
+    animation: none;
+    opacity: 0;
+  }
+  .wrapper:hover .page {
+    opacity: 0;
+  }
+}

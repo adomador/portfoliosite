@@ -1,0 +1,389 @@
+.section {
+  position: relative;
+  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-deep);
+}
+
+/* Dark ember glow from below – chiaroscuro base */
+.fireGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 55% at 50% 100%,
+    rgba(100, 35, 22, 0.28) 0%,
+    rgba(80, 28, 18, 0.18) 35%,
+    rgba(50, 20, 14, 0.08) 60%,
+    transparent 85%
+  );
+  animation: fireFlicker 5s ease-in-out infinite;
+}
+
+@keyframes fireFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fireGlow {
+    animation: none;
+  }
+}
+
+.back {
+  position: absolute;
+  top: 1.5rem;
+  left: 2.5rem;
+  z-index: 20;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  transition: color 0.2s ease, letter-spacing 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.back:hover {
+  color: var(--accent-gold);
+  letter-spacing: 0.08em;
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+/* Main content – centered with strong typographic hierarchy */
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 5rem 2rem 4rem;
+  pointer-events: none;
+}
+
+.content > * {
+  pointer-events: auto;
+}
+
+/* 2x2 grid – each case study has its place */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 3vw, 1.75rem);
+  max-width: min(680px, 92vw);
+  width: 100%;
+}
+
+/* Case study card – chiaroscuro + baroque framing */
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  overflow: visible;
+}
+
+.cardFrame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(
+    165deg,
+    rgba(26, 24, 22, 0.95) 0%,
+    rgba(14, 12, 11, 0.98) 50%,
+    rgba(10, 9, 8, 1) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s ease,
+    border-color 0.3s ease, background 0.4s ease;
+  overflow: hidden;
+}
+
+/* Baroque corner accent – subtle flourish */
+.cardFrame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 162, 39, 0.15) 20%,
+    rgba(201, 162, 39, 0.25) 50%,
+    rgba(201, 162, 39, 0.15) 80%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Chiaroscuro light pool – varies by card */
+.cardGlow {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Per-card light source positions */
+.card[data-study='trochi'] .cardGlow {
+  top: -15%;
+  left: -15%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(201, 162, 39, 0.12) 0%,
+    rgba(201, 162, 39, 0.04) 40%,
+    transparent 70%
+  );
+  opacity: 0.6;
+}
+
+.card[data-study='fleetworthy'] .cardGlow {
+  top: -15%;
+  right: -15%;
+  left: auto;
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(212, 160, 84, 0.1) 0%,
+    rgba(212, 160, 84, 0.03) 40%,
+    transparent 70%
+  );
+  opacity: 0.5;
+}
+
+.card[data-study='triumph'] .cardGlow {
+  bottom: -15%;
+  left: -15%;
+  top: auto;
+  background: radial-gradient(
+    circle at 30% 70%,
+    rgba(139, 38, 53, 0.08) 0%,
+    rgba(139, 38, 53, 0.02) 40%,
+    transparent 70%
+  );
+  opacity: 0.5;
+}
+
+.card[data-study='diezl'] .cardGlow {
+  bottom: -15%;
+  right: -15%;
+  left: auto;
+  top: auto;
+  background: radial-gradient(
+    circle at 70% 70%,
+    rgba(139, 38, 53, 0.08) 0%,
+    rgba(139, 38, 53, 0.02) 40%,
+    transparent 70%
+  );
+  opacity: 0.5;
+}
+
+/* Hover: card lifts, light intensifies, gold border */
+.card:hover .cardFrame,
+.card:focus-visible .cardFrame {
+  transform: translateY(-6px);
+  border-color: rgba(201, 162, 39, 0.25);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(201, 162, 39, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.card:hover .cardFrame::before,
+.card:focus-visible .cardFrame::before {
+  opacity: 1;
+}
+
+/* Hover: light pool expands and brightens */
+.card:hover .cardGlow,
+.card:focus-visible .cardGlow {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Trochi hover – golden wash */
+.card[data-study='trochi']:hover .cardGlow {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(201, 162, 39, 0.22) 0%,
+    rgba(201, 162, 39, 0.08) 45%,
+    transparent 75%
+  );
+}
+
+/* Fleetworthy hover – amber accent */
+.card[data-study='fleetworthy']:hover .cardGlow {
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(212, 160, 84, 0.2) 0%,
+    rgba(212, 160, 84, 0.06) 45%,
+    transparent 75%
+  );
+}
+
+/* Triumph hover – crimson undertone */
+.card[data-study='triumph']:hover .cardGlow {
+  background: radial-gradient(
+    circle at 30% 70%,
+    rgba(139, 38, 53, 0.18) 0%,
+    rgba(139, 38, 53, 0.05) 45%,
+    transparent 75%
+  );
+}
+
+/* Diezl hover – crimson (matches Triumph) */
+.card[data-study='diezl']:hover .cardGlow {
+  background: radial-gradient(
+    circle at 70% 70%,
+    rgba(139, 38, 53, 0.18) 0%,
+    rgba(139, 38, 53, 0.05) 45%,
+    transparent 75%
+  );
+}
+
+/* Logo container – subtle depth */
+.logoWrapper {
+  position: relative;
+  z-index: 2;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.card:hover .logoWrapper,
+.card:focus-visible .logoWrapper {
+  transform: scale(1.08);
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: brightness(0) invert(0.95);
+  opacity: 0.9;
+  transition: opacity 0.3s ease, filter 0.35s ease;
+}
+
+.card:hover .logo,
+.card:focus-visible .logo {
+  opacity: 1;
+  filter: none;
+}
+
+/* Card title – stark typographic hierarchy */
+.cardTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color 0.3s ease, letter-spacing 0.3s ease;
+  margin-bottom: 0.5rem;
+}
+
+.card:hover .cardTitle,
+.card:focus-visible .cardTitle {
+  color: var(--accent-gold);
+  letter-spacing: 0.24em;
+}
+
+/* CTA – appears on hover */
+.cardCta {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.35s ease, transform 0.35s ease, color 0.3s ease;
+}
+
+.card:hover .cardCta,
+.card:focus-visible .cardCta {
+  opacity: 0.85;
+  transform: translateY(0);
+  color: var(--text-secondary);
+}
+
+.card:focus-visible {
+  outline: none;
+}
+
+.card:focus-visible .cardFrame {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+/* Mobile: single column, stacked cards */
+@media (max-width: 640px) {
+  .content {
+    padding: 4rem 1.25rem 3rem;
+  }
+
+  .sectionTitle {
+    margin-bottom: 2rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 320px;
+  }
+
+  .cardFrame {
+    min-height: 160px;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .logoWrapper {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0.75rem;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cardTitle {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+  }
+
+  .cardCta {
+    opacity: 0.7;
+    transform: none;
+    font-size: 0.6875rem;
+  }
+}

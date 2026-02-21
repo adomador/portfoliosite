@@ -1,0 +1,155 @@
+.section {
+  position: relative;
+  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Pearl white light from the top – glows stronger on section hover */
+.topLight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 60% at 50% 0%,
+    rgba(252, 251, 248, 0.06) 0%,
+    rgba(252, 251, 248, 0.02) 50%,
+    transparent 85%
+  );
+}
+
+.topLight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 110% 70% at 50% 0%,
+    rgba(252, 251, 248, 0.12) 0%,
+    rgba(252, 251, 248, 0.05) 45%,
+    rgba(252, 251, 248, 0.02) 70%,
+    transparent 90%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.section:hover .topLight::after {
+  opacity: 1;
+}
+
+.inner {
+  max-width: 56rem;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.copy {
+  min-width: 0;
+}
+
+.toolsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.toolsTitle {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.toolsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toolIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.toolIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.toolIconDark img {
+  filter: brightness(0) invert(1);
+}
+
+.back {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.back:hover {
+  color: var(--accent-gold);
+}
+
+.back:focus-visible {
+  outline-offset: 4px;
+}
+
+.title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.lead {
+  font-size: clamp(1.0625rem, 2.5vw, 1.25rem);
+  line-height: 1.65;
+  color: rgba(198, 195, 190, 1);
+  margin-bottom: 1.5rem;
+  max-width: 42ch;
+  font-weight: 400;
+}
+
+.body {
+  font-size: clamp(1.0625rem, 2.5vw, 1.125rem);
+  line-height: 1.75;
+  color: rgba(198, 195, 190, 1);
+  max-width: 42ch;
+  font-weight: 400;
+}
+

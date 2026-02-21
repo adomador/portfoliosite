@@ -1,0 +1,107 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 600ms ease-out;
+}
+
+.layer.layerDarkened {
+  opacity: 0;
+  transition: opacity 400ms ease-in;
+}
+
+/* ── Orbs: warm Goya-like glows ── */
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.06;
+  will-change: transform;
+}
+
+.orb1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.6) 0%, transparent 70%);
+  top: -10%;
+  left: -5%;
+  animation: drift1 28s ease-in-out infinite alternate;
+}
+
+.orb2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(139, 38, 53, 0.5) 0%, transparent 70%);
+  bottom: -8%;
+  right: -5%;
+  animation: drift2 32s ease-in-out infinite alternate;
+}
+
+.orb3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(212, 160, 84, 0.4) 0%, transparent 70%);
+  top: 40%;
+  left: 50%;
+  animation: drift3 24s ease-in-out infinite alternate;
+}
+
+/* ── Lines: thin labyrinth traces ── */
+
+.line {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.08), transparent);
+  height: 1px;
+}
+
+.line1 {
+  width: 60vw;
+  top: 30%;
+  left: -10%;
+  transform: rotate(-8deg);
+  animation: lineDrift1 20s ease-in-out infinite alternate;
+}
+
+.line2 {
+  width: 50vw;
+  top: 65%;
+  right: -10%;
+  transform: rotate(5deg);
+  animation: lineDrift2 26s ease-in-out infinite alternate;
+}
+
+/* ── Keyframes ── */
+
+@keyframes drift1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(80px, 60px) scale(1.1); }
+}
+
+@keyframes drift2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-60px, -40px) scale(1.08); }
+}
+
+@keyframes drift3 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(50px, -70px) scale(0.95); }
+}
+
+@keyframes lineDrift1 {
+  from { transform: rotate(-8deg) translateX(0); }
+  to   { transform: rotate(-6deg) translateX(40px); }
+}
+
+@keyframes lineDrift2 {
+  from { transform: rotate(5deg) translateX(0); }
+  to   { transform: rotate(3deg) translateX(-30px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb, .line {
+    animation: none;
+  }
+}
