@@ -10,6 +10,7 @@ import {
   type ReactNode,
   type MutableRefObject,
 } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export type CanvasSection = 'home' | 'about' | 'work'
 
@@ -65,7 +66,10 @@ export function useCanvasNavigation() {
   return ctx
 }
 
-function getInitialSection(): CanvasSection {
+function getInitialSection(searchParams: URLSearchParams | null): CanvasSection {
+  const section = searchParams?.get('section')
+  if (section === 'about' || section === 'work') return section
+  if (section === 'home') return 'home'
   if (typeof window === 'undefined') return 'home'
   return hashToSection(window.location.hash)
 }
@@ -73,9 +77,11 @@ function getInitialSection(): CanvasSection {
 const DEFAULT_LEAF: LeafPosition = { x: 0, y: 0, rotation: 0 }
 
 export function CanvasNavigationProvider({ children }: { children: ReactNode }) {
-  const [activeSection, setActiveSection] = useState<CanvasSection>(getInitialSection)
+  const searchParams = useSearchParams()
+  const initialSection = getInitialSection(searchParams)
+  const [activeSection, setActiveSection] = useState<CanvasSection>(initialSection)
   const [isTransitioning, setIsTransitioning] = useState(false)
-  const [homeDarkened, setHomeDarkened] = useState(false)
+  const [homeDarkened, setHomeDarkened] = useState(initialSection === 'work')
   const transitionEndRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lightsOutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const leafPositionRef = useRef<LeafPosition>({ ...DEFAULT_LEAF })
@@ -145,10 +151,15 @@ export function CanvasNavigationProvider({ children }: { children: ReactNode }) 
   }, [activeSection])
 
   useEffect(() => {
-    const hash = typeof window !== 'undefined' ? window.location.hash : ''
-    const section = hashToSection(hash)
-    setActiveSection(section)
-  }, [])
+    const sectionParam = searchParams?.get('section')
+    if (sectionParam === 'about' || sectionParam === 'work') {
+      window.history.replaceState(null, '', `${window.location.pathname}#${sectionParam}`)
+    } else {
+      const hash = typeof window !== 'undefined' ? window.location.hash : ''
+      const section = hashToSection(hash)
+      setActiveSection(section)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const onPopState = () => {

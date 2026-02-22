@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { CanvasNavigationProvider, useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import AboutSection from '@/components/sections/AboutSection'
 import WorkSection from '@/components/sections/WorkSection'
@@ -22,7 +23,8 @@ function CanvasWrapper({ children }: { children: React.ReactNode }) {
 
 export default function Page() {
   return (
-    <CanvasNavigationProvider>
+    <Suspense fallback={null}>
+      <CanvasNavigationProvider>
       <SingleLeaf />
       <CanvasWrapper>
         <AboutSection />
@@ -34,5 +36,6 @@ export default function Page() {
         <WorkSection />
       </CanvasWrapper>
     </CanvasNavigationProvider>
+    </Suspense>
   )
 }

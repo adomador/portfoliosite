@@ -1,10 +1,19 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import styles from './WorkSection.module.css'
 
-const CASE_STUDIES = [
+type CaseStudy = {
+  id: string
+  title: string
+  logo: string
+  cta?: string
+  href?: string
+}
+
+const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'diezl',
     title: 'Diezl',
@@ -12,10 +21,16 @@ const CASE_STUDIES = [
     cta: 'Designed & built, end to end',
     href: 'https://www.diezlapp.com',
   },
-  { id: 'trochi', title: 'Trochi', logo: '/work/Trochi.svg' },
+  {
+    id: 'trochi',
+    title: 'Trochi',
+    logo: '/work/Trochi.svg',
+    cta: '0 to 1 MVP',
+    href: '/work/trochi',
+  },
   { id: 'fleetworthy', title: 'Fleetworthy', logo: '/work/FW.svg' },
   { id: 'triumph', title: 'Triumph', logo: '/work/TriumphFAV2.svg' },
-] as const
+]
 
 export default function WorkSection() {
   const { goTo } = useCanvasNavigation()
@@ -61,18 +76,35 @@ export default function WorkSection() {
             )
 
             if ('href' in study && study.href) {
+              const isExternal = study.href.startsWith('http')
+              const label = 'cta' in study && study.cta
+                ? `${study.title} – ${study.cta}`
+                : `View ${study.title} case study`
+              if (isExternal) {
+                return (
+                  <a
+                    key={study.id}
+                    href={study.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.card}
+                    data-study={study.id}
+                    aria-label={label}
+                  >
+                    <CardContent />
+                  </a>
+                )
+              }
               return (
-                <a
+                <Link
                   key={study.id}
                   href={study.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className={styles.card}
                   data-study={study.id}
-                  aria-label={`${study.title} – ${study.cta}`}
+                  aria-label={label}
                 >
                   <CardContent />
-                </a>
+                </Link>
               )
             }
 
