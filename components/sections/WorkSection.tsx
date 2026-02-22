@@ -18,7 +18,7 @@ const CASE_STUDIES: CaseStudy[] = [
     id: 'diezl',
     title: 'Diezl',
     logo: '/work/Diezl.svg',
-    cta: 'Designed & built, end to end',
+    cta: 'Designed & Built, Solo Project',
     href: 'https://www.diezlapp.com',
   },
   {

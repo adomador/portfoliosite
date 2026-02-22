@@ -60,9 +60,20 @@
 
 .sectionInner {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   width: 100%;
+}
+
+.navBarLabel {
+  margin: 0;
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #afb7ca;
 }
 
 .scrollIndicator {
