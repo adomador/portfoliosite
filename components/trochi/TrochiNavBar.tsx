@@ -25,19 +25,26 @@ const RECENT_SEARCHES = [
 export default function TrochiNavBar() {
   const [activeId, setActiveId] = useState<string>('home')
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isResultsExiting, setIsResultsExiting] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const wrapperRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const openSearch = () => {
+    setIsResultsExiting(false)
     setIsSearchOpen(true)
     setSearchQuery('')
     setTimeout(() => inputRef.current?.focus(), 50)
   }
 
   const closeSearch = () => {
-    setIsSearchOpen(false)
-    setSearchQuery('')
+    if (isResultsExiting) return
+    setIsResultsExiting(true)
+    setTimeout(() => {
+      setIsSearchOpen(false)
+      setIsResultsExiting(false)
+      setSearchQuery('')
+    }, 100)
   }
 
   useEffect(() => {
@@ -129,7 +136,9 @@ export default function TrochiNavBar() {
           aria-label="Search for lanes"
         />
       </div>
-      <div className={styles.resultsPanel}>
+      <div
+        className={`${styles.resultsPanel} ${isResultsExiting ? styles.resultsExiting : ''}`}
+      >
         <div className={styles.resultsPanelInner}>
           <p className={styles.resultsHeader}>Recent searches</p>
           <div className={styles.resultsList}>
