@@ -25,7 +25,7 @@
 }
 
 .sidebar {
-  width: 25%;
+  width: 50%;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -142,6 +142,36 @@
   align-items: center;
   justify-content: center;
   animation: overlayIn 0.2s ease-out forwards;
+}
+
+.overlayClose {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.overlayClose:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.overlayClose:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
 }
 
 @keyframes overlayIn {

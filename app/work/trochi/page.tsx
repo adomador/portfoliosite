@@ -111,6 +111,17 @@ export default function TrochiCaseStudyPage() {
             aria-modal="true"
             aria-label="Lane Results full screen"
           >
+            <button
+              type="button"
+              className={styles.overlayClose}
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowOverlay(false)
+              }}
+              aria-label="Close"
+            >
+              ×
+            </button>
             <div
               className={styles.overlayImageWrap}
               onClick={(e) => e.stopPropagation()}
