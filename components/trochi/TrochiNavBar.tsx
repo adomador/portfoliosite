@@ -1,10 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import styles from './TrochiNavBar.module.css'
 
 const NAV_ITEMS = [
-  { id: 'home', label: 'Home', icon: '/work/trochi/home.svg', iconActive: '/work/trochi/home-active.svg', hotkeys: ['G', 'then', 'H'] },
+  { id: 'home', label: 'Home', icon: '/work/trochi/home-active.svg', iconActive: '/work/trochi/home.svg', hotkeys: ['G', 'then', 'H'] },
   { id: 'lanes', label: 'Lanes', icon: '/work/trochi/lanes.svg', iconActive: '/work/trochi/lanes-active.svg', hotkeys: ['G', 'then', 'L'] },
   { id: 'benchmarks', label: 'Benchmarks', icon: '/work/trochi/benchmarks.svg', iconActive: '/work/trochi/benchmarks-active.svg', hotkeys: ['G', 'then', 'B'] },
   { id: 'coverage', label: 'Coverage', icon: '/work/trochi/coverage.svg', iconActive: '/work/trochi/coverage-active.svg', hotkeys: ['G', 'then', 'C'] },
@@ -12,48 +13,57 @@ const NAV_ITEMS = [
 ] as const
 
 export default function TrochiNavBar() {
+  const [activeId, setActiveId] = useState<string>('home')
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.primaryBar}>
         <div className={styles.navIcons}>
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={styles.navButton}
-              aria-label={item.label}
-            >
-              <span className={styles.tooltip}>
-                <span className={styles.tooltipLabel}>{item.label}</span>
-                <span className={styles.hotkeys}>
-                  {item.hotkeys.map((key, i) =>
-                    key === 'then' ? (
-                      <span key={i} className={styles.hotkeyThen}>
-                        {key}
-                      </span>
-                    ) : (
-                      <span key={i} className={styles.hotkey}>
-                        {key}
-                      </span>
-                    )
-                  )}
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeId === item.id
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`${styles.navButton} ${isActive ? styles.active : ''}`}
+                aria-label={item.label}
+                aria-pressed={isActive}
+                onClick={() => setActiveId(item.id)}
+              >
+                <span className={styles.tooltip}>
+                  <span className={styles.tooltipLabel}>{item.label}</span>
+                  <span className={styles.hotkeys}>
+                    {item.hotkeys.map((key, i) =>
+                      key === 'then' ? (
+                        <span key={i} className={styles.hotkeyThen}>
+                          {key}
+                        </span>
+                      ) : (
+                        <span key={i} className={styles.hotkey}>
+                          {key}
+                        </span>
+                      )
+                    )}
+                  </span>
                 </span>
-              </span>
-              <Image
-                src={item.icon}
-                alt=""
-                width={24}
-                height={24}
-                className={styles.icon}
-              />
-            </button>
-          ))}
+                <Image
+                  src={isActive ? item.iconActive : item.icon}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className={styles.icon}
+                />
+              </button>
+            )
+          })}
         </div>
       </div>
       <button
         type="button"
-        className={styles.searchButton}
+        className={`${styles.searchButton} ${activeId === 'search' ? styles.active : ''}`}
         aria-label="Search"
+        aria-pressed={activeId === 'search'}
+        onClick={() => setActiveId('search')}
       >
         <span className={styles.tooltip}>
           <span className={styles.tooltipLabel}>Search</span>
@@ -62,7 +72,7 @@ export default function TrochiNavBar() {
           </span>
         </span>
         <Image
-          src="/work/trochi/search.svg"
+          src={activeId === 'search' ? '/work/trochi/search-active.svg' : '/work/trochi/search.svg'}
           alt=""
           width={24}
           height={24}
