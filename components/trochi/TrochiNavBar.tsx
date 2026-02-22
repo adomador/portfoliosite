@@ -39,6 +39,7 @@ export default function TrochiNavBar() {
 
   const closeSearch = () => {
     if (isResultsExiting) return
+    inputRef.current?.blur()
     setIsResultsExiting(true)
     setTimeout(() => {
       setIsSearchOpen(false)
