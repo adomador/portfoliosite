@@ -1,0 +1,53 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg-deep);
+}
+
+.fireGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 55% at 50% 100%,
+    rgba(100, 35, 22, 0.28) 0%,
+    rgba(80, 28, 18, 0.18) 35%,
+    rgba(50, 20, 14, 0.08) 60%,
+    transparent 85%
+  );
+  animation: fireFlicker 5s ease-in-out infinite;
+}
+
+@keyframes fireFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fireGlow {
+    animation: none;
+  }
+}
+
+.back {
+  position: relative;
+  z-index: 10;
+  display: inline-block;
+  margin: max(2rem, env(safe-area-inset-top)) 0 0 max(2rem, env(safe-area-inset-left));
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  transition: color 0.2s ease, letter-spacing 0.2s ease;
+}
+
+.back:hover {
+  color: var(--accent-gold);
+  letter-spacing: 0.08em;
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
