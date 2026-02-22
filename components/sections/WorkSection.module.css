@@ -361,6 +361,7 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
     touch-action: pan-y;
+    padding-top: env(safe-area-inset-top);
   }
 
   .content {
@@ -368,8 +369,13 @@
     inset: unset;
     min-height: min-content;
     justify-content: flex-start;
-    padding: max(4rem, calc(env(safe-area-inset-top) + 2rem)) 1.25rem
+    padding: max(3rem, 2rem) 1.25rem
       max(3rem, env(safe-area-inset-bottom));
+    padding-top: max(3rem, 2rem);
+  }
+
+  .back {
+    margin-bottom: 1.5rem;
   }
 
   .sectionTitle {
