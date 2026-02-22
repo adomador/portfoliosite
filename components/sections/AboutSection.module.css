@@ -322,3 +322,25 @@
   outline-offset: -2px;
 }
 
+/* Mobile: scrollable section – full scroll within section, no cutoff */
+@media (max-width: 640px) {
+  .section {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: max(2rem, env(safe-area-inset-top)) 1.5rem
+      max(2rem, env(safe-area-inset-bottom));
+  }
+
+  .inner {
+    padding-bottom: 2rem;
+  }
+}
+

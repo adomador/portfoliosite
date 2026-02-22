@@ -350,10 +350,26 @@
   outline-offset: 4px;
 }
 
-/* Mobile: single column, stacked cards */
+/* Mobile: scrollable section – full scroll within section, no cutoff */
 @media (max-width: 640px) {
+  .section {
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
   .content {
-    padding: 4rem 1.25rem 3rem;
+    position: relative;
+    inset: unset;
+    min-height: min-content;
+    justify-content: flex-start;
+    padding: max(4rem, calc(env(safe-area-inset-top) + 2rem)) 1.25rem
+      max(3rem, env(safe-area-inset-bottom));
   }
 
   .sectionTitle {

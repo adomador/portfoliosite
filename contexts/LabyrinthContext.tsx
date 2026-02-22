@@ -146,7 +146,9 @@ export function LabyrinthProvider({
           return
         }
 
-        const landX = (ent.landingSpot.x / 100) * vw
+        const isNav = ent.id === 'about' || ent.id === 'work' || ent.id === 'resume'
+        const navOffsetX = vw < 640 && isNav ? vw * -0.05 : 0
+        const landX = (ent.landingSpot.x / 100) * vw + navOffsetX
         const landY = (ent.landingSpot.y / 100) * vh
 
         /* Soft-landing phase: lerp to target over LANDING_DURATION_MS */
@@ -215,10 +217,11 @@ export function LabyrinthProvider({
             ent.vy += (cdy / cdist) * cforce
           }
           /* Nav row: Work, About, Resume (structured bottom strip) */
+          const navOffset = vw < 640 ? vw * -0.05 : 0
           const buttonZones: [number, number][] = [
-            [(25 / 100) * vw, (80 / 100) * vh],
-            [(50 / 100) * vw, (80 / 100) * vh],
-            [(75 / 100) * vw, (80 / 100) * vh],
+            [(25 / 100) * vw + navOffset, (80 / 100) * vh],
+            [(50 / 100) * vw + navOffset, (80 / 100) * vh],
+            [(75 / 100) * vw + navOffset, (80 / 100) * vh],
           ]
           buttonZones.forEach(([bx, by]) => {
             const bdx = ent.x - bx

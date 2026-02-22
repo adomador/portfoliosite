@@ -210,9 +210,11 @@
 
 @media (max-width: 640px) {
   .candleGlowWrap {
+    left: 50%;
     top: 82%;
     width: 320px;
     height: 320px;
+    transform: translate(-50%, -50%);
   }
 }
 
