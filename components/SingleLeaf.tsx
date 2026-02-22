@@ -48,6 +48,11 @@ function easeOutQuad(t: number): number {
   return 1 - (1 - t) * (1 - t)
 }
 
+/** Ease in-out: accelerates then decelerates – good for falling with soft landing */
+function easeInOutQuad(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
+}
+
 const TAU = Math.PI * 2
 /** When progress is past this, lock to exact target so the transition ends with no snap */
 const LAND_THRESHOLD = 0.998
@@ -110,6 +115,47 @@ function applyRisingPhysics(
   const y = start.y + (target.y - start.y) * eased
   const wobble = floatRotation * Math.sin(progress * TAU * 2)
   const rotation = start.rotation * (1 - eased) + wobble * fade
+
+  return { x, y, rotation }
+}
+
+/**
+ * Falling physics: leaf tumbling down from About rest (upper-left) toward Home center.
+ * Gravity-like acceleration, sway, tumble—fades to seamless landing.
+ */
+function applyFallingToHomePhysics(
+  progress: number,
+  start: LeafPosition,
+  end: LeafPosition,
+  vw: number,
+  vh: number
+): LeafPosition {
+  const swayAmplitude = Math.min(48, vw * 0.08)
+  const wobbleCycles = 5
+  const tumbleRotations = 2.5
+  const wobbleAmplitude = 35
+  const fade = landEase(progress)
+
+  /* Gravity-like fall with soft deceleration at landing */
+  const eased = easeInOutQuad(progress)
+
+  const baseX = start.x + (end.x - start.x) * eased
+  const baseY = start.y + (end.y - start.y) * eased
+
+  /* Lateral sway as it drops */
+  const sway =
+    swayAmplitude *
+    Math.sin(progress * TAU * wobbleCycles) *
+    fade
+
+  const x = baseX + sway
+  const y = baseY
+
+  /* Tumble and wobble – spinning as it falls */
+  const tumble =
+    tumbleRotations * 360 * progress +
+    wobbleAmplitude * Math.sin(progress * TAU * (wobbleCycles + 0.5)) * fade
+  const rotation = start.rotation * (1 - eased) + tumble * fade + end.rotation * eased
 
   return { x, y, rotation }
 }
@@ -227,16 +273,24 @@ export default function SingleLeaf() {
             x = pos.x
             y = pos.y
             rotation = pos.rotation
-          } else if (progress >= LAND_THRESHOLD) {
-            x = frozen.x
-            y = frozen.y
-            rotation = frozen.rotation
           } else {
-            const eased = easeOutCubic(progress)
-            const pos = lerp(start, frozen, eased)
-            x = pos.x
-            y = pos.y
-            rotation = pos.rotation
+            /* fromSection === 'about' – falling from upper-left to home center */
+            if (progress >= LAND_THRESHOLD) {
+              x = frozen.x
+              y = frozen.y
+              rotation = frozen.rotation
+            } else {
+              const pos = applyFallingToHomePhysics(
+                progress,
+                start,
+                frozen,
+                vwN,
+                vhN
+              )
+              x = pos.x
+              y = pos.y
+              rotation = pos.rotation
+            }
           }
         } else {
           x = frozen.x

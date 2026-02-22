@@ -34,10 +34,11 @@ export default function AboutSection() {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setMenuOpen(false)
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    // Use capture phase so we receive the event before any child can stopPropagation
+    document.addEventListener('mousedown', handleClickOutside, true)
     document.addEventListener('keydown', handleEscape)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside, true)
       document.removeEventListener('keydown', handleEscape)
     }
   }, [menuOpen])
