@@ -115,6 +115,53 @@ function applyRisingPhysics(
 }
 
 /**
+ * Wind-blown rise: leaf flying up from Work rest toward Home with sway, tumble, and arc.
+ * Feels like being pushed up by a gust—dynamic and organic.
+ */
+function applyRisingToHomePhysics(
+  progress: number,
+  start: LeafPosition,
+  end: LeafPosition,
+  vw: number,
+  vh: number
+): LeafPosition {
+  const swayAmplitude = Math.min(72, vw * 0.15)
+  const swayCycles = 7
+  const arcAmplitude = Math.min(48, vw * 0.1)
+  const tumbleRotations = 3.2
+  const wobbleAmplitude = 55
+  const wobbleCycles = 5
+  const fade = landEase(progress)
+
+  /* Wind burst at start, gentle settle at end */
+  const eased = easeOutCubic(progress)
+
+  const baseX = start.x + (end.x - start.x) * eased
+  const baseY = start.y + (end.y - start.y) * eased
+
+  /* Lateral sway – wind buffeting left and right */
+  const sway =
+    swayAmplitude *
+    Math.sin(progress * TAU * swayCycles) *
+    Math.sin(progress * Math.PI) *
+    fade
+
+  /* Slight arc – drifts one way then the other as it rises */
+  const arc = arcAmplitude * Math.sin(progress * Math.PI) * fade
+
+  const x = baseX + sway + arc
+  const y = baseY
+
+  /* Tumble and wobble – spinning as it’s carried up */
+  const tumble =
+    tumbleRotations * 360 * progress +
+    wobbleAmplitude * Math.sin(progress * TAU * wobbleCycles) * fade
+  const rotation = tumble * fade
+
+  return { x, y, rotation }
+}
+
+/**
  * The only leaf in the app.
  * - Home: labyrinth drives position.
  * - Going to Work: leaf stays frozen during transition, then animates to bottom-left rest.
@@ -173,6 +220,17 @@ export default function SingleLeaf() {
             x = frozen.x
             y = frozen.y
             rotation = frozen.rotation
+          } else if (fromSection === 'work') {
+            const pos = applyRisingToHomePhysics(
+              progress,
+              start,
+              frozen,
+              vwN,
+              vhN
+            )
+            x = pos.x
+            y = pos.y
+            rotation = pos.rotation
           } else {
             const eased = easeOutCubic(progress)
             const pos = lerp(start, frozen, eased)
