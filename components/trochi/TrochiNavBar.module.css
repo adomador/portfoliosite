@@ -307,7 +307,6 @@
 .resultRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px dashed #3d465c;
   gap: 16px;
@@ -350,8 +349,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 84px;
-  padding: 2px 16px;
+  width: 84px;
+  flex-shrink: 0;
+  padding: 2px 0;
   border-radius: 4px;
   font-family: 'Proxima Nova', 'Satoshi', sans-serif;
   font-size: 14px;
@@ -383,6 +383,9 @@
   font-weight: 700;
   line-height: 24px;
   color: white;
+  width: 60px;
+  flex-shrink: 0;
+  text-align: left;
 }
 
 .resultConfidence {
