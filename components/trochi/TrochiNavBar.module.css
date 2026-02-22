@@ -321,8 +321,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
-  min-width: 0;
+  width: 344px;
+  min-width: 344px;
+  flex-shrink: 0;
 }
 
 .resultRoute {
@@ -348,6 +349,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 84px;
   padding: 2px 16px;
   border-radius: 4px;
   font-family: 'Proxima Nova', 'Satoshi', sans-serif;
