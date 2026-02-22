@@ -1,8 +1,14 @@
 .wrapper {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
+  transition: gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wrapper.searchOpen {
+  gap: 0;
 }
 
 .primaryBar {
@@ -17,6 +23,17 @@
   justify-content: space-between;
   padding: 0 32px;
   overflow: visible;
+  transition:
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wrapper.searchOpen .primaryBar {
+  width: 456px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(44, 37, 35, 0.1);
+  padding: 0 24px;
 }
 
 .navIcons {
@@ -27,6 +44,13 @@
   justify-content: space-between;
   max-width: 288px;
   margin: 0 auto;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wrapper.searchOpen .navIcons {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
 }
 
 .navButton {
@@ -137,6 +161,7 @@
   flex-shrink: 0;
   width: 56px;
   height: 56px;
+  min-width: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,11 +171,26 @@
   border-radius: 60px;
   cursor: pointer;
   transition:
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    min-width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.3s ease,
     border-color 0.3s ease,
     box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.2s ease;
-  overflow: visible;
+  overflow: hidden;
+}
+
+.wrapper.searchOpen .searchButton {
+  width: 0;
+  height: 0;
+  min-width: 0;
+  opacity: 0;
+  border-width: 0;
+  padding: 0;
+  pointer-events: none;
 }
 
 .searchButton:hover {
@@ -189,4 +229,177 @@
   height: 24px;
   object-fit: contain;
   transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Search input (visible when searchOpen) */
+.searchInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+  border: none;
+  background: transparent;
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.searchInput::placeholder {
+  color: #afb7ca;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.wrapper.searchOpen .searchInput {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Results panel */
+.resultsPanel {
+  position: absolute;
+  bottom: calc(100% + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 726px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: #2e3442;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(44, 37, 35, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  z-index: 100;
+}
+
+.wrapper.searchOpen .resultsPanel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.resultsHeader {
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #afb7ca;
+  margin: 0 0 8px 0;
+}
+
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #3d465c;
+  gap: 16px;
+}
+
+.resultRow:last-child {
+  border-bottom: none;
+}
+
+.resultLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.resultRoute {
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #d4d9e3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+
+.resultRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.equipmentBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 16px;
+  border-radius: 4px;
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.equipmentBadge.van {
+  background: #fffeea;
+  border: 2px solid #482300;
+  color: #482300;
+}
+
+.equipmentBadge.temp {
+  background: #f0f6fd;
+  border: 2px solid #203046;
+  color: #203046;
+}
+
+.equipmentBadge.flatbed {
+  background: #edeef1;
+  border: 2px solid #292d38;
+  color: #292d38;
+}
+
+.resultPrice {
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  color: white;
+}
+
+.resultConfidence {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resultConfidenceText {
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #d4d9e3;
+}
+
+.historyIcon,
+.confidenceIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
 }

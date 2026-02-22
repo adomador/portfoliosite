@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import styles from './TrochiNavBar.module.css'
 
@@ -12,11 +12,73 @@ const NAV_ITEMS = [
   { id: 'settings', label: 'Settings', icon: '/work/trochi/settings.svg', iconActive: '/work/trochi/settings-active.svg', hotkeys: ['G', 'then', 'S'] },
 ] as const
 
+type EquipmentType = 'Van' | 'Temp' | 'Flatbed'
+
+const RECENT_SEARCHES = [
+  { route: 'Phoenix, AR → Memphis, TN', equipment: 'Van' as EquipmentType, price: '$1.58', confidence: '92%' },
+  { route: 'Chattanooga, TN → Portland, OR', equipment: 'Van' as EquipmentType, price: '$1.51', confidence: '91%' },
+  { route: 'Chicago Market', equipment: 'Temp' as EquipmentType, price: '$1.53', confidence: '94%' },
+  { route: 'Houston, TX → Dallas, TX', equipment: 'Flatbed' as EquipmentType, price: '$1.48', confidence: '88%' },
+  { route: 'Nashville, TN → Laredom TX', equipment: 'Van' as EquipmentType, price: '$1.49', confidence: '81%' },
+]
+
 export default function TrochiNavBar() {
   const [activeId, setActiveId] = useState<string>('home')
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const openSearch = () => {
+    setIsSearchOpen(true)
+    setSearchQuery('')
+    setTimeout(() => inputRef.current?.focus(), 50)
+  }
+
+  const closeSearch = () => {
+    setIsSearchOpen(false)
+    setSearchQuery('')
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isSearchOpen) {
+          e.preventDefault()
+          closeSearch()
+        }
+        return
+      }
+      if (e.key === '/' && !isSearchOpen) {
+        const target = e.target as HTMLElement
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return
+        e.preventDefault()
+        openSearch()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isSearchOpen])
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (isSearchOpen && wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        closeSearch()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isSearchOpen])
+
+  const filteredResults = RECENT_SEARCHES.filter(
+    (r) => !searchQuery || r.route.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      ref={wrapperRef}
+      className={`${styles.wrapper} ${isSearchOpen ? styles.searchOpen : ''}`}
+    >
       <div className={styles.primaryBar}>
         <div className={styles.navIcons}>
           {NAV_ITEMS.map((item) => {
@@ -57,13 +119,60 @@ export default function TrochiNavBar() {
             )
           })}
         </div>
+        <input
+          ref={inputRef}
+          type="text"
+          className={styles.searchInput}
+          placeholder="Search for lanes"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Search for lanes"
+        />
+      </div>
+      <div className={styles.resultsPanel}>
+        <p className={styles.resultsHeader}>Recent searches</p>
+        <div className={styles.resultsList}>
+          {filteredResults.map((result, i) => (
+            <div key={i} className={styles.resultRow}>
+              <div className={styles.resultLeft}>
+                <Image
+                  src="/work/trochi/history.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className={styles.historyIcon}
+                />
+                <span className={styles.resultRoute}>{result.route}</span>
+              </div>
+              <div className={styles.resultRight}>
+                <span
+                  className={`${styles.equipmentBadge} ${styles[result.equipment.toLowerCase()]}`}
+                >
+                  {result.equipment}
+                </span>
+                <span className={styles.resultPrice}>{result.price}</span>
+                <div className={styles.resultConfidence}>
+                  <Image
+                    src="/work/trochi/confidence-badge.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className={styles.confidenceIcon}
+                  />
+                  <span className={styles.resultConfidenceText}>
+                    {result.confidence} confidence
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <button
         type="button"
-        className={`${styles.searchButton} ${activeId === 'search' ? styles.active : ''}`}
+        className={styles.searchButton}
         aria-label="Search"
-        aria-pressed={activeId === 'search'}
-        onClick={() => setActiveId('search')}
+        onClick={openSearch}
       >
         <span className={styles.tooltip}>
           <span className={styles.tooltipLabel}>Search</span>
@@ -72,7 +181,7 @@ export default function TrochiNavBar() {
           </span>
         </span>
         <Image
-          src={activeId === 'search' ? '/work/trochi/search-active.svg' : '/work/trochi/search.svg'}
+          src="/work/trochi/search.svg"
           alt=""
           width={24}
           height={24}
