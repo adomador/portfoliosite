@@ -91,7 +91,7 @@ export default function TrochiCaseStudyPage() {
             aria-label="Expand Lane Results full screen"
           >
             <Image
-              src="/work/trochi/Lane_Results.png"
+              src="/work/trochi/Lane_Results.svg"
               alt="Lane Results — Dallas, TX to Chicago, IL rate analysis"
               fill
               sizes="(max-width: 860px) 100vw, 75vw"
@@ -116,7 +116,7 @@ export default function TrochiCaseStudyPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src="/work/trochi/Lane_Results.png"
+                src="/work/trochi/Lane_Results.svg"
                 alt="Lane Results — Dallas, TX to Chicago, IL rate analysis"
                 fill
                 sizes="100vw"
