@@ -130,8 +130,9 @@ export default function TrochiNavBar() {
         />
       </div>
       <div className={styles.resultsPanel}>
-        <p className={styles.resultsHeader}>Recent searches</p>
-        <div className={styles.resultsList}>
+        <div className={styles.resultsPanelInner}>
+          <p className={styles.resultsHeader}>Recent searches</p>
+          <div className={styles.resultsList}>
           {filteredResults.map((result, i) => (
             <div key={i} className={styles.resultRow}>
               <div className={styles.resultLeft}>
@@ -166,6 +167,7 @@ export default function TrochiNavBar() {
               </div>
             </div>
           ))}
+          </div>
         </div>
       </div>
       <button
