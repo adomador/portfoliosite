@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, type ReactNode } from 'react'
 import Image from 'next/image'
 import styles from './TrochiNavBar.module.css'
 
@@ -13,6 +13,21 @@ const NAV_ITEMS = [
 ] as const
 
 type EquipmentType = 'Van' | 'Temp' | 'Flatbed'
+
+function highlightMatch(text: string, query: string): ReactNode {
+  if (!query.trim()) return text
+  const lowerText = text.toLowerCase()
+  const lowerQuery = query.toLowerCase()
+  const index = lowerText.indexOf(lowerQuery)
+  if (index === -1) return text
+  return (
+    <>
+      {text.slice(0, index)}
+      <strong style={{ color: '#ffffff', fontWeight: 700 }}>{text.slice(index, index + query.length)}</strong>
+      {text.slice(index + query.length)}
+    </>
+  )
+}
 
 const RECENT_SEARCHES = [
   { route: 'Phoenix, AR → Memphis, TN', equipment: 'Van' as EquipmentType, price: '$1.58', confidence: '92%' },
@@ -153,7 +168,7 @@ export default function TrochiNavBar() {
                   height={16}
                   className={styles.historyIcon}
                 />
-                <span className={styles.resultRoute}>{result.route}</span>
+                <span className={styles.resultRoute}>{highlightMatch(result.route, searchQuery)}</span>
               </div>
               <div className={styles.resultRight}>
                 <span
