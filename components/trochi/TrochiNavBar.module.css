@@ -335,7 +335,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 320px;
+  width: 320px;
+  flex-shrink: 0;
 }
 
 .resultRight {
