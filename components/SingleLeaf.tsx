@@ -156,7 +156,7 @@ function applyRisingToHomePhysics(
   const tumble =
     tumbleRotations * 360 * progress +
     wobbleAmplitude * Math.sin(progress * TAU * wobbleCycles) * fade
-  const rotation = tumble * fade
+  const rotation = tumble * fade * (1 - eased) + end.rotation * eased
 
   return { x, y, rotation }
 }
@@ -216,11 +216,7 @@ export default function SingleLeaf() {
             1,
             (Date.now() - transitionStartRef.current) / TRANSITION_DURATION_MS
           )
-          if (progress >= LAND_THRESHOLD) {
-            x = frozen.x
-            y = frozen.y
-            rotation = frozen.rotation
-          } else if (fromSection === 'work') {
+          if (fromSection === 'work') {
             const pos = applyRisingToHomePhysics(
               progress,
               start,
@@ -231,6 +227,10 @@ export default function SingleLeaf() {
             x = pos.x
             y = pos.y
             rotation = pos.rotation
+          } else if (progress >= LAND_THRESHOLD) {
+            x = frozen.x
+            y = frozen.y
+            rotation = frozen.rotation
           } else {
             const eased = easeOutCubic(progress)
             const pos = lerp(start, frozen, eased)
