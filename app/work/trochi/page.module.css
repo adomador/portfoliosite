@@ -6,7 +6,8 @@
   padding: 120px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 0;
   animation: pageDissolveIn 0.5s ease-out forwards;
 }
 
@@ -25,17 +26,21 @@
   }
 }
 
-.content {
-  position: relative;
-  z-index: 10;
+.sidebar {
+  width: 25%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-.navCenter {
+.workColumn {
+  width: 75%;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 0;
+  min-width: 0;
 }
 
 .navCenterContent {
@@ -43,6 +48,24 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+}
+
+.copy {
+  margin-top: 2rem;
+  max-width: 42rem;
+}
+
+.copy p {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: #d4d9e3;
+  margin: 0 0 1rem 0;
+}
+
+.copy p:last-child {
+  margin-bottom: 0;
 }
 
 .comingSoon {
@@ -68,6 +91,7 @@
   margin-top: 72px;
   width: auto;
   height: 48px;
+  max-width: 100%;
   object-fit: contain;
   object-position: left top;
 }
