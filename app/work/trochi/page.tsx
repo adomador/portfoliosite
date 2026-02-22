@@ -21,7 +21,10 @@ export default function TrochiCaseStudyPage() {
         />
       </div>
       <div className={styles.navCenter}>
-        <TrochiNavBar />
+        <div className={styles.navCenterContent}>
+          <TrochiNavBar />
+          <p className={styles.comingSoon}>More coming soon…</p>
+        </div>
       </div>
     </main>
   )

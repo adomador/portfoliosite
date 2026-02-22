@@ -2,11 +2,27 @@
   position: relative;
   min-height: 100vh;
   width: 100%;
-  background: #20232d;
+  background: #16181d;
   padding: 120px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  animation: pageDissolveIn 0.5s ease-out forwards;
+}
+
+@keyframes pageDissolveIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    animation: none;
+  }
 }
 
 .content {
@@ -20,6 +36,21 @@
   align-items: center;
   justify-content: center;
   min-height: 0;
+}
+
+.navCenterContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.comingSoon {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 0;
 }
 
 .back {
