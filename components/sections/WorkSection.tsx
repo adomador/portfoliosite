@@ -17,7 +17,7 @@ const CASE_STUDIES = [
     id: 'trochi',
     title: 'Trochi',
     logo: '/work/Trochi.svg',
-    cta: 'View case study',
+    cta: '0 to 1 MVP',
     href: '/work/trochi',
   },
   { id: 'fleetworthy', title: 'Fleetworthy', logo: '/work/FW.svg' },

@@ -1,0 +1,148 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBar {
+  position: relative;
+  width: 392px;
+  height: 56px;
+  background: #2e3442;
+  border-radius: 60px;
+  box-shadow: inset -2px -4px 8px rgba(236, 238, 242, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+
+.navIcons {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  justify-content: space-between;
+  max-width: 288px;
+  margin: 0 auto;
+}
+
+.navButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: default;
+  transition: background 0.2s ease;
+}
+
+.navButton:hover {
+  background: #47526c;
+}
+
+.navButton:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #16181d;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.tooltipLabel {
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: white;
+}
+
+.hotkeys {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hotkey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: #3d465c;
+  border-radius: 2px;
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: white;
+}
+
+.hotkeyThen {
+  font-family: 'Proxima Nova', 'Satoshi', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: white;
+}
+
+.searchButton {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #d4d9e3;
+  background: #2e3442;
+  border-radius: 60px;
+  cursor: default;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchButton:hover {
+  border-color: #afb7ca;
+  box-shadow: 0 2px 6px rgba(44, 37, 35, 0.1);
+}
+
+.searchButton:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.searchIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
