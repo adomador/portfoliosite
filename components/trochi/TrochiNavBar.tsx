@@ -136,7 +136,7 @@ export default function TrochiNavBar() {
             <div key={i} className={styles.resultRow}>
               <div className={styles.resultLeft}>
                 <Image
-                  src="/work/trochi/history.svg"
+                  src="/work/trochi/recent-search.svg"
                   alt=""
                   width={16}
                   height={16}
