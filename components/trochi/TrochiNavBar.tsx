@@ -131,13 +131,26 @@ export default function TrochiNavBar() {
                     )}
                   </span>
                 </span>
-                <Image
-                  src={isActive ? item.iconActive : item.icon}
-                  alt=""
-                  width={24}
-                  height={24}
-                  className={styles.icon}
-                />
+                <span className={styles.iconWrapper}>
+                  <Image
+                    src={item.icon}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className={styles.icon}
+                    style={{ opacity: isActive ? 0 : 1 }}
+                  />
+                  <span className={styles.iconOverlay}>
+                    <Image
+                      src={item.iconActive}
+                      alt=""
+                      width={24}
+                      height={24}
+                      className={styles.icon}
+                      style={{ opacity: isActive ? 1 : 0 }}
+                    />
+                  </span>
+                </span>
               </button>
             )
           })}
