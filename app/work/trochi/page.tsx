@@ -27,7 +27,8 @@ export default function TrochiCaseStudyPage() {
             I led design from zero to one, bringing the MVP concept to life with no prior design foundation. Starting from competitive analysis and deep freight industry knowledge, I defined the product experience before a single screen existed, then designed end-to-end wireframes and a full interactive prototype.
           </p>
           <p>
-            The core design challenge was trust. Brokers had to see themselves as co-owners, not just users being mined for data. Every product decision was oriented around making that value exchange legible and compelling.
+          The design challenge was twofold: make brokers feel like owners of something valuable, and build an interface dense enough to be useful but intuitive enough to not require a manual. 
+          Brokers needed to quote rates confidently, spot where they were winning or bleeding margin, and source capacity, all without context-switching.
           </p>
         </div>
       </div>
