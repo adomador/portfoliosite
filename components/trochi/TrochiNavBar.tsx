@@ -159,7 +159,12 @@ export default function TrochiNavBar() {
           <p className={styles.resultsHeader}>Recent searches</p>
           <div className={styles.resultsList}>
           {filteredResults.map((result, i) => (
-            <div key={i} className={styles.resultRow}>
+            <button
+              key={i}
+              type="button"
+              className={styles.resultRow}
+              onClick={() => {}}
+            >
               <div className={styles.resultLeft}>
                 <Image
                   src="/work/trochi/recent-search.svg"
@@ -190,7 +195,7 @@ export default function TrochiNavBar() {
                   </span>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
           </div>
         </div>
