@@ -69,6 +69,7 @@
 .navButton:hover .tooltip {
   opacity: 1;
   visibility: visible;
+  transition-delay: 0.7s;
 }
 
 .icon {
@@ -92,7 +93,7 @@
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition: opacity 0.2s ease 0s, visibility 0.2s ease 0s;
   pointer-events: none;
   z-index: 50;
 }
@@ -184,6 +185,7 @@
 .searchButton:hover .tooltip {
   opacity: 1;
   visibility: visible;
+  transition-delay: 0.7s;
 }
 
 .searchIcon {
