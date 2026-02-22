@@ -16,6 +16,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
+  overflow: visible;
 }
 
 .navIcons {
@@ -39,12 +40,45 @@
   border: none;
   background: transparent;
   border-radius: 8px;
-  cursor: default;
-  transition: background 0.2s ease;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s ease;
+  overflow: visible;
+}
+
+.navButton::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  background: radial-gradient(
+    circle at center,
+    rgba(93, 212, 212, 0.4) 0%,
+    rgba(93, 212, 212, 0.2) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navButton:hover {
   background: #47526c;
+}
+
+.navButton:active {
+  transform: scale(0.96);
+}
+
+.navButton:active::before {
+  opacity: 1;
+}
+
+.navButton:active .icon {
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+    drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
 }
 
 .navButton:hover .tooltip {
@@ -56,6 +90,7 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
+  transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tooltip {
@@ -127,13 +162,46 @@
   border: 1px solid #d4d9e3;
   background: #2e3442;
   border-radius: 60px;
-  cursor: default;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.2s ease;
+  overflow: visible;
+}
+
+.searchButton::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(93, 212, 212, 0.35) 0%,
+    rgba(93, 212, 212, 0.15) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .searchButton:hover {
   border-color: #afb7ca;
   box-shadow: 0 2px 6px rgba(44, 37, 35, 0.1);
+}
+
+.searchButton:active {
+  transform: scale(0.96);
+}
+
+.searchButton:active::before {
+  opacity: 1;
+}
+
+.searchButton:active .searchIcon {
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+    drop-shadow(0 0 12px rgba(255, 255, 255, 0.3));
 }
 
 .searchButton:hover .tooltip {
@@ -145,4 +213,5 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
+  transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
