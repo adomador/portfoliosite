@@ -5,7 +5,15 @@ import Link from 'next/link'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
 import styles from './WorkSection.module.css'
 
-const CASE_STUDIES = [
+type CaseStudy = {
+  id: string
+  title: string
+  logo: string
+  cta?: string
+  href?: string
+}
+
+const CASE_STUDIES: CaseStudy[] = [
   {
     id: 'diezl',
     title: 'Diezl',
@@ -22,7 +30,7 @@ const CASE_STUDIES = [
   },
   { id: 'fleetworthy', title: 'Fleetworthy', logo: '/work/FW.svg' },
   { id: 'triumph', title: 'Triumph', logo: '/work/TriumphFAV2.svg' },
-] as const
+]
 
 export default function WorkSection() {
   const { goTo } = useCanvasNavigation()
