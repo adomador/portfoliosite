@@ -9,7 +9,7 @@ export default function TrochiCaseStudyPage() {
   return (
     <main className={styles.page}>
       <div className={styles.sidebar}>
-        <Link href="/#work" className={styles.back}>
+        <Link href="/?section=work" className={styles.back}>
           ← Back
         </Link>
         <Image
