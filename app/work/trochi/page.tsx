@@ -21,7 +21,7 @@ export default function TrochiCaseStudyPage() {
         />
         <div className={styles.copy}>
           <p>
-            Trochi Data Corp is a B2B SaaS startup building a cooperative truckload rate intelligence platform, where the brokers who contribute data also own equity in the company.
+            Trochi is a B2B SaaS startup building a cooperative truckload rate intelligence platform, where the brokers who contribute data also own equity in the company.
           </p>
           <p>
             I led design from zero to one, bringing the MVP concept to life with no prior design foundation. Starting from competitive analysis and deep freight industry knowledge, I defined the product experience before a single screen existed, then designed end-to-end wireframes and a full interactive prototype.
