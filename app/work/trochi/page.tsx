@@ -26,16 +26,12 @@ export default function TrochiCaseStudyPage() {
           <p>
             I led design from zero to one, bringing the MVP concept to life with no prior design foundation. Starting from competitive analysis and deep freight industry knowledge, I defined the product experience before a single screen existed, then designed end-to-end wireframes and a full interactive prototype.
           </p>
-          <p>
-          The design challenge was twofold: make brokers feel like owners of something valuable, and build an interface dense enough to be useful but intuitive enough to not require a manual. 
-          Brokers needed to quote rates confidently, spot where they were winning or bleeding margin, and source capacity, all without context-switching.
-          </p>
+          <p>More coming soon...</p>
         </div>
       </div>
       <div className={styles.workColumn}>
         <div className={styles.navCenterContent}>
           <TrochiNavBar />
-          <p className={styles.comingSoon}>More coming soon…</p>
         </div>
       </div>
     </main>

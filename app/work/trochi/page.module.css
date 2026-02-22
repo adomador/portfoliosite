@@ -1,6 +1,7 @@
 .page {
   position: relative;
   min-height: 100vh;
+  height: 100vh;
   width: 100%;
   background: #16181d;
   padding: 120px;
@@ -8,6 +9,9 @@
   display: flex;
   flex-direction: row;
   gap: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   animation: pageDissolveIn 0.5s ease-out forwards;
 }
 
@@ -41,6 +45,26 @@
   align-items: center;
   justify-content: center;
   min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .page {
+    flex-direction: column;
+    padding: 48px 24px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .workColumn {
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  .logo {
+    margin-top: 32px;
+  }
 }
 
 .navCenterContent {
