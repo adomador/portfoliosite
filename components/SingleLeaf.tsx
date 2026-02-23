@@ -1,6 +1,8 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
+import Link from 'next/link'
+import GlitchOverlay from '@/components/GlitchOverlay'
 import {
   useCanvasNavigation,
   TRANSITION_DURATION_MS,
@@ -409,9 +411,33 @@ export default function SingleLeaf() {
     transitionStartRef,
   ])
 
+  const [showGlitchOverlay, setShowGlitchOverlay] = useState(false)
+  const isClickable = activeSection === 'work' && !isTransitioning
+
+  const handleLeafClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setShowGlitchOverlay(true)
+  }
+
   return (
-    <div ref={elRef} className={styles.leaf} aria-hidden>
-      <img src="/fall-leaf.svg" alt="" draggable={false} />
-    </div>
+    <>
+      {showGlitchOverlay && <GlitchOverlay />}
+      {isClickable ? (
+        <div ref={elRef} className={`${styles.leaf} ${styles.leafClickable}`}>
+          <Link
+            href="/art"
+            onClick={handleLeafClick}
+            aria-label="View art"
+            style={{ display: 'block', width: '100%', height: '100%' }}
+          >
+            <img src="/fall-leaf.svg" alt="" draggable={false} />
+          </Link>
+        </div>
+      ) : (
+        <div ref={elRef} className={styles.leaf} aria-hidden>
+          <img src="/fall-leaf.svg" alt="" draggable={false} />
+        </div>
+      )}
+    </>
   )
 }

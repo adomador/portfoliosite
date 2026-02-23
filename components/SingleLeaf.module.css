@@ -5,6 +5,8 @@
   width: clamp(60px, 10vw, 100px);
   z-index: 9998;
   pointer-events: none;
+  text-decoration: none;
+  display: block;
   transform-origin: center center;
   will-change: transform;
   filter: drop-shadow(0 2px 8px rgba(201, 162, 39, 0.25));
@@ -14,6 +16,12 @@
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* Clickable only on Work section */
+.leafClickable {
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 /* When on About/Work we animate to rest position */
