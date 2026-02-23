@@ -1,6 +1,5 @@
 .page {
   position: relative;
-  display: flex;
   width: 100%;
   min-height: 100vh;
   height: 100vh;
@@ -24,86 +23,27 @@
   }
 }
 
-.sidebar {
-  width: 50%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 120px;
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-
-.contentColumn {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
-  box-sizing: border-box;
-  overflow: auto;
-}
-
-.embedWrapper {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  aspect-ratio: 16 / 9;
-  min-height: 320px;
-}
-
-.figmaEmbed {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  background: #1a1a1a;
-}
-
-.copy {
-  margin-top: 2rem;
-  max-width: 42rem;
-}
-
-.copy p {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
-  font-size: 0.9375rem;
-  font-weight: 400;
-  line-height: 1.65;
-  color: #d4d9e3;
-  margin: 0 0 1rem 0;
-}
-
-.copy p:last-child {
-  margin-bottom: 0;
-}
-
 .back {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 10;
   display: inline-block;
   margin: 0;
+  padding: 8px 12px;
   font-size: 0.9375rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--text-secondary);
-  transition: color 0.2s ease, letter-spacing 0.2s ease;
-}
-
-.logo {
-  display: block;
-  margin-top: 72px;
-  width: auto;
-  height: 48px;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: left top;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  transition: color 0.2s ease, letter-spacing 0.2s ease, background 0.2s ease;
 }
 
 .back:hover {
   color: var(--accent-gold);
   letter-spacing: 0.08em;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .back:focus-visible {
@@ -111,31 +51,11 @@
   outline-offset: 4px;
 }
 
-@media (max-width: 860px) {
-  .page {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 48px 24px;
-    flex-shrink: 0;
-    overflow-y: visible;
-  }
-
-  .contentColumn {
-    padding: 24px 16px;
-    min-height: 50vh;
-  }
-
-  .embedWrapper {
-    min-height: 280px;
-  }
-
-  .logo {
-    margin-top: 32px;
-  }
+.figmaEmbed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #1a1a1a;
 }
