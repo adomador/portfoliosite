@@ -63,7 +63,7 @@ export default function AboutSection() {
               enjoy using.
             </p>
             <p className={styles.body}>
-              Currently solving problems at Fleetworthy. Based in Pennsylvania. </p>
+             Based in Pennsylvania. </p>
               <p className={styles.body}>Enjoy playing chess, reading fiction,
               and hiking.
             </p>
