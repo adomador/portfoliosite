@@ -33,7 +33,7 @@ const CASE_STUDIES: CaseStudy[] = [
     id: 'triumph',
     title: 'Triumph',
     logo: '/work/TriumphFAV2.svg',
-    cta: ''22 - '25'',
+    cta: "'22 - '25",
     href: '/work/triumph',
   },
 ]
