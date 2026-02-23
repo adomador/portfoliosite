@@ -93,6 +93,13 @@ const LANDING_DURATION_MS = 500
 
 type LeafPositionCallback = (x: number, y: number, rotation: number) => void
 
+/** SingleLeaf uses center positioning; labyrinth stores top-left. Convert for leaf only. */
+function leafCenter(ent: FleeingEntity): { x: number; y: number } {
+  const w = ent.el.offsetWidth || 80
+  const h = ent.el.offsetHeight || 80
+  return { x: ent.x + w / 2, y: ent.y + h / 2 }
+}
+
 /* ── Provider ── */
 
 export function LabyrinthProvider({
@@ -141,7 +148,8 @@ export function LabyrinthProvider({
       entitiesRef.current.forEach((ent) => {
         if (ent.landed) {
           if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-            onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
+            const { x, y } = leafCenter(ent)
+            onLeafPositionChangeRef.current(x, y, ent.rotation)
           }
           return
         }
@@ -161,7 +169,8 @@ export function LabyrinthProvider({
           ent.rotation = ent.landingFromRotation + (0 - ent.landingFromRotation) * eased
           ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(${ent.rotation}deg)`
           if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-            onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
+            const { x, y } = leafCenter(ent)
+            onLeafPositionChangeRef.current(x, y, ent.rotation)
           }
           if (progress >= 1) {
             ent.x = landX
@@ -172,7 +181,8 @@ export function LabyrinthProvider({
             ent.el.style.transform = `translate(${landX}px, ${landY}px) rotate(0deg)`
             ent.el.style.willChange = 'auto'
             if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-              onLeafPositionChangeRef.current(landX, landY, 0)
+              const { x, y } = leafCenter(ent)
+              onLeafPositionChangeRef.current(x, y, 0)
             }
             setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
           }
@@ -187,7 +197,8 @@ export function LabyrinthProvider({
           ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(0deg)`
           ent.el.style.willChange = 'auto'
           if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-            onLeafPositionChangeRef.current(ent.x, ent.y, 0)
+            const { x, y } = leafCenter(ent)
+            onLeafPositionChangeRef.current(x, y, 0)
           }
           setLandedMap((prev) => ({ ...prev, [ent.id]: true }))
           return
@@ -275,7 +286,8 @@ export function LabyrinthProvider({
         /* Apply transform (GPU-composited) */
         ent.el.style.transform = `translate(${ent.x}px, ${ent.y}px) rotate(${ent.rotation}deg)`
         if (ent.id === 'leaf' && onLeafPositionChangeRef.current) {
-          onLeafPositionChangeRef.current(ent.x, ent.y, ent.rotation)
+          const { x, y } = leafCenter(ent)
+          onLeafPositionChangeRef.current(x, y, ent.rotation)
         }
       })
 
@@ -351,7 +363,9 @@ export function LabyrinthProvider({
       el.style.transform = `translate(${startX}px, ${startY}px) rotate(${entity.rotation}deg)`
       entitiesRef.current.set(id, entity)
       if (id === 'leaf' && onLeafPositionChangeRef.current) {
-        onLeafPositionChangeRef.current(startX, startY, entity.rotation)
+        const w = el.offsetWidth || 80
+        const h = el.offsetHeight || 80
+        onLeafPositionChangeRef.current(startX + w / 2, startY + h / 2, entity.rotation)
       }
 
       const settleTimeout = setTimeout(() => {
