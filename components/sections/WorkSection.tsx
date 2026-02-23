@@ -29,7 +29,13 @@ const CASE_STUDIES: CaseStudy[] = [
     href: '/work/trochi',
   },
   { id: 'fleetworthy', title: 'Fleetworthy', logo: '/work/FW.svg' },
-  { id: 'triumph', title: 'Triumph', logo: '/work/TriumphFAV2.svg' },
+  {
+    id: 'triumph',
+    title: 'Triumph',
+    logo: '/work/TriumphFAV2.svg',
+    cta: 'Case Study',
+    href: '/work/triumph',
+  },
 ]
 
 export default function WorkSection() {
