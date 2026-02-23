@@ -7,8 +7,13 @@ import Image from 'next/image'
 import TrochiNavBar from '@/components/trochi/TrochiNavBar'
 import styles from './page.module.css'
 
+const OVERLAY_IMAGES = {
+  laneResults: { src: '/work/trochi/Lane_Results.svg', alt: 'Lane Results — Dallas, TX to Chicago, IL rate analysis' },
+  lanesSearch: { src: '/work/trochi/Lanes_Search_Active.svg', alt: 'Lanes Search Active' },
+} as const
+
 export default function TrochiCaseStudyPage() {
-  const [showOverlay, setShowOverlay] = useState(false)
+  const [overlayImage, setOverlayImage] = useState<keyof typeof OVERLAY_IMAGES | null>(null)
   const [showScrollIndicator, setShowScrollIndicator] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -24,14 +29,14 @@ export default function TrochiCaseStudyPage() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowOverlay(false)
+      if (e.key === 'Escape') setOverlayImage(null)
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
   useEffect(() => {
-    if (showOverlay) {
+    if (overlayImage) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -39,7 +44,7 @@ export default function TrochiCaseStudyPage() {
     return () => {
       document.body.style.overflow = ''
     }
-  }, [showOverlay])
+  }, [overlayImage])
 
   return (
     <main className={styles.page}>
@@ -88,7 +93,7 @@ export default function TrochiCaseStudyPage() {
           <button
             type="button"
             className={styles.imageSection}
-            onClick={() => setShowOverlay(true)}
+            onClick={() => setOverlayImage('laneResults')}
             aria-label="Expand Lane Results full screen"
           >
             <Image
@@ -100,24 +105,41 @@ export default function TrochiCaseStudyPage() {
             />
           </button>
         </section>
+
+        <section className={styles.section}>
+          <button
+            type="button"
+            className={styles.imageSection}
+            onClick={() => setOverlayImage('lanesSearch')}
+            aria-label="Expand Lanes Search full screen"
+          >
+            <Image
+              src="/work/trochi/Lanes_Search_Active.svg"
+              alt="Lanes Search Active"
+              fill
+              sizes="(max-width: 860px) 100vw, 75vw"
+              className={styles.laneImage}
+            />
+          </button>
+        </section>
       </div>
 
-      {showOverlay &&
+      {overlayImage &&
         typeof document !== 'undefined' &&
         createPortal(
           <div
             className={styles.overlay}
-            onClick={() => setShowOverlay(false)}
+            onClick={() => setOverlayImage(null)}
             role="dialog"
             aria-modal="true"
-            aria-label="Lane Results full screen"
+            aria-label={`${OVERLAY_IMAGES[overlayImage].alt} full screen`}
           >
             <button
               type="button"
               className={styles.overlayClose}
               onClick={(e) => {
                 e.stopPropagation()
-                setShowOverlay(false)
+                setOverlayImage(null)
               }}
               aria-label="Close"
             >
@@ -128,8 +150,8 @@ export default function TrochiCaseStudyPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src="/work/trochi/Lane_Results.svg"
-                alt="Lane Results — Dallas, TX to Chicago, IL rate analysis"
+                src={OVERLAY_IMAGES[overlayImage].src}
+                alt={OVERLAY_IMAGES[overlayImage].alt}
                 fill
                 sizes="100vw"
                 className={styles.overlayImage}
