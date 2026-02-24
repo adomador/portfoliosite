@@ -66,7 +66,6 @@ export default function TrochiCaseStudyPage() {
           <p>
             I designed the product from zero to one, bringing the MVP concept to life with no prior foundation. Using competitive analysis and deep freight industry knowledge, I defined the entire experience before a single screen existed, and produced end-to-end wireframes and a full interactive prototype.
           </p>
-          <p>More coming soon...</p>
         </div>
       </aside>
 
