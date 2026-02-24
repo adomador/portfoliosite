@@ -58,12 +58,13 @@ export default function AboutSection() {
           <div className={styles.copy}>
             <h1 className={styles.title}>About me</h1>
             <p className={styles.lead}>
-              Through first principles, strategic systems thinking, and a bias toward
-              action, I transform ambiguous problems into elegant experiences humans
-              enjoy using.
+            I came to design through fine art, drawn to work concerned with essential themes of systems, 
+            power, and structure. That sensibility shapes my approach to problem solving. 
+            For the last three years I've been in freight technology, one of the more complex and underdesigned 
+            corners of the industry, where the problems are dense enough to demand both rigor and craft.
             </p>
             <p className={styles.body}>
-             Based in Pennsylvania. </p>
+             Currently based in Pennsylvania. </p>
               <p className={styles.body}>Enjoy playing chess, reading fiction,
               and hiking.
             </p>
