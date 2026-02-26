@@ -58,10 +58,8 @@ export default function AboutSection() {
           <div className={styles.copy}>
             <h1 className={styles.title}>About me</h1>
             <p className={styles.lead}>
-            I came to design through fine art, drawn to work concerned with systems, 
-            power, and structure. That sensibility shapes my approach to problem solving. 
-            For the last three years I&apos;ve been in freight technology, one of the more complex and underdesigned 
-            corners of the industry, where the problems are dense enough to demand both rigor and craft.
+            I am a designer and builder with over 5 years of experience. I am drawn to complex/ambiguous problems and the challenge of building something new.
+            For the last three years I&apos;ve been in freight technology, one of the more complex and under-served industries. 
             </p>
             <p className={styles.body}>
              Currently based in Pennsylvania. </p>
