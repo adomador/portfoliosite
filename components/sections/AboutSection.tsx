@@ -58,8 +58,8 @@ export default function AboutSection() {
           <div className={styles.copy}>
             <h1 className={styles.title}>About me</h1>
             <p className={styles.lead}>
-            I am a designer and builder with over 5 years of experience. I am drawn to ambiguous problems and the challenge of building something new.
-            For the last three years I&apos;ve been in freight technology, one of the more complex and under-served industries out there. 
+            I am a designer and builder with over 5 years of experience. Drawn to ambiguous problems and the challenge of building something new, 
+           I&apos;ve been in freight technology space for the last three years, one of the most complex and under-served industries in the world
             </p>
             <p className={styles.body}>
              Currently based in Pennsylvania. </p>
