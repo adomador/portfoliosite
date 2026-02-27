@@ -183,15 +183,15 @@
   opacity: 0.5;
 }
 
-/* Trochi – bottom-left, warm amber */
+/* Trochi – bottom-left, crimson to match background */
 .card[data-study='trochi'] .cardGlow {
   bottom: -15%;
   left: -15%;
   top: auto;
   background: radial-gradient(
     circle at 30% 70%,
-    rgba(212, 160, 84, 0.08) 0%,
-    rgba(212, 160, 84, 0.02) 40%,
+    rgba(139, 38, 53, 0.08) 0%,
+    rgba(139, 38, 53, 0.02) 40%,
     transparent 70%
   );
   opacity: 0.5;
@@ -255,12 +255,12 @@
   );
 }
 
-/* Trochi hover – warm amber (bottom-left) */
+/* Trochi hover – crimson undertone (bottom-left, matches background) */
 .card[data-study='trochi']:hover .cardGlow {
   background: radial-gradient(
     circle at 30% 70%,
-    rgba(212, 160, 84, 0.18) 0%,
-    rgba(212, 160, 84, 0.05) 45%,
+    rgba(139, 38, 53, 0.18) 0%,
+    rgba(139, 38, 53, 0.05) 45%,
     transparent 75%
   );
 }
