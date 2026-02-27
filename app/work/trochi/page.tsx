@@ -89,37 +89,47 @@ export default function TrochiCaseStudyPage() {
         </section>
 
         <section className={styles.section}>
-          <button
-            type="button"
-            className={styles.imageSection}
-            onClick={() => setOverlayImage('laneResults')}
-            aria-label="Expand Lane Results full screen"
-          >
-            <Image
-              src="/work/trochi/Lane_Results.svg"
-              alt="Lane Results — Dallas, TX to Chicago, IL rate analysis"
-              fill
-              sizes="(max-width: 860px) 100vw, 75vw"
-              className={styles.laneImage}
-            />
-          </button>
+          <div className={styles.screenshotBlock}>
+            <button
+              type="button"
+              className={styles.imageSection}
+              onClick={() => setOverlayImage('laneResults')}
+              aria-label="Expand Lane Results full screen"
+            >
+              <Image
+                src="/work/trochi/Lane_Results.svg"
+                alt="Lane Results — Dallas, TX to Chicago, IL rate analysis"
+                fill
+                sizes="(max-width: 860px) 100vw, 75vw"
+                className={styles.laneImage}
+              />
+            </button>
+            <p className={styles.screenshotCaption}>
+              Spot market data, trends, and signals in one view.
+            </p>
+          </div>
         </section>
 
         <section className={styles.section}>
-          <button
-            type="button"
-            className={styles.imageSection}
-            onClick={() => setOverlayImage('lanesSearch')}
-            aria-label="Expand Lanes Search full screen"
-          >
-            <Image
-              src="/work/trochi/Lanes_Search_Active.svg"
-              alt="Lanes Search Active"
-              fill
-              sizes="(max-width: 860px) 100vw, 75vw"
-              className={styles.laneImage}
-            />
-          </button>
+          <div className={styles.screenshotBlock}>
+            <button
+              type="button"
+              className={styles.imageSection}
+              onClick={() => setOverlayImage('lanesSearch')}
+              aria-label="Expand Lanes Search full screen"
+            >
+              <Image
+                src="/work/trochi/Lanes_Search_Active.svg"
+                alt="Lanes Search Active"
+                fill
+                sizes="(max-width: 860px) 100vw, 75vw"
+                className={styles.laneImage}
+              />
+            </button>
+            <p className={styles.screenshotCaption}>
+              Search as filter system. Users can find lanes using natural language.
+            </p>
+          </div>
         </section>
       </div>
 

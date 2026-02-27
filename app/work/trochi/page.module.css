@@ -113,6 +113,16 @@
   line-height: 1;
 }
 
+.screenshotBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
 .imageSection {
   position: relative;
   width: 100%;
@@ -124,6 +134,17 @@
   cursor: pointer;
   display: block;
   transition: opacity 0.2s ease;
+}
+
+.screenshotCaption {
+  margin: 0;
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #afb7ca;
+  text-align: center;
+  max-width: 42ch;
 }
 
 .imageSection:hover {
