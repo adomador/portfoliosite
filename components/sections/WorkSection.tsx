@@ -22,6 +22,13 @@ const CASE_STUDIES: CaseStudy[] = [
     href: 'https://www.diezlapp.com',
   },
   {
+    id: 'triumph',
+    title: 'Triumph',
+    logo: '/work/TriumphFAV2.svg',
+    cta: "'22 - '25",
+    href: '/work/triumph',
+  },
+  {
     id: 'trochi',
     title: 'Trochi',
     logo: '/work/Trochi.svg',
@@ -29,13 +36,6 @@ const CASE_STUDIES: CaseStudy[] = [
     href: '/work/trochi',
   },
   { id: 'fleetworthy', title: 'Fleetworthy', logo: '/work/FW.svg' },
-  {
-    id: 'triumph',
-    title: 'Triumph',
-    logo: '/work/TriumphFAV2.svg',
-    cta: "'22 - '25",
-    href: '/work/triumph',
-  },
 ]
 
 export default function WorkSection() {

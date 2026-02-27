@@ -169,7 +169,8 @@
   opacity: 0.6;
 }
 
-.card[data-study='trochi'] .cardGlow {
+/* Triumph – top-right, amber accent */
+.card[data-study='triumph'] .cardGlow {
   top: -15%;
   right: -15%;
   left: auto;
@@ -182,20 +183,22 @@
   opacity: 0.5;
 }
 
-.card[data-study='fleetworthy'] .cardGlow {
+/* Trochi – bottom-left, warm amber */
+.card[data-study='trochi'] .cardGlow {
   bottom: -15%;
   left: -15%;
   top: auto;
   background: radial-gradient(
     circle at 30% 70%,
-    rgba(139, 38, 53, 0.08) 0%,
-    rgba(139, 38, 53, 0.02) 40%,
+    rgba(212, 160, 84, 0.08) 0%,
+    rgba(212, 160, 84, 0.02) 40%,
     transparent 70%
   );
   opacity: 0.5;
 }
 
-.card[data-study='triumph'] .cardGlow {
+/* Fleetworthy – bottom-right, crimson undertone */
+.card[data-study='fleetworthy'] .cardGlow {
   bottom: -15%;
   right: -15%;
   left: auto;
@@ -242,8 +245,8 @@
   );
 }
 
-/* Trochi hover – amber accent */
-.card[data-study='trochi']:hover .cardGlow {
+/* Triumph hover – amber accent (top-right) */
+.card[data-study='triumph']:hover .cardGlow {
   background: radial-gradient(
     circle at 70% 30%,
     rgba(212, 160, 84, 0.2) 0%,
@@ -252,18 +255,18 @@
   );
 }
 
-/* Fleetworthy hover – crimson undertone */
-.card[data-study='fleetworthy']:hover .cardGlow {
+/* Trochi hover – warm amber (bottom-left) */
+.card[data-study='trochi']:hover .cardGlow {
   background: radial-gradient(
     circle at 30% 70%,
-    rgba(139, 38, 53, 0.18) 0%,
-    rgba(139, 38, 53, 0.05) 45%,
+    rgba(212, 160, 84, 0.18) 0%,
+    rgba(212, 160, 84, 0.05) 45%,
     transparent 75%
   );
 }
 
-/* Triumph hover – crimson (bottom-right) */
-.card[data-study='triumph']:hover .cardGlow {
+/* Fleetworthy hover – crimson (bottom-right) */
+.card[data-study='fleetworthy']:hover .cardGlow {
   background: radial-gradient(
     circle at 70% 70%,
     rgba(139, 38, 53, 0.18) 0%,
