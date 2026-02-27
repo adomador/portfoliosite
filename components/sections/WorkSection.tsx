@@ -25,7 +25,7 @@ const CASE_STUDIES: CaseStudy[] = [
     id: 'triumph',
     title: 'Triumph',
     logo: '/work/TriumphFAV2.svg',
-    cta: "Designing the financial layer of freight",
+    cta: "End to end design & research",
     href: '/work/triumph',
   },
   {
