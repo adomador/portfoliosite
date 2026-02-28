@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import TrochiNavBar from '@/components/trochi/TrochiNavBar'
@@ -14,20 +15,33 @@ const PRODUCT_SUBTITLES = [
   'From market insight to quoted rate in one flow.',
 ] as const
 
-const PERSONA_LABELS = [
-  'Name',
-  'Role',
-  'Company size',
-  'Quote',
-  'Goals',
-  'Pain Points',
-  'KPIs',
-  'Motivations',
-  'Jobs to be Done',
+const PERSONAS = [
+  {
+    id: 'james',
+    name: 'James',
+    role: 'Account Manager',
+    src: '/work/trochi/persona-james.png',
+    alt: 'James — Account Manager, Large 3PL',
+  },
+  {
+    id: 'tyler',
+    name: 'Tyler',
+    role: 'Carrier Sales Rep',
+    src: '/work/trochi/persona-tyler.png',
+    alt: 'Tyler — Carrier Sales Rep, Mid-size 3PL',
+  },
+  {
+    id: 'sarah',
+    name: 'Sarah',
+    role: 'Pricing Analyst',
+    src: '/work/trochi/persona-sarah.png',
+    alt: 'Sarah — Pricing Analyst, Large 3PL',
+  },
 ] as const
 
 export default function TrochiCaseStudyPage() {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true)
+  const [expandedPersona, setExpandedPersona] = useState<(typeof PERSONAS)[number] | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -39,6 +53,25 @@ export default function TrochiCaseStudyPage() {
     el.addEventListener('scroll', handleScroll)
     return () => el.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setExpandedPersona(null)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  useEffect(() => {
+    if (expandedPersona) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [expandedPersona])
 
   return (
     <main className={styles.page}>
@@ -108,17 +141,29 @@ export default function TrochiCaseStudyPage() {
             Three roles, all paying to access data they created.
           </p>
           <div className={styles.personaGrid}>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className={styles.personaCard}>
-                {PERSONA_LABELS.map((label) => (
-                  <div key={label} className={styles.personaField}>
-                    <span className={styles.personaLabel}>{label}</span>
-                    <span className={styles.personaPlaceholder}>
-                      [Placeholder]
-                    </span>
-                  </div>
-                ))}
-              </div>
+            {PERSONAS.map((persona) => (
+              <button
+                key={persona.id}
+                type="button"
+                className={styles.personaCard}
+                onClick={() => setExpandedPersona(persona)}
+                aria-label={`View ${persona.name} persona — ${persona.role}`}
+              >
+                <div className={styles.personaThumbnail}>
+                  <Image
+                    src={persona.src}
+                    alt=""
+                    fill
+                    sizes="(max-width: 860px) 100vw, 33vw"
+                    className={styles.personaImage}
+                  />
+                </div>
+                <div className={styles.personaMeta}>
+                  <span className={styles.personaName}>{persona.name}</span>
+                  <span className={styles.personaRole}>{persona.role}</span>
+                  <span className={styles.personaExpandHint}>Click to expand</span>
+                </div>
+              </button>
             ))}
           </div>
         </section>
@@ -182,6 +227,43 @@ export default function TrochiCaseStudyPage() {
           </p>
         </section>
       </div>
+
+      {expandedPersona &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            className={styles.overlay}
+            onClick={() => setExpandedPersona(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${expandedPersona.alt} — full persona view`}
+          >
+            <button
+              type="button"
+              className={styles.overlayClose}
+              onClick={(e) => {
+                e.stopPropagation()
+                setExpandedPersona(null)
+              }}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <div
+              className={styles.overlayImageWrap}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={expandedPersona.src}
+                alt={expandedPersona.alt}
+                fill
+                sizes="95vw"
+                className={styles.overlayImage}
+              />
+            </div>
+          </div>,
+          document.body
+        )}
     </main>
   )
 }
