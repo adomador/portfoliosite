@@ -1,11 +1,9 @@
+/* Page wrapper */
 .page {
   position: relative;
-  display: flex;
   width: 100%;
   min-height: 100vh;
-  height: 100vh;
   background: #16181d;
-  overflow: hidden;
   animation: pageDissolveIn 0.5s ease-out forwards;
 }
 
@@ -24,28 +22,44 @@
   }
 }
 
-.sidebar {
-  width: 50%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 120px;
-  box-sizing: border-box;
-  overflow-y: auto;
+/* Fixed back nav */
+.back {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 100;
+  display: inline-block;
+  margin: 0;
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  transition: color 0.2s ease, letter-spacing 0.2s ease;
 }
 
-.scrollColumn {
-  flex: 1;
-  min-width: 0;
+.back:hover {
+  color: var(--accent-gold);
+  letter-spacing: 0.08em;
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+/* Scroll container */
+.scrollContainer {
+  width: 100%;
+  height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: y mandatory;
 }
 
+/* Base section */
 .section {
-  height: 100dvh;
   min-height: 100dvh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -55,16 +69,66 @@
   justify-content: center;
   position: relative;
   padding: 48px 24px;
+  padding-top: 72px;
   box-sizing: border-box;
 }
 
-.sectionInner {
+/* Section 1: Opening — Two column */
+.openingGrid {
+  display: flex;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  gap: 48px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebarContent {
+  width: 50%;
+  max-width: 42rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 48px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left top;
+  margin-bottom: 2rem;
+}
+
+.copy {
+  max-width: 42rem;
+}
+
+.copy p {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: #d4d9e3;
+  margin: 0 0 1rem 0;
+}
+
+.copy p:last-child {
+  margin-bottom: 0;
+}
+
+.navDemo {
+  width: 50%;
+  max-width: 520px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  width: 100%;
 }
 
 .navBarLabel {
@@ -90,7 +154,8 @@
 }
 
 @keyframes scrollBounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-50%) translateY(0);
   }
   50% {
@@ -113,199 +178,226 @@
   line-height: 1;
 }
 
-.screenshotBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-}
-
-.imageSection {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  display: block;
-  transition: opacity 0.2s ease;
-}
-
-.screenshotCaption {
+/* Section 2: Problem Statement — Full width */
+.problemStatement {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #d4d9e3;
+  max-width: 52ch;
   margin: 0;
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: #afb7ca;
   text-align: center;
-  max-width: 42ch;
+  padding: 3rem 1.5rem;
 }
 
-.imageSection:hover {
-  opacity: 0.95;
+/* Section 3: Users — Full width */
+.sectionHeader {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
 }
 
-.imageSection:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 4px;
-}
-
-.laneImage {
-  object-fit: contain;
-  object-position: center;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: rgba(0, 0, 0, 0.92);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: overlayIn 0.2s ease-out forwards;
-}
-
-.overlayClose {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  z-index: 1001;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 1.75rem;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.overlayClose:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.overlayClose:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 2px;
-}
-
-@keyframes overlayIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.overlayImageWrap {
-  position: relative;
-  width: 95vw;
-  height: 95vh;
-  max-width: 95vw;
-  max-height: 95vh;
-}
-
-.overlayImage {
-  object-fit: contain;
-  object-position: center;
-}
-
-.copy {
-  margin-top: 2rem;
-  max-width: 42rem;
-}
-
-.copy p {
+.sectionSubtext {
   font-family: 'Satoshi', 'Proxima Nova', sans-serif;
   font-size: 0.9375rem;
   font-weight: 400;
-  line-height: 1.65;
-  color: #d4d9e3;
-  margin: 0 0 1rem 0;
+  color: #afb7ca;
+  margin: 0 0 2rem 0;
+  text-align: center;
 }
 
-.copy p:last-child {
-  margin-bottom: 0;
+.personaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.back {
-  display: inline-block;
-  margin: 0;
-  font-size: 0.9375rem;
+.personaCard {
+  border: 1px dashed #afb7ca;
+  background: rgba(175, 183, 202, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.personaField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.personaLabel {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #afb7ca;
+}
+
+.personaPlaceholder {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #6b6560;
+}
+
+/* Section 4: Key Decisions — Full width */
+.decisionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.decisionRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.decisionPair {
+  display: flex;
+  width: 100%;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.designPlaceholder {
+  flex: 1;
+  min-height: 200px;
+  border: 1px dashed #afb7ca;
+  background: rgba(175, 183, 202, 0.06);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #afb7ca;
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-  transition: color 0.2s ease, letter-spacing 0.2s ease;
 }
 
-.logo {
-  display: block;
-  margin-top: 72px;
-  width: auto;
-  height: 48px;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: left top;
+.rationale {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #afb7ca;
+  margin: 0;
+  text-align: center;
+  max-width: 48ch;
 }
 
-.back:hover {
-  color: var(--accent-gold);
-  letter-spacing: 0.08em;
+/* Section 5: The Product — Two column, 5 snap sections */
+.productGrid {
+  display: flex;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 48px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
 }
 
-.back:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 4px;
+.screenPlaceholder {
+  width: 50%;
+  min-height: 360px;
+  border: 1px dashed #afb7ca;
+  background: rgba(175, 183, 202, 0.06);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #afb7ca;
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
+.productSubtitle {
+  width: 50%;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #d4d9e3;
+  margin: 0;
+}
+
+/* Section 6: Outcome — Full width */
+.outcomeStatement {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #d4d9e3;
+  max-width: 52ch;
+  margin: 0;
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+/* Responsive: max-width 860px */
 @media (max-width: 860px) {
-  .page {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 48px 24px;
-    flex-shrink: 0;
-    overflow-y: visible;
-  }
-
-  .scrollColumn {
-    overflow-y: visible;
-    scroll-snap-type: none;
+  .scrollContainer {
+    scroll-snap-type: y proximity;
   }
 
   .section {
-    min-height: 80vh;
-    padding: 48px 24px;
+    min-height: min(100dvh, auto);
+    padding-top: 80px;
   }
 
-  .scrollIndicator {
-    display: none;
+  .openingGrid {
+    flex-direction: column;
+    gap: 2rem;
   }
 
-  .logo {
-    margin-top: 32px;
+  .sidebarContent {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .navDemo {
+    width: 100%;
+  }
+
+  .personaGrid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+
+  .decisionPair {
+    flex-direction: column;
+  }
+
+  .productGrid {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .screenPlaceholder {
+    width: 100%;
+    min-height: 280px;
+  }
+
+  .productSubtitle {
+    width: 100%;
+    text-align: center;
   }
 }
