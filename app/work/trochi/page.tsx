@@ -19,8 +19,8 @@ const PRODUCT_SUBTITLES = [
   'A personalized market briefing to start the day.',
   'Search as the filter. Find lanes by intent.',
   'Spot market intelligence for a single lane.',
-  'City-level capacity and volatility at a glance.',
-  'From market insight to quoted rate in one flow.',
+  'Market-level capacity and volatility at a glance.',
+  'From insight to quoted rate in one flow.',
 ] as const
 
 const PERSONAS = [
@@ -234,16 +234,17 @@ export default function TrochiCaseStudyPage() {
           </div>
         </section>
 
-        {/* Section 5: The Product — Five two-column snap sections */}
+        {/* Section 5: The Product — Five centered snap sections */}
         {PRODUCT_SUBTITLES.map((subtitle, i) => {
           const screen = PRODUCT_SCREENS[i]
           return (
             <section
               key={i}
               className={styles.section}
-              data-layout="two-col"
+              data-layout="full"
             >
-              <div className={styles.productGrid}>
+              <div className={styles.productStack}>
+                <p className={styles.productSubtitle}>{subtitle}</p>
                 {screen ? (
                   <button
                     type="button"
@@ -255,7 +256,7 @@ export default function TrochiCaseStudyPage() {
                       src={screen.src}
                       alt={screen.alt}
                       fill
-                      sizes="(max-width: 860px) 100vw, 50vw"
+                      sizes="(max-width: 860px) 100vw, 85vw"
                       className={styles.productScreenImg}
                     />
                   </button>
@@ -264,7 +265,6 @@ export default function TrochiCaseStudyPage() {
                     Screen {i + 1} Placeholder
                   </div>
                 )}
-                <p className={styles.productSubtitle}>{subtitle}</p>
               </div>
             </section>
           )

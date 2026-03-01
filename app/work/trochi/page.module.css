@@ -416,22 +416,36 @@
   object-position: center;
 }
 
-/* Section 5: The Product — Two column, 5 snap sections */
-.productGrid {
+/* Section 5: The Product — Centered stack, 5 snap sections */
+.productStack {
   display: flex;
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  gap: 48px;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   flex: 1;
   min-height: 0;
+  text-align: center;
+}
+
+.productSubtitle {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: #d4d9e3;
+  margin: 0;
+  max-width: 48ch;
 }
 
 .productScreen {
-  width: 50%;
-  min-height: 360px;
+  width: 100%;
+  max-width: 1100px;
+  flex: 1;
+  min-height: 420px;
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -449,8 +463,10 @@
 }
 
 .screenPlaceholder {
-  width: 50%;
-  min-height: 360px;
+  width: 100%;
+  max-width: 1100px;
+  flex: 1;
+  min-height: 420px;
   border: 1px dashed #afb7ca;
   background: rgba(175, 183, 202, 0.06);
   border-radius: 12px;
@@ -461,16 +477,6 @@
   font-family: 'Satoshi', 'Proxima Nova', sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
-}
-
-.productSubtitle {
-  width: 50%;
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-  font-weight: 400;
-  line-height: 1.5;
-  color: #d4d9e3;
-  margin: 0;
 }
 
 /* Section 6: Outcome — Full width */
@@ -516,23 +522,15 @@
     max-width: 380px;
   }
 
-  .productGrid {
-    flex-direction: column;
-    gap: 1.5rem;
+  .productStack {
+    gap: 1rem;
   }
 
   .productScreen {
-    width: 100%;
-    min-height: 280px;
+    min-height: 320px;
   }
 
   .screenPlaceholder {
-    width: 100%;
-    min-height: 280px;
-  }
-
-  .productSubtitle {
-    width: 100%;
-    text-align: center;
+    min-height: 320px;
   }
 }
