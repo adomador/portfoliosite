@@ -17,32 +17,41 @@ const PRODUCT_SUBTITLES = [
 
 const PERSONAS = [
   {
-    id: 'james',
-    name: 'James',
-    role: 'Account Manager',
-    src: '/work/trochi/persona-james.png',
-    alt: 'James — Account Manager, Large 3PL',
-  },
-  {
     id: 'tyler',
     name: 'Tyler',
     role: 'Carrier Sales Rep',
-    src: '/work/trochi/persona-tyler.png',
+    src: '/work/trochi/persona-tyler.svg',
     alt: 'Tyler — Carrier Sales Rep, Mid-size 3PL',
   },
   {
     id: 'sarah',
     name: 'Sarah',
     role: 'Pricing Analyst',
-    src: '/work/trochi/persona-sarah.png',
+    src: '/work/trochi/persona-sarah.svg',
     alt: 'Sarah — Pricing Analyst, Large 3PL',
   },
+  {
+    id: 'james',
+    name: 'James',
+    role: 'Account Manager',
+    src: '/work/trochi/persona-james.svg',
+    alt: 'James — Account Manager, Large 3PL',
+  },
 ] as const
+
+const MIN_ZOOM = 1
+const MAX_ZOOM = 4
+const ZOOM_STEP = 0.25
 
 export default function TrochiCaseStudyPage() {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true)
   const [expandedPersona, setExpandedPersona] = useState<(typeof PERSONAS)[number] | null>(null)
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isPanning, setIsPanning] = useState(false)
+  const panStartRef = useRef({ x: 0, y: 0 })
   const scrollRef = useRef<HTMLDivElement>(null)
+  const overlayWrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const el = scrollRef.current
@@ -65,6 +74,8 @@ export default function TrochiCaseStudyPage() {
   useEffect(() => {
     if (expandedPersona) {
       document.body.style.overflow = 'hidden'
+      setZoom(1)
+      setPan({ x: 0, y: 0 })
     } else {
       document.body.style.overflow = ''
     }
@@ -72,6 +83,51 @@ export default function TrochiCaseStudyPage() {
       document.body.style.overflow = ''
     }
   }, [expandedPersona])
+
+  useEffect(() => {
+    const el = overlayWrapRef.current
+    if (!expandedPersona || !el) return
+    const preventScroll = (e: WheelEvent) => e.preventDefault()
+    el.addEventListener('wheel', preventScroll, { passive: false })
+    return () => el.removeEventListener('wheel', preventScroll)
+  }, [expandedPersona])
+
+  const handleOverlayWheel = (e: React.WheelEvent) => {
+    e.preventDefault()
+    setZoom((z) => {
+      const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP
+      return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, z + delta))
+    })
+  }
+
+  const handlePanStart = (e: React.MouseEvent) => {
+    if (zoom <= 1) return
+    e.preventDefault()
+    setIsPanning(true)
+    panStartRef.current = { x: e.clientX - pan.x, y: e.clientY - pan.y }
+  }
+
+  const handlePanMove = (e: MouseEvent) => {
+    if (!isPanning) return
+    setPan({
+      x: e.clientX - panStartRef.current.x,
+      y: e.clientY - panStartRef.current.y,
+    })
+  }
+
+  const handlePanEnd = () => {
+    setIsPanning(false)
+  }
+
+  useEffect(() => {
+    if (!isPanning) return
+    window.addEventListener('mousemove', handlePanMove)
+    window.addEventListener('mouseup', handlePanEnd)
+    return () => {
+      window.removeEventListener('mousemove', handlePanMove)
+      window.removeEventListener('mouseup', handlePanEnd)
+    }
+  }, [isPanning])
 
   return (
     <main className={styles.page}>
@@ -174,8 +230,24 @@ export default function TrochiCaseStudyPage() {
           <div className={styles.decisionsList}>
             <div className={styles.decisionRow}>
               <div className={styles.decisionPair}>
-                <div className={styles.designPlaceholder}>[Old Design]</div>
-                <div className={styles.designPlaceholder}>[New Design]</div>
+                <div className={styles.decisionImage}>
+                  <Image
+                    src="/work/trochi/decisions/before-1.svg"
+                    alt="Old design"
+                    fill
+                    sizes="(max-width: 860px) 100vw, 50vw"
+                    className={styles.decisionImageImg}
+                  />
+                </div>
+                <div className={styles.decisionImage}>
+                  <Image
+                    src="/work/trochi/decisions/after-1.svg"
+                    alt="New design"
+                    fill
+                    sizes="(max-width: 860px) 100vw, 50vw"
+                    className={styles.decisionImageImg}
+                  />
+                </div>
               </div>
               <p className={styles.rationale}>
                 Removed structural chrome to keep focus on the data.
@@ -249,17 +321,62 @@ export default function TrochiCaseStudyPage() {
             >
               ×
             </button>
+            <div className={styles.overlayZoomControls}>
+              <button
+                type="button"
+                className={styles.zoomBtn}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setZoom((z) => Math.max(MIN_ZOOM, z - ZOOM_STEP))
+                }}
+                disabled={zoom <= MIN_ZOOM}
+                aria-label="Zoom out"
+              >
+                −
+              </button>
+              <span className={styles.zoomLabel} aria-hidden>
+                {Math.round(zoom * 100)}%
+              </span>
+              <button
+                type="button"
+                className={styles.zoomBtn}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setZoom((z) => Math.min(MAX_ZOOM, z + ZOOM_STEP))
+                }}
+                disabled={zoom >= MAX_ZOOM}
+                aria-label="Zoom in"
+              >
+                +
+              </button>
+            </div>
             <div
+              ref={overlayWrapRef}
               className={styles.overlayImageWrap}
               onClick={(e) => e.stopPropagation()}
+              onWheel={handleOverlayWheel}
+              onMouseDown={handlePanStart}
+              style={{
+                cursor:
+                  zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in',
+              }}
+              role="img"
+              aria-label={`${expandedPersona.alt}. Scroll to zoom, drag to pan when zoomed.`}
             >
-              <Image
-                src={expandedPersona.src}
-                alt={expandedPersona.alt}
-                fill
-                sizes="95vw"
-                className={styles.overlayImage}
-              />
+              <div
+                className={styles.overlayZoomContent}
+                style={{
+                  transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+                }}
+              >
+                <Image
+                  src={expandedPersona.src}
+                  alt={expandedPersona.alt}
+                  fill
+                  sizes="95vw"
+                  className={styles.overlayImage}
+                />
+              </div>
             </div>
           </div>,
           document.body

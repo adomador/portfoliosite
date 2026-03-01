@@ -331,6 +331,61 @@
   outline-offset: 2px;
 }
 
+.overlayZoomControls {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+}
+
+.zoomBtn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.zoomBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.zoomBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.zoomBtn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.zoomLabel {
+  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #afb7ca;
+  min-width: 3ch;
+  text-align: center;
+}
+
 @keyframes overlayIn {
   from {
     opacity: 0;
@@ -343,9 +398,17 @@
 .overlayImageWrap {
   position: relative;
   width: 95vw;
-  max-width: 900px;
+  max-width: 1575px; /* 75% larger than 900px */
   aspect-ratio: 4 / 3;
-  max-height: 85vh;
+  max-height: 95vh;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.overlayZoomContent {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
 }
 
 .overlayImage {
@@ -375,6 +438,19 @@
   width: 100%;
   gap: 24px;
   align-items: stretch;
+}
+
+.decisionImage {
+  flex: 1;
+  min-height: 220px;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.decisionImageImg {
+  object-fit: contain;
+  object-position: top center;
 }
 
 .designPlaceholder {
