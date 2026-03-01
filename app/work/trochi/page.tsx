@@ -7,6 +7,14 @@ import Image from 'next/image'
 import TrochiNavBar from '@/components/trochi/TrochiNavBar'
 import styles from './page.module.css'
 
+const PRODUCT_SCREENS = [
+  { src: '/work/trochi/screen-1.svg', alt: 'Dashboard — personalized market briefing' },
+  { src: '/work/trochi/screen-2.svg', alt: 'Lanes Search — find lanes by intent' },
+  { src: '/work/trochi/screen-3.svg', alt: 'Lane Results — spot market intelligence' },
+  { src: '/work/trochi/screen-4.svg', alt: 'Market Result — city-level capacity and volatility' },
+  { src: '/work/trochi/screen-5.svg', alt: 'Quote — from market insight to quoted rate' },
+] as const
+
 const PRODUCT_SUBTITLES = [
   'A personalized market briefing to start the day.',
   'Search as the filter. Find lanes by intent.',
@@ -43,9 +51,11 @@ const MIN_ZOOM = 1
 const MAX_ZOOM = 4
 const ZOOM_STEP = 0.25
 
+type ExpandedImage = { src: string; alt: string }
+
 export default function TrochiCaseStudyPage() {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true)
-  const [expandedPersona, setExpandedPersona] = useState<(typeof PERSONAS)[number] | null>(null)
+  const [expandedImage, setExpandedImage] = useState<ExpandedImage | null>(null)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [isPanning, setIsPanning] = useState(false)
@@ -65,14 +75,14 @@ export default function TrochiCaseStudyPage() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setExpandedPersona(null)
+      if (e.key === 'Escape') setExpandedImage(null)
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
   useEffect(() => {
-    if (expandedPersona) {
+    if (expandedImage) {
       document.body.style.overflow = 'hidden'
       setZoom(1)
       setPan({ x: 0, y: 0 })
@@ -82,15 +92,15 @@ export default function TrochiCaseStudyPage() {
     return () => {
       document.body.style.overflow = ''
     }
-  }, [expandedPersona])
+  }, [expandedImage])
 
   useEffect(() => {
     const el = overlayWrapRef.current
-    if (!expandedPersona || !el) return
+    if (!expandedImage || !el) return
     const preventScroll = (e: WheelEvent) => e.preventDefault()
     el.addEventListener('wheel', preventScroll, { passive: false })
     return () => el.removeEventListener('wheel', preventScroll)
-  }, [expandedPersona])
+  }, [expandedImage])
 
   const handleOverlayWheel = (e: React.WheelEvent) => {
     e.preventDefault()
@@ -202,7 +212,7 @@ export default function TrochiCaseStudyPage() {
                 key={persona.id}
                 type="button"
                 className={styles.personaCard}
-                onClick={() => setExpandedPersona(persona)}
+                onClick={() => setExpandedImage({ src: persona.src, alt: persona.alt })}
                 aria-label={`View ${persona.name} persona — ${persona.role}`}
               >
                 <div className={styles.personaThumbnail}>
@@ -225,20 +235,40 @@ export default function TrochiCaseStudyPage() {
         </section>
 
         {/* Section 5: The Product — Five two-column snap sections */}
-        {PRODUCT_SUBTITLES.map((subtitle, i) => (
-          <section
-            key={i}
-            className={styles.section}
-            data-layout="two-col"
-          >
-            <div className={styles.productGrid}>
-              <div className={styles.screenPlaceholder}>
-                Screen {i + 1} Placeholder
+        {PRODUCT_SUBTITLES.map((subtitle, i) => {
+          const screen = PRODUCT_SCREENS[i]
+          return (
+            <section
+              key={i}
+              className={styles.section}
+              data-layout="two-col"
+            >
+              <div className={styles.productGrid}>
+                {screen ? (
+                  <button
+                    type="button"
+                    className={styles.productScreen}
+                    onClick={() => setExpandedImage({ src: screen.src, alt: screen.alt })}
+                    aria-label={`View ${screen.alt} — click to expand`}
+                  >
+                    <Image
+                      src={screen.src}
+                      alt={screen.alt}
+                      fill
+                      sizes="(max-width: 860px) 100vw, 50vw"
+                      className={styles.productScreenImg}
+                    />
+                  </button>
+                ) : (
+                  <div className={styles.screenPlaceholder}>
+                    Screen {i + 1} Placeholder
+                  </div>
+                )}
+                <p className={styles.productSubtitle}>{subtitle}</p>
               </div>
-              <p className={styles.productSubtitle}>{subtitle}</p>
-            </div>
-          </section>
-        ))}
+            </section>
+          )
+        })}
 
         {/* Section 6: Outcome — Full width */}
         <section className={styles.section} data-layout="full">
@@ -250,22 +280,22 @@ export default function TrochiCaseStudyPage() {
         </section>
       </div>
 
-      {expandedPersona &&
+      {expandedImage &&
         typeof document !== 'undefined' &&
         createPortal(
           <div
             className={styles.overlay}
-            onClick={() => setExpandedPersona(null)}
+            onClick={() => setExpandedImage(null)}
             role="dialog"
             aria-modal="true"
-            aria-label={`${expandedPersona.alt} — full persona view`}
+            aria-label={`${expandedImage.alt} — expanded view`}
           >
             <button
               type="button"
               className={styles.overlayClose}
               onClick={(e) => {
                 e.stopPropagation()
-                setExpandedPersona(null)
+                setExpandedImage(null)
               }}
               aria-label="Close"
             >
@@ -311,7 +341,7 @@ export default function TrochiCaseStudyPage() {
                   zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'zoom-in',
               }}
               role="img"
-              aria-label={`${expandedPersona.alt}. Scroll to zoom, drag to pan when zoomed.`}
+              aria-label={`${expandedImage.alt}. Scroll to zoom, drag to pan when zoomed.`}
             >
               <div
                 className={styles.overlayZoomContent}
@@ -320,8 +350,8 @@ export default function TrochiCaseStudyPage() {
                 }}
               >
                 <Image
-                  src={expandedPersona.src}
-                  alt={expandedPersona.alt}
+                  src={expandedImage.src}
+                  alt={expandedImage.alt}
                   fill
                   sizes="95vw"
                   className={styles.overlayImage}

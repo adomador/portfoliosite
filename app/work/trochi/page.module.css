@@ -429,6 +429,25 @@
   min-height: 0;
 }
 
+.productScreen {
+  width: 50%;
+  min-height: 360px;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  display: block;
+}
+
+.productScreenImg {
+  object-fit: contain;
+  object-position: top center;
+}
+
 .screenPlaceholder {
   width: 50%;
   min-height: 360px;
@@ -500,6 +519,11 @@
   .productGrid {
     flex-direction: column;
     gap: 1.5rem;
+  }
+
+  .productScreen {
+    width: 100%;
+    min-height: 280px;
   }
 
   .screenPlaceholder {
