@@ -273,7 +273,7 @@ export default function TrochiCaseStudyPage() {
         {/* Section 6: Outcome — Full width */}
         <section className={styles.section} data-layout="full">
           <p className={styles.outcomeStatement}>
-          The prototype was presented at Trochi&apos;s invite-only industry conferences and used as a reference tool in early broker recruitment conversations. It became the visual foundation for their pitch to prospective cooperative members.
+          The prototype has been presented at Trochi&apos;s invite-only industry conferences and used as a reference tool in early broker recruitment conversations. It became the visual foundation for their pitch to prospective cooperative members.
           </p>
         </section>
       </div>
