@@ -7,11 +7,11 @@ import Image from 'next/image'
 import TrochiNavBar from '@/components/trochi/TrochiNavBar'
 import styles from './page.module.css'
 
-const DECISIONS = [
+const DECISION_PAIRS = [
   {
     before: '/work/trochi/decisions/before-1.svg',
     after: '/work/trochi/decisions/after-1.svg',
-    rationale: 'Removed structural chrome to keep focus on the data.',
+    rationale: 'Replaced inputs and dropdowns with natural language.',
   },
   {
     before: null,
@@ -23,7 +23,7 @@ const DECISIONS = [
     after: null,
     rationale: 'Shifted from showing everything to surfacing what matters now.',
   },
-] as const
+]
 
 const PRODUCT_SUBTITLES = [
   'A personalized market briefing to start the day.',
@@ -70,14 +70,39 @@ export default function TrochiCaseStudyPage() {
   const panStartRef = useRef({ x: 0, y: 0 })
   const scrollRef = useRef<HTMLDivElement>(null)
   const overlayWrapRef = useRef<HTMLDivElement>(null)
+  const decisionSectionRefs = useRef<(HTMLElement | null)[]>([])
+  const decisionBeforeRefs = useRef<(HTMLDivElement | null)[]>([])
+  const decisionLabelRefs = useRef<(HTMLSpanElement | null)[]>([])
 
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
+    let ticking = false
     const handleScroll = () => {
-      setShowScrollIndicator(el.scrollTop < 50)
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        setShowScrollIndicator(el.scrollTop < 50)
+        decisionSectionRefs.current.forEach((section, i) => {
+          if (!section) return
+          const scrolled = el.scrollTop - section.offsetTop
+          const vh = el.clientHeight
+          const raw = scrolled < 0 ? 0 : scrolled > vh ? 1 : scrolled / vh
+          const lift = Math.min(1, Math.max(0, (raw - 0.15) / 0.5))
+          const beforeEl = decisionBeforeRefs.current[i]
+          if (beforeEl) {
+            beforeEl.style.transform = `translateY(${-100 * lift}px)`
+            beforeEl.style.opacity = String(1 - lift)
+          }
+          const labelEl = decisionLabelRefs.current[i]
+          if (labelEl) {
+            labelEl.textContent = lift > 0.5 ? 'After' : 'Before'
+          }
+        })
+        ticking = false
+      })
     }
-    el.addEventListener('scroll', handleScroll)
+    el.addEventListener('scroll', handleScroll, { passive: true })
     return () => el.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -242,46 +267,73 @@ export default function TrochiCaseStudyPage() {
           </div>
         </section>
 
-        {/* Section 4: Key Decisions — one pair per scroll */}
-        {DECISIONS.map((decision, i) => (
-          <section key={i} className={styles.section} data-layout="full">
-            {i === 0 && (
-              <h2 className={styles.sectionHeader}>How the design evolved</h2>
-            )}
-            <div className={styles.decisionShowcase}>
-              <div className={styles.decisionPair}>
-                {decision.before ? (
-                  <div className={styles.decisionImage}>
-                    <Image
-                      src={decision.before}
-                      alt="Old design"
-                      fill
-                      sizes="(max-width: 860px) 100vw, 50vw"
-                      className={styles.decisionImageImg}
-                    />
+        {/* Section 4: Key Decisions — paired before/after scroll */}
+        {DECISION_PAIRS.map((pair, i) => (
+          <section
+            key={`decision-${i}`}
+            ref={(el) => {
+              decisionSectionRefs.current[i] = el
+            }}
+            className={styles.decisionSection}
+          >
+            <div className={styles.decisionSnapAnchor} />
+            <div className={styles.decisionStickyContent}>
+              {i === 0 && (
+                <h2 className={styles.sectionHeader}>How the design evolved</h2>
+              )}
+              <div className={styles.decisionShowcase}>
+                <p className={styles.rationale}>{pair.rationale}</p>
+                <div className={styles.mockupStack}>
+                  <div className={styles.afterLayer}>
+                    {pair.after ? (
+                      <Image
+                        src={pair.after}
+                        alt="After design"
+                        fill
+                        sizes="(max-width: 860px) 100vw, 70vw"
+                        className={styles.decisionImageImg}
+                      />
+                    ) : (
+                      <div className={styles.designPlaceholder}>
+                        [After Design]
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className={styles.designPlaceholder}>[Old Design]</div>
-                )}
-                {decision.after ? (
-                  <div className={styles.decisionImage}>
-                    <Image
-                      src={decision.after}
-                      alt="New design"
-                      fill
-                      sizes="(max-width: 860px) 100vw, 50vw"
-                      className={styles.decisionImageImg}
-                    />
+                  <div
+                    ref={(el) => {
+                      decisionBeforeRefs.current[i] = el
+                    }}
+                    className={styles.beforeLayer}
+                  >
+                    {pair.before ? (
+                      <Image
+                        src={pair.before}
+                        alt="Before design"
+                        fill
+                        sizes="(max-width: 860px) 100vw, 70vw"
+                        className={styles.decisionImageImg}
+                      />
+                    ) : (
+                      <div className={styles.designPlaceholder}>
+                        [Before Design]
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className={styles.designPlaceholder}>[New Design]</div>
-                )}
+                </div>
+                <span
+                  ref={(el) => {
+                    decisionLabelRefs.current[i] = el
+                  }}
+                  className={styles.decisionLabel}
+                >
+                  Before
+                </span>
+                <span className={styles.decisionProgress}>
+                  {i + 1} of 3
+                </span>
               </div>
-              <p className={styles.rationale}>{decision.rationale}</p>
-              <span className={styles.decisionProgress}>
-                {i + 1} of {DECISIONS.length}
-              </span>
             </div>
+            <div className={styles.decisionSnapAnchor} />
           </section>
         ))}
 
