@@ -7,6 +7,24 @@ import Image from 'next/image'
 import TrochiNavBar from '@/components/trochi/TrochiNavBar'
 import styles from './page.module.css'
 
+const DECISIONS = [
+  {
+    before: '/work/trochi/decisions/before-1.svg',
+    after: '/work/trochi/decisions/after-1.svg',
+    rationale: 'Removed structural chrome to keep focus on the data.',
+  },
+  {
+    before: null,
+    after: null,
+    rationale: 'Brokers think in intent, not parameters.',
+  },
+  {
+    before: null,
+    after: null,
+    rationale: 'Shifted from showing everything to surfacing what matters now.',
+  },
+] as const
+
 const PRODUCT_SUBTITLES = [
   'A personalized market briefing to start the day.',
   'Search as the filter. Find lanes by intent.',
@@ -224,55 +242,48 @@ export default function TrochiCaseStudyPage() {
           </div>
         </section>
 
-        {/* Section 4: Key Decisions — Full width */}
-        <section className={styles.section} data-layout="full">
-          <h2 className={styles.sectionHeader}>How the design evolved</h2>
-          <div className={styles.decisionsList}>
-            <div className={styles.decisionRow}>
+        {/* Section 4: Key Decisions — one pair per scroll */}
+        {DECISIONS.map((decision, i) => (
+          <section key={i} className={styles.section} data-layout="full">
+            {i === 0 && (
+              <h2 className={styles.sectionHeader}>How the design evolved</h2>
+            )}
+            <div className={styles.decisionShowcase}>
               <div className={styles.decisionPair}>
-                <div className={styles.decisionImage}>
-                  <Image
-                    src="/work/trochi/decisions/before-1.svg"
-                    alt="Old design"
-                    fill
-                    sizes="(max-width: 860px) 100vw, 50vw"
-                    className={styles.decisionImageImg}
-                  />
-                </div>
-                <div className={styles.decisionImage}>
-                  <Image
-                    src="/work/trochi/decisions/after-1.svg"
-                    alt="New design"
-                    fill
-                    sizes="(max-width: 860px) 100vw, 50vw"
-                    className={styles.decisionImageImg}
-                  />
-                </div>
+                {decision.before ? (
+                  <div className={styles.decisionImage}>
+                    <Image
+                      src={decision.before}
+                      alt="Old design"
+                      fill
+                      sizes="(max-width: 860px) 100vw, 50vw"
+                      className={styles.decisionImageImg}
+                    />
+                  </div>
+                ) : (
+                  <div className={styles.designPlaceholder}>[Old Design]</div>
+                )}
+                {decision.after ? (
+                  <div className={styles.decisionImage}>
+                    <Image
+                      src={decision.after}
+                      alt="New design"
+                      fill
+                      sizes="(max-width: 860px) 100vw, 50vw"
+                      className={styles.decisionImageImg}
+                    />
+                  </div>
+                ) : (
+                  <div className={styles.designPlaceholder}>[New Design]</div>
+                )}
               </div>
-              <p className={styles.rationale}>
-                Removed structural chrome to keep focus on the data.
-              </p>
+              <p className={styles.rationale}>{decision.rationale}</p>
+              <span className={styles.decisionProgress}>
+                {i + 1} of {DECISIONS.length}
+              </span>
             </div>
-            <div className={styles.decisionRow}>
-              <div className={styles.decisionPair}>
-                <div className={styles.designPlaceholder}>[Old Design]</div>
-                <div className={styles.designPlaceholder}>[New Design]</div>
-              </div>
-              <p className={styles.rationale}>
-                Brokers think in intent, not parameters.
-              </p>
-            </div>
-            <div className={styles.decisionRow}>
-              <div className={styles.decisionPair}>
-                <div className={styles.designPlaceholder}>[Old Design]</div>
-                <div className={styles.designPlaceholder}>[New Design]</div>
-              </div>
-              <p className={styles.rationale}>
-                Shifted from showing everything to surfacing what matters now.
-              </p>
-            </div>
-          </div>
-        </section>
+          </section>
+        ))}
 
         {/* Section 5: The Product — Five two-column snap sections */}
         {PRODUCT_SUBTITLES.map((subtitle, i) => (
