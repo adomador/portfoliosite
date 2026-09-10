@@ -97,23 +97,20 @@
   width: 34px;
   height: 34px;
   border-radius: 999px;
+  color: var(--ink-2);
   transition: background 220ms var(--ease-out-quart);
 }
 
 .iconLink:hover {
+  color: var(--ink);
   background: color-mix(in srgb, var(--ink) 7%, transparent);
 }
 
+/* Drawn in currentColor, so both marks follow the ink through nightfall. */
 .icon {
   width: 15px;
   height: 15px;
   display: block;
-  object-fit: contain;
-}
-
-/* GitHub's mark is solid black — flip it once the page goes dark. */
-:global(:root[data-phase='night']) .invert .icon {
-  filter: invert(1);
 }
 
 .resume {
