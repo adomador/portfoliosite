@@ -8,10 +8,6 @@ import styles from './ScrollLeaf.module.css'
 
 const TAU = Math.PI * 2
 
-/** Horizontal path in vw: starts off to the right, drifts across, settles left. */
-const X_START = 76
-const X_END = 13
-
 /** Vertical path in vh, measured from the top of the viewport. */
 const Y_START = 13
 const Y_END = 86
@@ -21,9 +17,47 @@ const LANDING = 0.93
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n))
 
-/** Slow-in / slow-out so the drift across the page doesn't read as a straight line. */
-function smoothstep(t: number) {
-  return t * t * (3 - 2 * t)
+type Lane = {
+  /** Resting centre of the lane, in px from the left edge of the viewport. */
+  centre: number
+  /** How far the leaf may sway before it would touch the text. */
+  sway: number
+  /** The leaf may never travel left of this. */
+  limit: number
+}
+
+/**
+ * The leaf rides the gutter to the right of the text column. Measure `.u-shell`
+ * rather than the sections themselves — the sections run edge to edge, so only
+ * their inner content box says where the words actually stop.
+ */
+function measureLane(el: HTMLElement): Lane {
+  const vw = window.innerWidth
+  const half = (el.offsetWidth || 60) / 2
+
+  let contentRight = vw / 2
+  for (const shell of document.querySelectorAll<HTMLElement>('main .u-shell')) {
+    const rect = shell.getBoundingClientRect()
+    if (rect.height < 1) continue
+    const padRight = parseFloat(getComputedStyle(shell).paddingRight) || 0
+    contentRight = Math.max(contentRight, rect.right - padRight)
+  }
+
+  const margin = vw - contentRight
+
+  /* Centre it in the gutter when there is room. Where there isn't — phones,
+     mostly — it tucks behind the edge of the viewport rather than ride over
+     the text, keeping roughly a third of itself in frame. */
+  const inset =
+    margin >= half * 2 + 16 ? margin / 2 : Math.max(-half * 0.4, margin - half - 4)
+
+  const centre = vw - inset
+
+  return {
+    centre,
+    sway: Math.min(Math.max(0, margin - half * 2 - 16) / 2, vw * 0.03),
+    limit: Math.min(contentRight + half + 4, centre),
+  }
 }
 
 export default function ScrollLeaf() {
@@ -36,6 +70,12 @@ export default function ScrollLeaf() {
     if (!el) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    let lane = measureLane(el)
+    let stale = false
+    const invalidate = () => {
+      stale = true
+    }
 
     /* Rendered state chases the scroll-derived target, which is what gives the
        leaf weight: it overshoots slightly and keeps settling after you stop. */
@@ -56,7 +96,11 @@ export default function ScrollLeaf() {
       last = now
       const t = now / 1000
 
-      const vw = window.innerWidth
+      if (stale) {
+        stale = false
+        lane = measureLane(el)
+      }
+
       const vh = window.innerHeight
       const p = progressRef.current
       const fall = clamp01(p / LANDING)
@@ -68,15 +112,15 @@ export default function ScrollLeaf() {
       lastProgress = p
       gust = gust * Math.pow(0.94, dt / 16.67) + dp * 620
 
-      /* Pendulum sway: two frequencies so the arc never repeats visibly. */
-      const swayVw =
-        8.5 * Math.sin(fall * TAU * 2.4) * life +
-        3.2 * Math.sin(fall * TAU * 5.9 + 1.4) * life
+      /* Pendulum sway: two frequencies so the arc never repeats visibly, sized
+         to whatever empty gutter the layout actually leaves. */
+      const sway =
+        lane.sway *
+        (0.72 * Math.sin(fall * TAU * 2.4) + 0.28 * Math.sin(fall * TAU * 5.9 + 1.4)) *
+        life
+      const idleX = reduced ? 0 : Math.sin(t / 2.7) * lane.sway * 0.14 * life
 
-      const baseXvw = X_START + (X_END - X_START) * smoothstep(fall)
-      const idleX = reduced ? 0 : Math.sin(t / 2.7) * 0.7 * life
-
-      const targetX = ((baseXvw + swayVw + idleX) / 100) * vw
+      const targetX = lane.centre + sway + idleX
       const targetY = ((Y_START + (Y_END - Y_START) * fall) / 100) * vh
 
       /* Bank into the direction of travel, tumble slowly, and let gusts add spin. */
@@ -99,6 +143,9 @@ export default function ScrollLeaf() {
       renderY += (targetY - renderY) * ease(0.18)
       renderRot += (targetRot - renderRot) * ease(0.07)
 
+      /* Belt and braces: the flutter lag can't carry it over the text. */
+      renderX = Math.max(renderX, lane.limit)
+
       el.style.transform = `translate3d(${renderX.toFixed(2)}px, ${renderY.toFixed(
         2
       )}px, 0) translate(-50%, -50%) rotate(${renderRot.toFixed(2)}deg)`
@@ -107,7 +154,17 @@ export default function ScrollLeaf() {
     }
 
     rafId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId)
+
+    window.addEventListener('resize', invalidate)
+    /* The document reflows as fonts load and sections reveal; re-measure. */
+    const observer = new ResizeObserver(invalidate)
+    observer.observe(document.body)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      window.removeEventListener('resize', invalidate)
+      observer.disconnect()
+    }
   }, [progressRef])
 
   return (
