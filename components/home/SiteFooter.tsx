@@ -10,7 +10,7 @@ export default function SiteFooter() {
         <div className={styles.row}>
           <span className={styles.name}>{NAME}</span>
           <span className={styles.note}>
-            Designed &amp; built by me — the leaf falls all the way down.
+            Designed and built by me
           </span>
           <span className={styles.year}>© {new Date().getFullYear()}</span>
         </div>

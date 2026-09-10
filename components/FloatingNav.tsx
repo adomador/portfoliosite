@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { RESUME_URL } from '@/lib/profile'
+import { GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
 import styles from './FloatingNav.module.css'
 
 const ITEMS = [
@@ -10,32 +10,46 @@ const ITEMS = [
   { id: 'contact', label: 'Contact' },
 ] as const
 
+/** Section whose top has most recently crossed this line owns the nav highlight. */
+const FOCUS_RATIO = 0.22
+
 export default function FloatingNav() {
   const [active, setActive] = useState<string | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
   const [pill, setPill] = useState<{ x: number; w: number } | null>(null)
+  const raf = useRef(0)
+
+  const syncActive = useCallback(() => {
+    const focusY = window.innerHeight * FOCUS_RATIO
+    let current: string | null = null
+
+    for (const item of ITEMS) {
+      const el = document.getElementById(item.id)
+      if (!el) continue
+      if (el.getBoundingClientRect().top <= focusY) {
+        current = item.id
+      }
+    }
+
+    setActive((prev) => (prev === current ? prev : current))
+  }, [])
 
   useEffect(() => {
-    const sections = ITEMS.map((i) => document.getElementById(i.id)).filter(
-      (n): n is HTMLElement => Boolean(n)
-    )
-    if (!sections.length) return
+    const onScrollOrResize = () => {
+      cancelAnimationFrame(raf.current)
+      raf.current = requestAnimationFrame(syncActive)
+    }
 
-    /* Whichever section owns the upper third of the viewport wins. */
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        if (visible[0]) setActive(visible[0].target.id)
-      },
-      { rootMargin: '-18% 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] }
-    )
-
-    sections.forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [])
+    syncActive()
+    window.addEventListener('scroll', onScrollOrResize, { passive: true })
+    window.addEventListener('resize', onScrollOrResize)
+    return () => {
+      cancelAnimationFrame(raf.current)
+      window.removeEventListener('scroll', onScrollOrResize)
+      window.removeEventListener('resize', onScrollOrResize)
+    }
+  }, [syncActive])
 
   const measure = useCallback(() => {
     const list = listRef.current
@@ -82,14 +96,40 @@ export default function FloatingNav() {
           ))}
         </div>
         <span className={styles.divider} aria-hidden />
-        <a
-          className={styles.resume}
-          href={RESUME_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Résumé
-        </a>
+        <div className={styles.socials}>
+          <a
+            className={styles.iconLink}
+            href={LINKEDIN}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <img src="/linkedin.svg" alt="" className={styles.icon} width={15} height={15} />
+          </a>
+          <a
+            className={`${styles.iconLink} ${styles.invert}`}
+            href={GITHUB}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <img
+              src="/Octicons-mark-github.svg"
+              alt=""
+              className={styles.icon}
+              width={15}
+              height={15}
+            />
+          </a>
+          <a
+            className={styles.resume}
+            href={RESUME_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Résumé
+          </a>
+        </div>
       </div>
     </nav>
   )

@@ -16,7 +16,7 @@ export const HEADLINE =
   'I design and build software for messy, underserved industries.'
 
 export const INTRO =
-  "Designer and builder with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex and underserved industries in the world."
+  "Designer & builder based in Pennsylvania with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex industries in the world."
 
 /** Hero outcome metrics — keep labels short; the number does the talking. */
 export const METRICS = [
