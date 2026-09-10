@@ -30,7 +30,7 @@
   z-index: 100;
   display: inline-block;
   margin: 0;
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.9375rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -109,7 +109,7 @@
 }
 
 .copy p {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.9375rem;
   font-weight: 400;
   line-height: 1.65;
@@ -133,7 +133,7 @@
 
 .navBarLabel {
   margin: 0;
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -164,7 +164,7 @@
 }
 
 .scrollHint {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -180,7 +180,7 @@
 
 /* Section 2: Problem Statement — Full width */
 .problemStatement {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: clamp(1.25rem, 2.5vw, 2rem);
   font-weight: 400;
   line-height: 1.5;
@@ -193,7 +193,7 @@
 
 /* Section 3: Users — Full width */
 .sectionHeader {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 700;
   color: var(--text-primary);
@@ -202,7 +202,7 @@
 }
 
 .sectionSubtext {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.9375rem;
   font-weight: 400;
   color: #afb7ca;
@@ -263,21 +263,21 @@
 }
 
 .personaName {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .personaRole {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.8125rem;
   font-weight: 500;
   color: #afb7ca;
 }
 
 .personaExpandHint {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -378,7 +378,7 @@
 }
 
 .zoomLabel {
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   color: #afb7ca;
@@ -432,7 +432,7 @@
 }
 
 .productSubtitle {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: clamp(1.125rem, 2vw, 1.5rem);
   font-weight: 400;
   line-height: 1.5;
@@ -474,14 +474,14 @@
   align-items: center;
   justify-content: center;
   color: #afb7ca;
-  font-family: 'Satoshi', 'Proxima Nova', sans-serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
 /* Section 6: Outcome — Full width */
 .outcomeStatement {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: clamp(1.25rem, 2.5vw, 2rem);
   font-weight: 400;
   line-height: 1.5;

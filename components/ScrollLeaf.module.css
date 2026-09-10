@@ -1,0 +1,37 @@
+.leaf {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: clamp(52px, 7vw, 88px);
+  z-index: 30;
+  transform-origin: center center;
+  will-change: transform;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 16px rgba(20, 12, 4, calc(0.18 + var(--p) * 0.35)));
+  opacity: 0.94;
+}
+
+.hit {
+  display: block;
+  width: 100%;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: filter 400ms var(--ease-out-quart);
+}
+
+.hit:hover {
+  filter: brightness(1.12) saturate(1.15) drop-shadow(0 0 22px rgba(212, 160, 84, 0.55));
+}
+
+.leaf img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .leaf {
+    width: 46px;
+    opacity: 0.8;
+  }
+}

@@ -1,0 +1,131 @@
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.surface {
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+}
+
+/* ---------------------------------------------------------------
+   The sun. Sits high in the hero, sinks past the horizon around
+   two thirds down the page, and reddens on the way out.
+   --------------------------------------------------------------- */
+.sun {
+  position: absolute;
+  left: 50%;
+  top: calc(-34vh + var(--p) * 260vh);
+  width: clamp(420px, 78vw, 1180px);
+  aspect-ratio: 1;
+  transform: translateX(-50%) scale(calc(1 + var(--p) * 1.1));
+  opacity: clamp(0, calc(1.03 - var(--p) * 4), 1);
+  will-change: top, transform, opacity;
+}
+
+/* Outer bloom — this is what tints the whole upper page warm. */
+.sun::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 214, 138, 0.22) 0%,
+    rgba(233, 168, 88, 0.12) 26%,
+    rgba(196, 108, 62, 0.05) 48%,
+    transparent 70%
+  );
+  filter: blur(6px);
+}
+
+/* The disc itself: visible as a soft coin, never a hard circle. */
+.sunCore {
+  position: absolute;
+  inset: 33%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 46%,
+    rgba(255, 249, 232, 0.42) 0%,
+    rgba(255, 224, 158, 0.28) 42%,
+    rgba(238, 172, 92, 0.12) 68%,
+    transparent 82%
+  );
+  filter: blur(14px);
+  animation: pulse 11s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.045);
+    opacity: 0.82;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Horizon haze — a warm band low in the viewport that peaks during
+   the dusk hand-off, then burns off into night.
+   --------------------------------------------------------------- */
+.haze {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(178, 92, 48, 0.34) 0%,
+    rgba(178, 92, 48, 0.14) 14%,
+    transparent 42%
+  );
+  opacity: clamp(0, calc(var(--p) * 8 * (1.1 - var(--p) * 3.4)), 1);
+  mix-blend-mode: multiply;
+}
+
+/* Constant top-to-bottom falloff so the viewport always has a light source. */
+.depth {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.16) 100%);
+  opacity: calc(0.35 + var(--p) * 0.65);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 90% at 50% 42%, transparent 42%, rgba(0, 0, 0, 0.62) 100%);
+  opacity: clamp(0.12, calc(0.12 + var(--p) * 1.5), 0.85);
+}
+
+/* Film grain — keeps the large flat gradients from banding. */
+.grain {
+  position: absolute;
+  inset: -50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  animation: drift 7s steps(6) infinite;
+}
+
+@keyframes drift {
+  0% { transform: translate(0, 0); }
+  16% { transform: translate(-3%, 2%); }
+  33% { transform: translate(2%, -3%); }
+  50% { transform: translate(-2%, -2%); }
+  66% { transform: translate(3%, 1%); }
+  83% { transform: translate(-1%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .sunCore {
+    animation: none;
+  }
+}

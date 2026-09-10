@@ -1,0 +1,31 @@
+.head {
+  margin-bottom: clamp(48px, 7vh, 84px);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* A small filled square — the only hard-edged shape on the page. */
+.mark {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+}
+
+.title {
+  max-width: 20ch;
+  color: var(--ink);
+}
+
+.lead {
+  margin-top: 24px;
+  max-width: 54ch;
+  font-size: var(--type-lead);
+  line-height: 1.42;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
