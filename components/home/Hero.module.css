@@ -43,10 +43,12 @@
 }
 
 .headline {
-  max-width: min(100%, 16em);
+  max-width: min(100%, 20em);
   font-size: var(--type-hero);
-  line-height: 1.02;
+  line-height: 1.06;
   color: var(--ink);
+  /* pretty > balance here: balance was leaving lone last words on left-aligned lines. */
+  text-wrap: pretty;
   animation: rise 1200ms var(--ease-out-expo) 240ms both;
 }
 
@@ -122,7 +124,7 @@
 
 @media (max-width: 640px) {
   .headline {
-    max-width: min(100%, 14em);
+    max-width: min(100%, 18em);
   }
 
   .metrics {

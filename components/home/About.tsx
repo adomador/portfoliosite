@@ -15,7 +15,7 @@ export default function About() {
           <Reveal className={styles.copy}>
             <p className={styles.intro}>{INTRO}</p>
             <p className={styles.aside}>
-              Off the clock I&apos;m usually playing chess — find me on{' '}
+              Off the clock I&apos;m usually playing chess, writing short stories, or reading fiction — find me on{' '}
               {CHESS_LINKS.map((link, i) => (
                 <span key={link.label}>
                   <a

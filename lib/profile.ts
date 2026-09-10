@@ -12,10 +12,8 @@ export const GITHUB = 'https://github.com/adomador'
 export const RESUME_URL =
   'https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0'
 
-export const HEADLINE = {
-  before: 'I design and build software for',
-  after: 'industries that still run on spreadsheets and phone calls.',
-}
+export const HEADLINE =
+  'I design and build software for industries still stuck on spreadsheets and phone\u00A0calls.'
 
 export const INTRO =
   "Designer & builder based in Pennsylvania with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex industries in the world."
