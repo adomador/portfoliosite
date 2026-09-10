@@ -1,4 +1,4 @@
-import { HEADLINE, LOCATION, NAME, ROLE } from '@/lib/profile'
+import { HEADLINE, LOCATION, METRICS, NAME, ROLE } from '@/lib/profile'
 import styles from './Hero.module.css'
 
 export default function Hero() {
@@ -14,8 +14,17 @@ export default function Hero() {
         <h1 className={`u-display ${styles.headline}`}>{HEADLINE}</h1>
 
         <p className={styles.support}>
-          Product design and front-end for freight and logistics. Currently in {LOCATION}.
+          5 years of experience designing and building software for supply chain, logistics and fintech. Currently solving problems at Fleetworthy.
         </p>
+
+        <ul className={styles.metrics} aria-label="Selected outcomes">
+          {METRICS.map((metric) => (
+            <li key={metric.label} className={styles.metric}>
+              <span className={styles.metricValue}>{metric.value}</span>
+              <span className={styles.metricLabel}>{metric.label}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )

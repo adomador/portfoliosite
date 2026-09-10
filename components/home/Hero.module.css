@@ -57,6 +57,46 @@
   animation: rise 1200ms var(--ease-out-expo) 420ms both;
 }
 
+.metrics {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 520px);
+  margin-top: clamp(12px, 2.4vh, 28px);
+  padding-top: clamp(22px, 3.2vh, 32px);
+  border-top: 1px solid var(--line-soft);
+  animation: rise 1200ms var(--ease-out-expo) 560ms both;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-inline: 12px;
+}
+
+.metric + .metric {
+  border-left: 1px solid var(--line-soft);
+}
+
+.metricValue {
+  font-size: clamp(1.75rem, 3.4vw, 2.375rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.metricLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -81,5 +121,20 @@
   .tick {
     width: 1px;
     height: 16px;
+  }
+
+  .metrics {
+    width: 100%;
+  }
+
+  .metric {
+    padding-inline: 8px;
+    gap: 6px;
+  }
+
+  .metricLabel {
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-align: center;
   }
 }

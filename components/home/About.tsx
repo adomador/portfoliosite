@@ -8,7 +8,7 @@ export default function About() {
   return (
     <section id="about" className={styles.section} aria-label="About">
       <div className="u-shell">
-        <SectionHead label="About" title="A designer who ships his own code" />
+        <SectionHead label="About me" title="I'm a designer who ships his own code" />
 
         <div className={styles.grid}>
           <Reveal className={styles.copy}>

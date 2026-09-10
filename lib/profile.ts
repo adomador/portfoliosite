@@ -18,6 +18,13 @@ export const HEADLINE =
 export const INTRO =
   "Designer and builder with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex and underserved industries in the world."
 
+/** Hero outcome metrics — keep labels short; the number does the talking. */
+export const METRICS = [
+  { value: '127%', label: 'Conversion lift' },
+  { value: '$530K', label: 'ARR retained' },
+  { value: '5–7%', label: 'Cost reduction' },
+] as const
+
 export type Project = {
   id: string
   company: string
