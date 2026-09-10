@@ -36,7 +36,8 @@ function measureLane(el: HTMLElement): Lane {
   const half = (el.offsetWidth || 60) / 2
 
   let contentRight = vw / 2
-  for (const shell of document.querySelectorAll<HTMLElement>('main .u-shell')) {
+  const shells = Array.from(document.querySelectorAll<HTMLElement>('main .u-shell'))
+  for (const shell of shells) {
     const rect = shell.getBoundingClientRect()
     if (rect.height < 1) continue
     const padRight = parseFloat(getComputedStyle(shell).paddingRight) || 0
