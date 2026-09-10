@@ -52,7 +52,7 @@ export default function Work() {
         <SectionHead
           label="Selected Work"
           title="Things I've shipped"
-          lead="Mostly freight and logistics — the kind of software people depend on to do their job, not to enjoy their evening."
+          
         />
 
         <div className={styles.list}>

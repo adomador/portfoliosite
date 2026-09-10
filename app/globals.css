@@ -1,5 +1,4 @@
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
 
 /* --------------------------------------------------------------
    Registering these as <color> lets them animate. Without @property
@@ -48,10 +47,10 @@
 }
 
 :root {
-  /* Fonts */
-  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  /* Fonts — Satoshi only */
+  --font-display: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+  --font-mono: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Fixed brand accents (do not shift with scroll) */
   --gold: #c9a227;
@@ -209,11 +208,6 @@ img {
   line-height: 1.06;
   letter-spacing: var(--tracking-display);
   text-wrap: balance;
-}
-
-.u-display em {
-  font-style: italic;
-  color: var(--accent);
 }
 
 /* Hairline rule that fades at both ends, like a horizon */

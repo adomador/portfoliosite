@@ -18,11 +18,6 @@
   color: var(--ink);
 }
 
-.title em {
-  font-style: italic;
-  color: var(--accent);
-}
-
 .lead {
   max-width: 42ch;
   color: var(--ink-2);

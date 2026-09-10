@@ -12,12 +12,8 @@ export const GITHUB = 'https://github.com/adomador'
 export const RESUME_URL =
   'https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0'
 
-/** The hero line. `emphasis` renders in italic serif and picks up the gold accent. */
-export const HEADLINE = {
-  before: 'I design and build software for the industries the rest of tech ',
-  emphasis: 'overlooks',
-  after: '.',
-}
+export const HEADLINE =
+  'I design and build software for messy, underserved industries.'
 
 export const INTRO =
   "Designer and builder with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex and underserved industries in the world."
@@ -63,7 +59,7 @@ export const PROJECTS: Project[] = [
     logo: '/work/Diezl.svg',
     scope: 'Solo project · Design & Build',
     summary:
-      'Designed, built and shipped end to end, on my own. Research through interface through production code.',
+      'Solo designed, built and shipped end to end. Research through interface through production code with actual paying customers.',
     href: 'https://www.diezlapp.com',
   },
   {
@@ -81,7 +77,7 @@ export const PROJECTS: Project[] = [
     logo: '/work/Trochi.svg',
     scope: '0 → 1 MVP',
     summary:
-      'Took a product from an idea to a shipped MVP — defining the scope, the shape and the first version worth putting in front of customers.',
+      'Transformed an idea into a shipped MVP by defining the scope, the shape and the first version worth putting in front of customers.',
     href: '/work/trochi',
   },
   {
@@ -89,7 +85,7 @@ export const PROJECTS: Project[] = [
     company: 'Fleetworthy',
     logo: '/work/FW.svg',
     scope: 'Product design',
-    summary: 'Compliance and safety tooling for fleets.',
+    summary: 'A unified suite of efficiency products for fleets that want to win more business.',
     status: 'Case study in progress',
   },
 ]

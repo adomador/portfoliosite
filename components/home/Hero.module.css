@@ -50,13 +50,6 @@
   animation: rise 1200ms var(--ease-out-expo) 240ms both;
 }
 
-.headline em {
-  font-style: italic;
-  color: var(--accent);
-  /* The italic sits a hair high against the roman; nudge it back onto the baseline. */
-  padding-inline: 0.04em;
-}
-
 .support {
   max-width: 44ch;
   font-size: var(--type-body);

@@ -31,7 +31,7 @@ export default function Contact() {
         </Reveal>
         <Reveal delay={90}>
           <h2 className={`u-display ${styles.title}`}>
-            Have something hard to <em>figure out</em>?
+            Have something hard to figure out?
           </h2>
         </Reveal>
         <Reveal delay={170}>

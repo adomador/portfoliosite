@@ -11,11 +11,7 @@ export default function Hero() {
           <span className={styles.role}>{ROLE}</span>
         </p>
 
-        <h1 className={`u-display ${styles.headline}`}>
-          {HEADLINE.before}
-          <em>{HEADLINE.emphasis}</em>
-          {HEADLINE.after}
-        </h1>
+        <h1 className={`u-display ${styles.headline}`}>{HEADLINE}</h1>
 
         <p className={styles.support}>
           Product design and front-end for freight and logistics. Currently in {LOCATION}.
