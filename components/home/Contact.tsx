@@ -36,8 +36,9 @@ export default function Contact() {
         </Reveal>
         <Reveal delay={170}>
           <p className={styles.lead}>
-            I like early, messy problems and small teams that move. If that&apos;s yours, say
-            hello.
+            I like early, messy problems and small teams that move.
+            <br />
+            If that&apos;s yours, say hello.
           </p>
         </Reveal>
 

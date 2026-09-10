@@ -57,6 +57,17 @@
   animation: rise 1200ms var(--ease-out-expo) 420ms both;
 }
 
+.supportLink {
+  color: var(--accent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding-bottom: 1px;
+  transition: border-color 300ms var(--ease-out-quart);
+}
+
+.supportLink:hover {
+  border-bottom-color: var(--accent);
+}
+
 .metrics {
   list-style: none;
   display: grid;

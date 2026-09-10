@@ -75,7 +75,7 @@ export const PROJECTS: Project[] = [
     logo: '/work/TriumphFAV2.svg',
     scope: 'End-to-end design & research',
     summary:
-      'Owned the full arc of the work: discovery and research, interaction design, and the details that survive contact with real users.',
+      'Owned the full product & dev lifecycle: discovery and research, interaction design, and the details that survive contact with real users.',
     href: '/work/triumph',
   },
   {
@@ -92,7 +92,7 @@ export const PROJECTS: Project[] = [
     company: 'Fleetworthy',
     logo: '/work/FW.svg',
     scope: 'Product design',
-    summary: 'A unified suite of efficiency products for fleets that want to win more business.',
+    summary: 'Unifying a suite of powerful, but siloed, software products for fleets that want to win more business.',
     status: 'Case study in progress',
   },
 ]

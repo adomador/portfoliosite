@@ -14,7 +14,18 @@ export default function Hero() {
         <h1 className={`u-display ${styles.headline}`}>{HEADLINE}</h1>
 
         <p className={styles.support}>
-        5 years shipping software for supply chain, logistics, and fintech. Currently solving problems at Fleetworthy.        </p>
+          5 years shipping software for supply chain, logistics, and fintech. Currently solving
+          problems at{' '}
+          <a
+            className={styles.supportLink}
+            href="https://fleetworthy.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Fleetworthy
+          </a>
+          .
+        </p>
 
         <ul className={styles.metrics} aria-label="Selected outcomes">
           {METRICS.map((metric) => (
