@@ -1,0 +1,58 @@
+.footer {
+  position: relative;
+  padding-bottom: clamp(28px, 5vh, 48px);
+}
+
+/* Faint pool of light on the floor, where the leaf comes to rest. */
+.ground {
+  position: absolute;
+  left: 50%;
+  bottom: -160px;
+  width: min(1100px, 130vw);
+  height: 320px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgba(212, 160, 84, 0.13) 0%,
+    rgba(212, 160, 84, 0.04) 45%,
+    transparent 72%
+  );
+  opacity: clamp(0, calc(var(--p) * 1.4 - 0.3), 1);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 26px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.name {
+  color: var(--ink-2);
+}
+
+.note {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .row {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}

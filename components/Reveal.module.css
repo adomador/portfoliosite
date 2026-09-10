@@ -1,0 +1,20 @@
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 900ms var(--ease-out-quart),
+    transform 900ms var(--ease-out-expo);
+}
+
+.shown {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

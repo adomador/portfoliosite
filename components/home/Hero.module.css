@@ -1,0 +1,172 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: clamp(120px, 18vh, 200px) clamp(80px, 12vh, 140px);
+  text-align: center;
+
+  /* Gone by the time the palette flips, so the hand-off happens on a bare screen. */
+  opacity: clamp(0, calc(1.04 - var(--p) * 8.2), 1);
+  transform: translateY(calc(var(--p) * -80px));
+  will-change: opacity, transform;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(22px, 3.4vh, 34px);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  animation: rise 1000ms var(--ease-out-expo) 120ms both;
+}
+
+.tick {
+  width: 28px;
+  height: 1px;
+  background: var(--line);
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.headline {
+  max-width: 17ch;
+  font-size: var(--type-hero);
+  line-height: 1.02;
+  color: var(--ink);
+  animation: rise 1200ms var(--ease-out-expo) 240ms both;
+}
+
+.headline em {
+  font-style: italic;
+  color: var(--accent);
+  /* The italic sits a hair high against the roman; nudge it back onto the baseline. */
+  padding-inline: 0.04em;
+}
+
+.support {
+  max-width: 44ch;
+  font-size: var(--type-body);
+  color: var(--ink-2);
+  animation: rise 1200ms var(--ease-out-expo) 420ms both;
+}
+
+/* --------------------------------------------------------------
+   Scroll cue: a dot that falls down a hairline, over and over.
+   -------------------------------------------------------------- */
+.cue {
+  position: absolute;
+  bottom: clamp(26px, 5vh, 52px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: rise 1200ms var(--ease-out-expo) 700ms both;
+}
+
+.cueLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color 300ms var(--ease-out-quart);
+}
+
+.cue:hover .cueLabel {
+  color: var(--ink);
+}
+
+.cueTrack {
+  position: relative;
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, var(--line), transparent);
+  overflow: hidden;
+}
+
+.cueDot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: fall 2.4s cubic-bezier(0.5, 0, 0.75, 0) infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  22% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(52px);
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cue {
+  animation-name: cueRise;
+}
+
+@keyframes cueRise {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .headline {
+    max-width: 13ch;
+  }
+
+  .eyebrow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tick {
+    width: 1px;
+    height: 16px;
+  }
+}

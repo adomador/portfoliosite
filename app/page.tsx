@@ -1,41 +1,35 @@
-'use client'
-
 import { Suspense } from 'react'
-import { CanvasNavigationProvider, useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
-import AboutSection from '@/components/sections/AboutSection'
-import WorkSection from '@/components/sections/WorkSection'
-import HomeSection from '@/components/sections/HomeSection'
-import TransitionSection from '@/components/sections/TransitionSection'
-import SingleLeaf from '@/components/SingleLeaf'
+import { NightfallProvider } from '@/contexts/NightfallContext'
+import Atmosphere from '@/components/Atmosphere'
+import DeepLink from '@/components/DeepLink'
+import FloatingNav from '@/components/FloatingNav'
+import ScrollLeaf from '@/components/ScrollLeaf'
+import Hero from '@/components/home/Hero'
+import Approach from '@/components/home/Approach'
+import Work from '@/components/home/Work'
+import About from '@/components/home/About'
+import Contact from '@/components/home/Contact'
+import SiteFooter from '@/components/home/SiteFooter'
 import styles from './page.module.css'
-
-function CanvasWrapper({ children }: { children: React.ReactNode }) {
-  const { translateYVh } = useCanvasNavigation()
-  return (
-    <div
-      className={styles.canvasWrapper}
-      style={{ transform: `translateY(${translateYVh}vh)` }}
-    >
-      {children}
-    </div>
-  )
-}
 
 export default function Page() {
   return (
-    <Suspense fallback={null}>
-      <CanvasNavigationProvider>
-      <SingleLeaf />
-      <CanvasWrapper>
-        <AboutSection />
-        <TransitionSection direction="rise" />
-        <TransitionSection direction="rise" />
-        <HomeSection />
-        <TransitionSection direction="fall" />
-        <TransitionSection direction="fall" />
-        <WorkSection />
-      </CanvasWrapper>
-    </CanvasNavigationProvider>
-    </Suspense>
+    <NightfallProvider>
+      <Atmosphere />
+      <Suspense fallback={null}>
+        <DeepLink />
+      </Suspense>
+      <FloatingNav />
+      <ScrollLeaf />
+
+      <main className={styles.main}>
+        <Hero />
+        <Approach />
+        <Work />
+        <About />
+        <Contact />
+        <SiteFooter />
+      </main>
+    </NightfallProvider>
   )
 }

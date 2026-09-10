@@ -1,0 +1,171 @@
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+.list {
+  border-top: 1px solid var(--line-soft);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(18px, 3vw, 40px);
+  padding: clamp(24px, 3.4vh, 34px) 0 clamp(24px, 3.4vh, 34px) 4px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: padding-left 520ms var(--ease-out-expo);
+}
+
+.row:hover {
+  padding-left: 22px;
+}
+
+.rowInert {
+  cursor: default;
+}
+
+.rowInert:hover {
+  padding-left: 4px;
+}
+
+/* Gold rule that grows out of the left edge on hover. */
+.bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  background: var(--accent);
+  transform: translateY(-50%);
+  transition: height 520ms var(--ease-out-expo);
+}
+
+.row:hover .bar {
+  height: 62%;
+}
+
+.rowInert:hover .bar {
+  height: 0;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--line-soft);
+  opacity: 0.62;
+  transition:
+    opacity 420ms var(--ease-out-quart),
+    border-color 420ms var(--ease-out-quart);
+}
+
+.mark img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.row:hover .mark {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.rowInert:hover .mark {
+  opacity: 0.62;
+  border-color: var(--line);
+}
+
+.company {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.summary {
+  margin-top: 8px;
+  max-width: 52ch;
+  font-size: var(--type-small);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  text-align: right;
+}
+
+.scope {
+  white-space: nowrap;
+}
+
+.cta,
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.status {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.arrow {
+  width: 15px;
+  height: 15px;
+  transition: transform 420ms var(--ease-out-expo);
+}
+
+.row:hover .arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 780px) {
+  .row,
+  .row:hover {
+    grid-template-columns: 44px minmax(0, 1fr);
+    padding-left: 0;
+    row-gap: 14px;
+  }
+
+  .mark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .mark img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .aside {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+  }
+
+  .scope {
+    white-space: normal;
+  }
+}

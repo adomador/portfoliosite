@@ -1,0 +1,115 @@
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(36px, 6vw, 88px);
+  align-items: start;
+}
+
+.intro {
+  font-size: var(--type-lead);
+  line-height: 1.48;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.aside {
+  margin-top: 28px;
+  font-size: var(--type-small);
+  color: var(--ink-2);
+}
+
+.inlineLink {
+  color: var(--accent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding-bottom: 1px;
+  transition: border-color 300ms var(--ease-out-quart);
+}
+
+.inlineLink:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* --------------------------------------------------------------
+   Right column: a small masthead of facts.
+   -------------------------------------------------------------- */
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-top: 8px;
+}
+
+.dl {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.fact {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.dt {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.dd {
+  font-size: var(--type-small);
+  color: var(--ink);
+}
+
+.toolsBlock {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  transition:
+    border-color 300ms var(--ease-out-quart),
+    color 300ms var(--ease-out-quart);
+}
+
+.tool:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.tool img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* GitHub's mark is solid black — flip it once the page goes dark. */
+:global(:root[data-phase='night']) .invert img {
+  filter: invert(1);
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+}
