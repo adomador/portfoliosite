@@ -18,6 +18,27 @@ export const HEADLINE =
 export const INTRO =
   "Designer & builder based in Pennsylvania with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex industries in the world."
 
+export const ENDORSEMENTS = [
+  {
+    quote:
+      'I managed Alfredo at TriumphPay and highly recommend him as a UX designer or researcher. His design craft and diligence in learning new skills are top notch.',
+    author: 'Rob Daffin',
+    role: 'UX Manager - Triumph Financial',
+  },
+  {
+    quote:
+      'Alfredo consistently impresses with his ability to lead in end-to-end research and design efforts. That combined skillset of user research and design thinking has been invaluable, allowing us to translate user needs seamlessly into experiences that achieve business goals and deliver delightful user experiences. Working with him has been a pleasure, and I wholeheartedly recommend him for any design leadership role.',
+    author: 'Kyle LeGrand',
+    role: 'Group Product Manager - Triumph Financial',
+  },
+  {
+    quote:
+      'Alfredo has overachieved in all aspects in from ideation to production throughout product life cycles within the business vertical he supports including the support of research.',
+    author: 'John Szrejter',
+    role: 'Lead UX Researcher - Ex Google, Meta, JP Morgan, Triumph',
+  },
+] as const
+
 /** Hero outcome metrics — keep labels short; the number does the talking. */
 export const METRICS = [
   { value: '127%', label: 'Conversion lift' },

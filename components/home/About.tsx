@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import Reveal from '@/components/Reveal'
 import SectionHead from './SectionHead'
-import { CHESS_LINKS, INTRO, LOCATION, TOOLS } from '@/lib/profile'
+import Endorsements from './Endorsements'
+import { CHESS_LINKS, INTRO, TOOLS } from '@/lib/profile'
 import styles from './About.module.css'
 
 export default function About() {
@@ -32,16 +33,7 @@ export default function About() {
           </Reveal>
 
           <Reveal delay={130} className={styles.facts}>
-            <dl className={styles.dl}>
-              <div className={styles.fact}>
-                <dt className={`u-label ${styles.dt}`}>Based</dt>
-                <dd className={styles.dd}>{LOCATION}</dd>
-              </div>
-              <div className={styles.fact}>
-                <dt className={`u-label ${styles.dt}`}>Focus</dt>
-                <dd className={styles.dd}>Freight &amp; logistics software</dd>
-              </div>
-            </dl>
+            <Endorsements />
 
             <div className={styles.toolsBlock}>
               <p className={`u-label ${styles.dt}`}>Toolkit</p>
