@@ -43,7 +43,7 @@
 }
 
 .headline {
-  max-width: 17ch;
+  max-width: min(100%, 16em);
   font-size: var(--type-hero);
   line-height: 1.02;
   color: var(--ink);
@@ -121,7 +121,7 @@
 
 @media (max-width: 640px) {
   .headline {
-    max-width: 13ch;
+    max-width: min(100%, 14em);
   }
 
   .eyebrow {

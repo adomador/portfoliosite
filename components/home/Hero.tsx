@@ -1,4 +1,4 @@
-import { HEADLINE, LOCATION, METRICS, NAME, ROLE } from '@/lib/profile'
+import { HEADLINE, METRICS, NAME, ROLE } from '@/lib/profile'
 import styles from './Hero.module.css'
 
 export default function Hero() {
@@ -11,11 +11,16 @@ export default function Hero() {
           <span className={styles.role}>{ROLE}</span>
         </p>
 
-        <h1 className={`u-display ${styles.headline}`}>{HEADLINE}</h1>
+        <h1 className={`u-display ${styles.headline}`}>
+          {HEADLINE.before}
+          <br />
+          {HEADLINE.after}
+        </h1>
 
         <p className={styles.support}>
-          5 years shipping software for supply chain, logistics, and fintech. Currently solving
-          problems at{' '}
+          5+ years of experience in supply chain, logistics, and fintech.
+          <br />
+          Currently solving problems at{' '}
           <a
             className={styles.supportLink}
             href="https://fleetworthy.com/"
