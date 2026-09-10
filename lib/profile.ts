@@ -18,27 +18,6 @@ export const HEADLINE =
 export const INTRO =
   "Designer and builder with 5+ years of experience. I'm drawn to ambiguous problems and the challenge of creating something from nothing. For the last three years I've been working in freight tech, building for one of the most complex and underserved industries in the world."
 
-export const APPROACH_LEAD =
-  'Three things I keep coming back to, whatever the problem turns out to be.'
-
-export const PRINCIPLES = [
-  {
-    n: '01',
-    title: 'Start inside the ambiguity',
-    body: "The good problems never arrive well-defined. I go find the shape of one before anybody opens a design file — because the framing decides the outcome far more than the pixels do.",
-  },
-  {
-    n: '02',
-    title: 'Design by building',
-    body: 'A rough thing running in a browser tells you more in an afternoon than a perfect mockup tells you in a week. I prototype in code, put it in front of people, and let the work argue for itself.',
-  },
-  {
-    n: '03',
-    title: 'Go where the leverage is',
-    body: 'Complex, unglamorous, underserved industries are where design still moves the needle the most. Freight taught me that, and I keep looking for the next place it is true.',
-  },
-]
-
 export type Project = {
   id: string
   company: string

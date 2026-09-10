@@ -4,7 +4,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Alfredo Domador — Product Designer & Builder',
   description:
-    'Product designer and builder working in freight tech. Selected work, approach, and how to get in touch.',
+    'Product designer and builder working in freight tech. Selected work and how to get in touch.',
 }
 
 export const viewport: Viewport = {

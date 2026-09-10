@@ -17,13 +17,6 @@ export default function Hero() {
           Product design and front-end for freight and logistics. Currently in {LOCATION}.
         </p>
       </div>
-
-      <a className={styles.cue} href="#approach" aria-label="Scroll to approach">
-        <span className={styles.cueLabel}>Scroll</span>
-        <span className={styles.cueTrack} aria-hidden>
-          <span className={styles.cueDot} />
-        </span>
-      </a>
     </section>
   )
 }

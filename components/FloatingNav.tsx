@@ -5,7 +5,6 @@ import { RESUME_URL } from '@/lib/profile'
 import styles from './FloatingNav.module.css'
 
 const ITEMS = [
-  { id: 'approach', label: 'Approach' },
   { id: 'work', label: 'Work' },
   { id: 'about', label: 'About' },
   { id: 'contact', label: 'Contact' },

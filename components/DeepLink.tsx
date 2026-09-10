@@ -7,7 +7,6 @@ const ALIASES: Record<string, string> = {
   home: '',
   about: 'about',
   work: 'work',
-  approach: 'approach',
   contact: 'contact',
 }
 
