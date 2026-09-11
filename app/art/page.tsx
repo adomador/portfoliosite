@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 const VIMEO_VIDEOS = [
+  { id: '124853430', title: 'Cut' },
   { id: '223854453', title: '.p0rtal x1' },
   { id: '226504773', title: '.p0rtal x2' },
 ]
@@ -76,7 +77,8 @@ export default function ArtPage() {
                   height: '100%',
                   border: 'none',
                 }}
-                allow="autoplay; fullscreen; picture-in-picture"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
               />
             </div>
