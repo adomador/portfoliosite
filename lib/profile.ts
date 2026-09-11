@@ -43,7 +43,7 @@ export const ENDORSEMENTS = [
 export const METRICS = [
   { value: '127%', label: 'Conversion lift' },
   { value: '$530K', label: 'ARR retained' },
-  { value: '5–7%', label: 'Cost reduction' },
+  { value: '7%', label: 'Cost reduction' },
 ] as const
 
 export type Project = {
