@@ -59,33 +59,51 @@ export default function Work() {
           {PROJECTS.map((project, i) => {
             const external = project.href?.startsWith('http')
             return (
-              <Reveal key={project.id} delay={i * 80}>
-                {project.href ? (
-                  external ? (
-                    <a
-                      className={styles.row}
-                      href={project.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${project.company} — ${project.scope} (opens in a new tab)`}
-                    >
-                      <RowBody project={project} />
-                    </a>
-                  ) : (
-                    <Link
-                      className={styles.row}
-                      href={project.href}
-                      aria-label={`${project.company} — ${project.scope}`}
-                    >
-                      <RowBody project={project} />
-                    </Link>
-                  )
-                ) : (
-                  <div className={`${styles.row} ${styles.rowInert}`}>
-                    <RowBody project={project} />
-                  </div>
+              <div key={project.id} className={styles.item}>
+                {project.visual && (
+                  <Reveal delay={i * 80} className={styles.visualReveal}>
+                    <figure className={styles.visual}>
+                      <Image
+                        src={project.visual.src}
+                        alt={project.visual.alt}
+                        width={project.visual.width}
+                        height={project.visual.height}
+                        sizes="(max-width: 1080px) 100vw, 952px"
+                        quality={90}
+                        className={styles.visualImg}
+                      />
+                    </figure>
+                  </Reveal>
                 )}
-              </Reveal>
+
+                <Reveal delay={i * 80 + (project.visual ? 120 : 0)}>
+                  {project.href ? (
+                    external ? (
+                      <a
+                        className={styles.row}
+                        href={project.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.company} — ${project.scope} (opens in a new tab)`}
+                      >
+                        <RowBody project={project} />
+                      </a>
+                    ) : (
+                      <Link
+                        className={styles.row}
+                        href={project.href}
+                        aria-label={`${project.company} — ${project.scope}`}
+                      >
+                        <RowBody project={project} />
+                      </Link>
+                    )
+                  ) : (
+                    <div className={`${styles.row} ${styles.rowInert}`}>
+                      <RowBody project={project} />
+                    </div>
+                  )}
+                </Reveal>
+              </div>
             )
           })}
         </div>

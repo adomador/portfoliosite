@@ -7,6 +7,30 @@
   border-top: 1px solid var(--line-soft);
 }
 
+.item {
+  position: relative;
+}
+
+/* Doubled class to outrank Reveal's own transition: a visual this large should
+   feel heavier than a line of text, so it takes longer to settle. */
+.visualReveal.visualReveal {
+  transition-duration: 1300ms;
+}
+
+.visual {
+  margin: clamp(30px, 4.4vh, 52px) 0 clamp(2px, 0.6vh, 8px);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+.visualImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .row {
   position: relative;
   display: grid;
@@ -139,6 +163,11 @@
 }
 
 @media (max-width: 780px) {
+  .visual {
+    margin-top: clamp(24px, 3.4vh, 36px);
+    border-radius: 9px;
+  }
+
   .row,
   .row:hover {
     grid-template-columns: 44px minmax(0, 1fr);

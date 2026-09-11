@@ -57,6 +57,11 @@ export type Project = {
   href?: string
   /** Shown instead of a link when there's nothing to open yet. */
   status?: string
+  /**
+   * Optional hero image, shown above the row. The column is 952 CSS px, so export
+   * at 2x — 1904px wide — or it renders soft on retina screens.
+   */
+  visual?: { src: string; alt: string; width: number; height: number }
 }
 
 export const PROJECTS: Project[] = [
@@ -68,6 +73,12 @@ export const PROJECTS: Project[] = [
     summary:
       'Solo designed, built and shipped end to end. Research through interface through production code with actual paying customers.',
     href: 'https://www.diezlapp.com',
+    visual: {
+      src: '/work/diezl-app.png',
+      alt: 'Diezl load profitability screen showing a Dallas to Chicago route with estimated profit and per-mile breakdown',
+      width: 3808,
+      height: 2560,
+    },
   },
   {
     id: 'triumph',
@@ -77,6 +88,12 @@ export const PROJECTS: Project[] = [
     summary:
       'Owned the full product & dev lifecycle: discovery and research, interaction design, and the details that survive contact with real users.',
     href: '/work/triumph',
+    visual: {
+      src: '/work/Triumph.png',
+      alt: 'TriumphPay Insights dashboard showing payment volume by QuickPay, Standard Pay, and Factored, plus customer support metrics',
+      width: 3808,
+      height: 2560,
+    },
   },
   {
     id: 'trochi',
@@ -86,6 +103,12 @@ export const PROJECTS: Project[] = [
     summary:
       'Transformed an idea into a shipped MVP by defining the scope, the shape and the first version worth putting in front of customers.',
     href: '/work/trochi',
+    visual: {
+      src: '/work/Trochi.png',
+      alt: 'Trochi lane results for Dallas to Chicago with spot rate, confidence score, rate trends, and market conditions',
+      width: 3808,
+      height: 2560,
+    },
   },
   {
     id: 'fleetworthy',
@@ -94,6 +117,12 @@ export const PROJECTS: Project[] = [
     scope: 'Product design',
     summary: 'Unifying a suite of powerful, but siloed, software products for fleets that want to win more business.',
     status: 'Case study in progress',
+    visual: {
+      src: '/work/Fleetworthy.png',
+      alt: 'Fleetworthy command center showing fleet health, critical action items with estimated impact, and a map of fleet events',
+      width: 3808,
+      height: 2560,
+    },
   },
 ]
 
