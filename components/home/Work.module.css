@@ -19,10 +19,9 @@
 
 .visual {
   margin: clamp(30px, 4.4vh, 52px) 0 clamp(2px, 0.6vh, 8px);
-  border: 1px solid var(--line-soft);
-  border-radius: 12px;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  /* The PNGs already ship with rounded corners + transparent pixels outside
+     them. A second border-radius / translucent fill here shows the page
+     through those corners as a "gap." Let the image do the framing. */
 }
 
 .visualImg {
@@ -165,7 +164,6 @@
 @media (max-width: 780px) {
   .visual {
     margin-top: clamp(24px, 3.4vh, 36px);
-    border-radius: 9px;
   }
 
   .row,
