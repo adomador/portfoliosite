@@ -71,7 +71,7 @@ export const PROJECTS: Project[] = [
     logo: '/work/Diezl.svg',
     scope: 'Solo project · Design & Build',
     summary:
-      'Solo designed, built and shipped end to end. Research through interface through production code with actual paying customers.',
+      'Solo designed and built end to end, from user research to production code. Now used by paying owner-operators every day.',
     href: 'https://www.diezlapp.com',
     visual: {
       src: '/work/diezl-app.png',
