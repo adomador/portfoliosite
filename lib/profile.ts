@@ -102,7 +102,7 @@ export const PROJECTS: Project[] = [
     scope: 'Solo project · Design & Build',
     summary:
       'Solo designed and built end to end, from user research to production code. Now used by paying owner-operators every day.',
-    href: 'https://www.diezlapp.com',
+    href: '/work/diezl',
     visual: {
       src: '/work/diezl-app.png',
       alt: 'Diezl load profitability screen showing a Dallas to Chicago route with estimated profit and per-mile breakdown',
