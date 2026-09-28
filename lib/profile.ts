@@ -66,16 +66,16 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
-    id: 'diezl',
-    company: 'Diezl',
-    logo: '/work/Diezl.svg',
-    scope: 'Solo project · Design & Build',
+    id: 'trochi',
+    company: 'Trochi',
+    logo: '/work/Trochi.svg',
+    scope: '0 → 1 MVP',
     summary:
-      'Solo designed and built end to end, from user research to production code. Now used by paying owner-operators every day.',
-    href: 'https://www.diezlapp.com',
+      'Transformed an idea into a shipped MVP by defining the scope, the shape and the first version worth putting in front of customers.',
+    href: '/work/trochi',
     visual: {
-      src: '/work/diezl-app.png',
-      alt: 'Diezl load profitability screen showing a Dallas to Chicago route with estimated profit and per-mile breakdown',
+      src: '/work/Trochi.png',
+      alt: 'Trochi lane results for Dallas to Chicago with spot rate, confidence score, rate trends, and market conditions',
       width: 3808,
       height: 2560,
     },
@@ -96,16 +96,16 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: 'trochi',
-    company: 'Trochi',
-    logo: '/work/Trochi.svg',
-    scope: '0 → 1 MVP',
+    id: 'diezl',
+    company: 'Diezl',
+    logo: '/work/Diezl.svg',
+    scope: 'Solo project · Design & Build',
     summary:
-      'Transformed an idea into a shipped MVP by defining the scope, the shape and the first version worth putting in front of customers.',
-    href: '/work/trochi',
+      'Solo designed and built end to end, from user research to production code. Now used by paying owner-operators every day.',
+    href: 'https://www.diezlapp.com',
     visual: {
-      src: '/work/Trochi.png',
-      alt: 'Trochi lane results for Dallas to Chicago with spot rate, confidence score, rate trends, and market conditions',
+      src: '/work/diezl-app.png',
+      alt: 'Diezl load profitability screen showing a Dallas to Chicago route with estimated profit and per-mile breakdown',
       width: 3808,
       height: 2560,
     },
