@@ -26,9 +26,9 @@ const THEME: CaseTheme = {
 const SOLUTION_SCREENS = [
   {
     src: '/work/diezl-voice-input.png',
-    alt: 'Diezl voice and natural language input — speak or paste load details',
+    alt: 'Diezl voice and natural language input; speak or paste load details',
     caption:
-      'Paste a load message or speak it. Inputs fill themselves — no typing required.',
+      'Paste a load message or speak it. No typing required.',
   },
   {
     src: '/work/diezl-profit-margin.png',
@@ -46,7 +46,7 @@ const SOLUTION_SCREENS = [
 
 const META = [
   { label: 'Product', lines: ['Diezl'] },
-  { label: 'My role', lines: ['Designer & Builder'] },
+  { label: 'My role', lines: ['Founder, Designer & Builder'] },
   {
     label: 'Impact',
     lines: ['406 installs', '901 loads evaluated', '61% resolved in under 1 min'],
@@ -98,8 +98,7 @@ export default function DiezlCaseStudyPage() {
       <CaseIntro
         text={
           <>
-            A profitability calculator that gives owner-operators a defensible verdict, most of the
-            time in under a&nbsp;minute.
+            A profitability calculator that gives owner-operators a defensible verdict in under a&nbsp;minute.
           </>
         }
         meta={META}
@@ -115,7 +114,7 @@ export default function DiezlCaseStudyPage() {
 
       <CaseSection label="Problem">
         <p>
-          The decision happens on a phone call, with a broker waiting. The existing options were
+          The decision happens needs to happen very fast, over the phone or email, with a broker waiting at the other end. The existing options were
           spreadsheets or fleet software built for dispatchers, and neither survives
           that&nbsp;moment.
         </p>
@@ -123,7 +122,7 @@ export default function DiezlCaseStudyPage() {
 
       <CaseSection label="Approach">
         <p>
-          I scoped this to one user and one decision on purpose. I tested the cost model against
+          I scoped this to one user and one decision on purpose. I leveraged real industry data and tested the cost model against
           real lanes with a DAT researcher, then cut anything that didn&apos;t help someone say yes
           or no&nbsp;faster.
         </p>
