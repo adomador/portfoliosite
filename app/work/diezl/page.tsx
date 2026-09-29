@@ -1,19 +1,46 @@
-import type { Metadata } from 'next'
+'use client'
+
 import {
+  CaseFigure,
   CaseHero,
   CaseIntro,
   CasePlaceholder,
   CaseSection,
   CaseStats,
   CaseStudy,
+  type CaseTheme,
 } from '@/components/case-study/CaseStudy'
-import { NAME } from '@/lib/profile'
+import CaseCarousel from '@/components/case-study/CaseCarousel'
 
-export const metadata: Metadata = {
-  title: `Take the load or pass — ${NAME}`,
-  description:
-    'Diezl: a profitability calculator that gives owner-operators a defensible verdict, most of the time in under a minute.',
+const THEME: CaseTheme = {
+  bg: '#101114',
+  ink: '#f4f1ea',
+  ink2: 'rgba(244, 241, 234, 0.72)',
+  ink3: 'rgba(244, 241, 234, 0.5)',
+  rule: 'rgba(244, 241, 234, 0.1)',
+  panel: 'rgba(244, 241, 234, 0.03)',
+  accent: '#c9a227',
 }
+
+const SOLUTION_SCREENS = [
+  {
+    alt: 'Natural language input',
+    placeholder: 'Input',
+    caption: 'Paste a load message. Inputs fill themselves — no typing required.',
+  },
+  {
+    alt: 'Profit result and cost breakdown',
+    placeholder: 'Profit result',
+    caption:
+      'A clear profit result first, with a detailed cost breakdown from user inputs or research-backed defaults.',
+  },
+  {
+    alt: 'Destination Outlook',
+    placeholder: 'Destination Outlook',
+    caption:
+      "Destination Outlook rates where the truck ends up, so a good rate into a dead market doesn't fool anyone.",
+  },
+] as const
 
 const META = [
   { label: 'Product', lines: ['Diezl'] },
@@ -37,7 +64,7 @@ const MORE = [
 
 export default function DiezlCaseStudyPage() {
   return (
-    <CaseStudy more={MORE}>
+    <CaseStudy theme={THEME} more={MORE}>
       <CaseHero
         eyebrow="Diezl · Solo design and build"
         title="Take the load or pass"
@@ -72,12 +99,6 @@ export default function DiezlCaseStudyPage() {
         </p>
       </CaseSection>
 
-      <CasePlaceholder
-        label="Input screen"
-        caption="Natural language input turns a load message into a full set of inputs."
-        tall
-      />
-
       <CaseSection label="Approach">
         <p>
           I scoped this to one user and one decision on purpose. I tested the cost model against
@@ -88,18 +109,21 @@ export default function DiezlCaseStudyPage() {
 
       <CaseSection label="Solution">
         <p>
-          Natural language input turns a load message into a full set of inputs, no typing
-          required. The result leads with a single TAKE or PASS, and Show Me the Math opens the
-          full breakdown behind it. Destination Outlook rates where the truck ends up, so a good
-          rate into a dead market doesn&apos;t fool&nbsp;anyone.
+          Natural language input turns a load message into a full set of inputs, no typing required.
+          The result leads with clear profit result and detailed cost breakdown that leverages user
+          inputs or smart defaults based on real trucking research. Destination Outlook rates where
+          the truck ends up, so a good rate into a dead market doesn&apos;t fool&nbsp;anyone.
         </p>
       </CaseSection>
 
-      <CasePlaceholder
-        label="TAKE / PASS result"
-        caption="A single TAKE or PASS, with Show Me the Math behind it."
-        tall
-      />
+      <CaseFigure>
+        <CaseCarousel
+          slides={SOLUTION_SCREENS}
+          ratio="3 / 4"
+          label="Diezl product screens"
+          tone="dark"
+        />
+      </CaseFigure>
 
       <CaseSection label="Impact">
         <CaseStats stats={STATS} />

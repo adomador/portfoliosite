@@ -13,6 +13,7 @@ import {
   CaseStudy,
   type CaseTheme,
 } from '@/components/case-study/CaseStudy'
+import CaseCarousel from '@/components/case-study/CaseCarousel'
 import styles from './page.module.css'
 
 const THEME: CaseTheme = {
@@ -98,84 +99,6 @@ const MAX_ZOOM = 4
 const ZOOM_STEP = 0.25
 
 type ExpandedImage = { src: string; alt: string }
-type Slide = { src: string; alt: string; caption: string }
-
-function Carousel({
-  slides,
-  ratio,
-  label,
-  onExpand,
-}: {
-  slides: readonly Slide[]
-  ratio: string
-  label: string
-  onExpand: (image: ExpandedImage) => void
-}) {
-  const [index, setIndex] = useState(0)
-  const slide = slides[index]
-  const go = (next: number) => setIndex((next + slides.length) % slides.length)
-
-  return (
-    <div className={styles.carousel} role="group" aria-roledescription="carousel" aria-label={label}>
-      <button
-        type="button"
-        className={styles.frame}
-        style={{ aspectRatio: ratio }}
-        onClick={() => onExpand({ src: slide.src, alt: slide.alt })}
-        aria-label={`${slide.alt} — click to expand`}
-      >
-        {slides.map((s, i) => (
-          <Image
-            key={s.src}
-            src={s.src}
-            alt={i === index ? s.alt : ''}
-            fill
-            sizes="(max-width: 1080px) 100vw, 1016px"
-            className={`${styles.frameImg} ${i === index ? styles.frameImgActive : ''}`}
-            priority={i === 0}
-          />
-        ))}
-      </button>
-
-      <div className={styles.controls}>
-        <button
-          type="button"
-          className={styles.arrow}
-          onClick={() => go(index - 1)}
-          aria-label="Previous image"
-        >
-          ←
-        </button>
-        <button
-          type="button"
-          className={styles.arrow}
-          onClick={() => go(index + 1)}
-          aria-label="Next image"
-        >
-          →
-        </button>
-        <p className={styles.controlsCaption} aria-live="polite">
-          {slide.caption}
-        </p>
-        <div className={styles.dots}>
-          {slides.map((s, i) => (
-            <button
-              key={s.src}
-              type="button"
-              className={`${styles.dot} ${i === index ? styles.dotActive : ''}`}
-              onClick={() => setIndex(i)}
-              aria-label={`Go to image ${i + 1}`}
-              aria-current={i === index ? 'true' : undefined}
-            />
-          ))}
-        </div>
-        <span className={styles.count}>
-          {index + 1} / {slides.length}
-        </span>
-      </div>
-    </div>
-  )
-}
 
 export default function TrochiCaseStudyPage() {
   const [expandedImage, setExpandedImage] = useState<ExpandedImage | null>(null)
@@ -309,7 +232,7 @@ export default function TrochiCaseStudyPage() {
         </CaseSection>
 
         <CaseFigure>
-          <Carousel
+          <CaseCarousel
             slides={PERSONAS}
             ratio="6280 / 2636"
             label="Personas"
@@ -325,12 +248,6 @@ export default function TrochiCaseStudyPage() {
           </p>
         </CaseSection>
 
-        <CaseFigure caption="Floating nav bar from the prototype. Open search to try it.">
-          <div className={styles.navDemo}>
-            <TrochiNavBar />
-          </div>
-        </CaseFigure>
-
         <CaseSection label="Solution">
           <p>
             A dashboard opens on a personalized market briefing instead of a data dump. Lane search
@@ -343,12 +260,26 @@ export default function TrochiCaseStudyPage() {
         </CaseSection>
 
         <CaseFigure>
-          <Carousel
+          <CaseCarousel
             slides={PRODUCT_SCREENS}
             ratio="1720 / 1024"
             label="Product screens"
             onExpand={setExpandedImage}
           />
+        </CaseFigure>
+
+        <CaseFigure
+          caption={
+            <span className={styles.reasoning}>
+              Rate data needs every pixel, so navigation floats instead of taking a sidebar. Search,
+              the most common starting point, sits one tap away with recent lanes ready, and keyboard
+              shortcuts let reps jump between views mid-call. Open search to try&nbsp;it.
+            </span>
+          }
+        >
+          <div className={styles.navDemo}>
+            <TrochiNavBar />
+          </div>
         </CaseFigure>
 
         <CaseSection label="Impact">

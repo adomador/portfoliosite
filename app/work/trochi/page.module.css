@@ -10,110 +10,13 @@
   height: auto;
 }
 
-/* Carousel */
-
-.frame {
-  position: relative;
+.reasoning {
   display: block;
-  width: 100%;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid var(--cs-rule);
-  border-radius: 12px;
-  background: #f6f7f9;
-  cursor: zoom-in;
-}
-
-.frame:focus-visible,
-.arrow:focus-visible,
-.dot:focus-visible,
-.overlayClose:focus-visible,
-.zoomBtn:focus-visible {
-  outline: 2px solid var(--cs-accent);
-  outline-offset: 3px;
-}
-
-.frameImg {
-  object-fit: contain;
-  opacity: 0;
-  transition: opacity 420ms var(--ease-out-quart);
-}
-
-.frameImgActive {
-  opacity: 1;
-}
-
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.arrow {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--cs-rule);
-  border-radius: 8px;
-  color: var(--cs-ink-2);
+  max-width: 640px;
   font-size: 0.9375rem;
-  transition:
-    border-color 220ms var(--ease-out-quart),
-    color 220ms var(--ease-out-quart);
-}
-
-.arrow:hover {
-  border-color: color-mix(in srgb, var(--cs-accent) 50%, transparent);
-  color: var(--cs-ink);
-}
-
-.controlsCaption {
-  flex: 1;
-  min-width: 0;
-  margin-left: 8px;
-  font-size: 0.8125rem;
+  line-height: 1.65;
   color: var(--cs-ink-2);
-}
-
-.dots {
-  display: flex;
-  gap: 4px;
-}
-
-.dot {
-  width: 16px;
-  height: 16px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-}
-
-.dot::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--cs-ink-3);
-  opacity: 0.5;
-  transition:
-    background-color 220ms var(--ease-out-quart),
-    opacity 220ms var(--ease-out-quart);
-}
-
-.dotActive::before {
-  background: var(--cs-accent);
-  opacity: 1;
-}
-
-.count {
-  min-width: 3.5ch;
-  margin-left: 8px;
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--cs-ink-3);
-  text-align: right;
+  text-wrap: pretty;
 }
 
 /* Floating nav bar demo; search results open upward, so the bar sits low */
@@ -172,6 +75,12 @@
 
 .overlayClose:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.overlayClose:focus-visible,
+.zoomBtn:focus-visible {
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 3px;
 }
 
 .overlayZoomControls {
@@ -245,16 +154,6 @@
 }
 
 @media (max-width: 760px) {
-  .controlsCaption {
-    order: 5;
-    flex-basis: 100%;
-    margin: 8px 0 0;
-  }
-
-  .dots {
-    margin-left: auto;
-  }
-
   .navDemo {
     min-height: 0;
     overflow-x: auto;
