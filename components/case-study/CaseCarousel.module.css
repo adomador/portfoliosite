@@ -1,0 +1,149 @@
+.carousel {
+  width: 100%;
+}
+
+.frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--cs-rule);
+  border-radius: 12px;
+  background: #f6f7f9;
+}
+
+.frameDark {
+  background: var(--cs-panel);
+}
+
+.frameExpandable {
+  cursor: zoom-in;
+}
+
+.frameStatic {
+  cursor: default;
+}
+
+.frame:focus-visible,
+.arrow:focus-visible,
+.dot:focus-visible {
+  outline: 2px solid var(--cs-accent, var(--cs-ink));
+  outline-offset: 3px;
+}
+
+.frameImg {
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out-quart);
+}
+
+.frameImgActive {
+  opacity: 1;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cs-ink-3);
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out-quart);
+  border: 1px dashed color-mix(in srgb, var(--cs-ink) 16%, transparent);
+  border-radius: 12px;
+}
+
+.placeholderActive {
+  opacity: 1;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 8px;
+  color: var(--cs-ink-2);
+  font-size: 0.9375rem;
+  transition:
+    border-color 220ms var(--ease-out-quart),
+    color 220ms var(--ease-out-quart);
+}
+
+.arrow:hover {
+  border-color: color-mix(in srgb, var(--cs-accent, var(--cs-ink)) 50%, transparent);
+  color: var(--cs-ink);
+}
+
+.controlsCaption {
+  flex: 1;
+  min-width: 0;
+  margin-left: 8px;
+  font-size: 0.8125rem;
+  color: var(--cs-ink-2);
+  text-wrap: pretty;
+}
+
+.dots {
+  display: flex;
+  gap: 4px;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.dot::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cs-ink-3);
+  opacity: 0.5;
+  transition:
+    background-color 220ms var(--ease-out-quart),
+    opacity 220ms var(--ease-out-quart);
+}
+
+.dotActive::before {
+  background: var(--cs-accent, var(--cs-ink));
+  opacity: 1;
+}
+
+.count {
+  min-width: 3.5ch;
+  margin-left: 8px;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--cs-ink-3);
+  text-align: right;
+}
+
+@media (max-width: 760px) {
+  .controlsCaption {
+    order: 5;
+    flex-basis: 100%;
+    margin: 8px 0 0;
+  }
+
+  .dots {
+    margin-left: auto;
+  }
+}

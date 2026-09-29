@@ -1,13 +1,52 @@
-/* Page wrapper */
-.page {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  background: #16181d;
-  animation: pageDissolveIn 0.5s ease-out forwards;
+.logo {
+  display: block;
+  width: auto;
+  height: 40px;
 }
 
-@keyframes pageDissolveIn {
+.cover {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.reasoning {
+  display: block;
+  max-width: 640px;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--cs-ink-2);
+  text-wrap: pretty;
+}
+
+/* Floating nav bar demo; search results open upward, so the bar sits low */
+
+.navDemo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 480px;
+  padding: 48px 24px 64px;
+  border: 1px solid var(--cs-rule);
+  border-radius: 12px;
+  background: var(--cs-panel);
+}
+
+/* Expanded image overlay */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 11, 14, 0.94);
+  cursor: pointer;
+  animation: overlayIn 0.2s ease-out forwards;
+}
+
+@keyframes overlayIn {
   from {
     opacity: 0;
   }
@@ -16,319 +55,32 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .page {
-    animation: none;
-  }
-}
-
-/* Fixed back nav */
-.back {
-  position: fixed;
-  top: 24px;
-  left: 24px;
-  z-index: 100;
-  display: inline-block;
-  margin: 0;
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-  transition: color 0.2s ease, letter-spacing 0.2s ease;
-}
-
-.back:hover {
-  color: var(--accent-gold);
-  letter-spacing: 0.08em;
-}
-
-.back:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 4px;
-}
-
-/* Scroll container */
-.scrollContainer {
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: y mandatory;
-}
-
-/* Base section */
-.section {
-  min-height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 48px 24px;
-  padding-top: 72px;
-  box-sizing: border-box;
-}
-
-/* Section 1: Opening — Two column */
-.openingGrid {
-  display: flex;
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  gap: 48px;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-height: 0;
-}
-
-.sidebarContent {
-  width: 50%;
-  max-width: 42rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.logo {
-  display: block;
-  width: auto;
-  height: 48px;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: left top;
-  margin-bottom: 2rem;
-}
-
-.copy {
-  max-width: 42rem;
-}
-
-.copy p {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.9375rem;
-  font-weight: 400;
-  line-height: 1.65;
-  color: #d4d9e3;
-  margin: 0 0 1rem 0;
-}
-
-.copy p:last-child {
-  margin-bottom: 0;
-}
-
-.navDemo {
-  width: 50%;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.navBarLabel {
-  margin: 0;
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: #afb7ca;
-}
-
-.scrollIndicator {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  pointer-events: none;
-  animation: scrollBounce 2s ease-in-out infinite;
-}
-
-@keyframes scrollBounce {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(6px);
-  }
-}
-
-.scrollHint {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: #afb7ca;
-  text-transform: uppercase;
-}
-
-.scrollChevron {
-  font-size: 1rem;
-  color: #afb7ca;
-  line-height: 1;
-}
-
-/* Section 2: Problem Statement — Full width */
-.problemStatement {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(1.25rem, 2.5vw, 2rem);
-  font-weight: 400;
-  line-height: 1.5;
-  color: #d4d9e3;
-  max-width: 52ch;
-  margin: 0;
-  text-align: center;
-  padding: 3rem 1.5rem;
-}
-
-/* Section 3: Users — Full width */
-.sectionHeader {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 0.5rem 0;
-  text-align: center;
-}
-
-.sectionSubtext {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.9375rem;
-  font-weight: 400;
-  color: #afb7ca;
-  margin: 0 0 2rem 0;
-  text-align: center;
-}
-
-.personaGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.personaCard {
-  border: 1px solid rgba(175, 183, 202, 0.2);
-  background: rgba(26, 24, 22, 0.6);
-  border-radius: 12px;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-  text-align: left;
-}
-
-.personaCard:hover {
-  border-color: rgba(201, 162, 39, 0.4);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
-}
-
-.personaCard:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 4px;
-}
-
-.personaThumbnail {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-}
-
-.personaImage {
-  object-fit: contain;
-  object-position: top center;
-}
-
-.personaMeta {
-  padding: 1rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.personaName {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.personaRole {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: #afb7ca;
-}
-
-.personaExpandHint {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--accent-gold);
-  margin-top: 0.5rem;
-}
-
-/* Persona overlay (expand modal) */
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: rgba(0, 0, 0, 0.92);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: overlayIn 0.2s ease-out forwards;
-}
-
 .overlayClose {
   position: absolute;
   top: 24px;
   right: 24px;
   z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 44px;
   height: 44px;
-  padding: 0;
-  border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
   font-size: 1.75rem;
   line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .overlayClose:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.overlayClose:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 2px;
+.overlayClose:focus-visible,
+.zoomBtn:focus-visible {
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 3px;
 }
 
 .overlayZoomControls {
@@ -346,20 +98,20 @@
 }
 
 .zoomBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 36px;
-  padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font-size: 1.25rem;
   line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .zoomBtn:hover:not(:disabled) {
@@ -372,33 +124,18 @@
   cursor: not-allowed;
 }
 
-.zoomBtn:focus-visible {
-  outline: 2px solid var(--accent-gold);
-  outline-offset: 2px;
-}
-
 .zoomLabel {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-width: 3ch;
   font-size: 0.875rem;
   font-weight: 500;
   color: #afb7ca;
-  min-width: 3ch;
   text-align: center;
-}
-
-@keyframes overlayIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .overlayImageWrap {
   position: relative;
   width: 95vw;
-  max-width: 1575px; /* 75% larger than 900px */
+  max-width: 1575px;
   aspect-ratio: 4 / 3;
   max-height: 95vh;
   overflow: hidden;
@@ -416,121 +153,10 @@
   object-position: center;
 }
 
-/* Section 5: The Product — Centered stack, 5 snap sections */
-.productStack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  flex: 1;
-  min-height: 0;
-  text-align: center;
-}
-
-.productSubtitle {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-  font-weight: 400;
-  line-height: 1.5;
-  color: #d4d9e3;
-  margin: 0;
-  max-width: 48ch;
-}
-
-.productScreen {
-  width: 100%;
-  max-width: 1100px;
-  flex: 1;
-  min-height: 420px;
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  padding: 0;
-  border: none;
-  background: none;
-  font: inherit;
-  cursor: pointer;
-  display: block;
-}
-
-.productScreenImg {
-  object-fit: contain;
-  object-position: top center;
-}
-
-.screenPlaceholder {
-  width: 100%;
-  max-width: 1100px;
-  flex: 1;
-  min-height: 420px;
-  border: 1px dashed #afb7ca;
-  background: rgba(175, 183, 202, 0.06);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #afb7ca;
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-/* Section 6: Outcome — Full width */
-.outcomeStatement {
-  font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(1.25rem, 2.5vw, 2rem);
-  font-weight: 400;
-  line-height: 1.5;
-  color: #d4d9e3;
-  max-width: 52ch;
-  margin: 0;
-  text-align: center;
-  padding: 3rem 1.5rem;
-}
-
-/* Responsive: max-width 860px */
-@media (max-width: 860px) {
-  .scrollContainer {
-    scroll-snap-type: y proximity;
-  }
-
-  .section {
-    min-height: min(100dvh, auto);
-    padding-top: 80px;
-  }
-
-  .openingGrid {
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .sidebarContent {
-    width: 100%;
-    max-width: 100%;
-  }
-
+@media (max-width: 760px) {
   .navDemo {
-    width: 100%;
-  }
-
-  .personaGrid {
-    grid-template-columns: 1fr;
-    max-width: 380px;
-  }
-
-  .productStack {
-    gap: 1rem;
-  }
-
-  .productScreen {
-    min-height: 320px;
-  }
-
-  .screenPlaceholder {
-    min-height: 320px;
+    min-height: 0;
+    overflow-x: auto;
+    justify-content: flex-start;
   }
 }

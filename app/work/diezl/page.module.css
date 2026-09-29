@@ -1,0 +1,26 @@
+.cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.cta {
+  display: inline-block;
+  margin: 28px 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #f4f1ea;
+  border-bottom: 1px solid #f4f1ea;
+  padding-bottom: 2px;
+  transition: opacity 220ms var(--ease-out-quart);
+}
+
+.cta:hover {
+  opacity: 0.72;
+}
+
+.cta:focus-visible {
+  outline: 2px solid #f06b06;
+  outline-offset: 4px;
+}
