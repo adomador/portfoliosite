@@ -1,16 +1,17 @@
 'use client'
 
+import Image from 'next/image'
 import {
   CaseFigure,
   CaseHero,
   CaseIntro,
-  CasePlaceholder,
   CaseSection,
   CaseStats,
   CaseStudy,
   type CaseTheme,
 } from '@/components/case-study/CaseStudy'
 import CaseCarousel from '@/components/case-study/CaseCarousel'
+import styles from './page.module.css'
 
 const THEME: CaseTheme = {
   bg: '#101114',
@@ -19,26 +20,27 @@ const THEME: CaseTheme = {
   ink3: 'rgba(244, 241, 234, 0.5)',
   rule: 'rgba(244, 241, 234, 0.1)',
   panel: 'rgba(244, 241, 234, 0.03)',
-  accent: '#c9a227',
+  accent: '#f06b06',
 }
 
 const SOLUTION_SCREENS = [
   {
-    alt: 'Natural language input',
-    placeholder: 'Input',
-    caption: 'Paste a load message. Inputs fill themselves — no typing required.',
+    src: '/work/diezl-voice-input.png',
+    alt: 'Diezl voice and natural language input — speak or paste load details',
+    caption:
+      'Paste a load message or speak it. Inputs fill themselves — no typing required.',
   },
   {
-    alt: 'Profit result and cost breakdown',
-    placeholder: 'Profit result',
+    src: '/work/diezl-profit-margin.png',
+    alt: 'Diezl profit margin result with Destination Outlook for Laredo, TX',
     caption:
-      'A clear profit result first, with a detailed cost breakdown from user inputs or research-backed defaults.',
+      "A clear profit result first, with Destination Outlook so a good rate into a dead market doesn't fool anyone.",
   },
   {
-    alt: 'Destination Outlook',
-    placeholder: 'Destination Outlook',
+    src: '/work/diezl-cost-breakdown.png',
+    alt: 'Diezl cost breakdown showing fuel, weight, weather, and terrain impacts',
     caption:
-      "Destination Outlook rates where the truck ends up, so a good rate into a dead market doesn't fool anyone.",
+      'Show Me the Math opens the full cost breakdown from user inputs or research-backed defaults.',
   },
 ] as const
 
@@ -58,8 +60,8 @@ const STATS = [
 ] as const
 
 const MORE = [
-  { eyebrow: 'Trochi · Product design, 0 to 1', title: 'Trochi', href: '/work/trochi' },
   { eyebrow: 'Triumph · End-to-end design & research', title: 'Triumph', href: '/work/triumph' },
+  { eyebrow: 'Trochi · Product design, 0 to 1', title: 'Trochi', href: '/work/trochi' },
 ] as const
 
 export default function DiezlCaseStudyPage() {
@@ -71,7 +73,27 @@ export default function DiezlCaseStudyPage() {
         lead={<>Designed, built and shipped alone, from the first interview to the App&nbsp;Store.</>}
       />
 
-      <CasePlaceholder label="Cover" />
+      <a
+        className={styles.cta}
+        href="https://www.diezlapp.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Learn more at diezlapp.com
+      </a>
+
+      <CaseFigure>
+        <Image
+          src="/work/diezl-cover.png"
+          alt="Diezl load profitability screen"
+          width={5712}
+          height={3840}
+          quality={90}
+          sizes="(max-width: 1080px) 100vw, 1016px"
+          className={styles.cover}
+          priority
+        />
+      </CaseFigure>
 
       <CaseIntro
         text={
@@ -119,7 +141,7 @@ export default function DiezlCaseStudyPage() {
       <CaseFigure>
         <CaseCarousel
           slides={SOLUTION_SCREENS}
-          ratio="3 / 4"
+          ratio="5712 / 3840"
           label="Diezl product screens"
           tone="dark"
         />

@@ -66,21 +66,6 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
-    id: 'trochi',
-    company: 'Trochi',
-    logo: '/work/Trochi.svg',
-    scope: '0 → 1 MVP',
-    summary:
-      'Transformed an idea into a shipped MVP by defining the scope, the shape and the first version worth putting in front of customers.',
-    href: '/work/trochi',
-    visual: {
-      src: '/work/Trochi.png',
-      alt: 'Trochi lane results for Dallas to Chicago with spot rate, confidence score, rate trends, and market conditions',
-      width: 3808,
-      height: 2560,
-    },
-  },
-  {
     id: 'triumph',
     company: 'Triumph',
     logo: '/work/TriumphFAV2.svg',
@@ -91,6 +76,21 @@ export const PROJECTS: Project[] = [
     visual: {
       src: '/work/Triumph.png',
       alt: 'TriumphPay Insights dashboard showing payment volume by QuickPay, Standard Pay, and Factored, plus customer support metrics',
+      width: 3808,
+      height: 2560,
+    },
+  },
+  {
+    id: 'trochi',
+    company: 'Trochi',
+    logo: '/work/Trochi.svg',
+    scope: '0 → 1 MVP',
+    summary:
+      'Transformed an idea into a shipped MVP by defining the scope, the shape and the first version worth putting in front of customers.',
+    href: '/work/trochi',
+    visual: {
+      src: '/work/Trochi.png',
+      alt: 'Trochi lane results for Dallas to Chicago with spot rate, confidence score, rate trends, and market conditions',
       width: 3808,
       height: 2560,
     },
