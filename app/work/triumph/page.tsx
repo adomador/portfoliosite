@@ -143,7 +143,7 @@ export default function TriumphCaseStudyPage() {
     <CaseStudy theme={THEME} more={MORE}>
       <CaseHero
         eyebrow="Triumph · End-to-end design & research"
-        title="Stop jumping between profiles"
+        title="A better customer service experience leads to improved business outcomes"
         lead={<>Researched and designed in four weeks for TriumphPay&apos;s support&nbsp;team.</>}
       />
 
