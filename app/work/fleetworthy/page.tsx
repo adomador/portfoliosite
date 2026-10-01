@@ -68,8 +68,8 @@ const SOLUTION_SCREENS = [
 ] as const
 
 const META = [
-  { label: 'Product', lines: ['Fleetworthy (placeholder)'] },
-  { label: 'My role', lines: ['Product designer (placeholder)'] },
+  { label: 'Product', lines: ['Fleetworthy'] },
+  { label: 'My role', lines: ['Senior Product Designer'] },
   { label: 'Impact', lines: ['Impact metric one', 'Impact metric two', 'Impact metric three'] },
 ] as const
 
