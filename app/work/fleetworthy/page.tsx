@@ -45,26 +45,24 @@ const BEFORE_AFTER = [
 ] as const
 
 const APPROACH_IMAGE = {
-  src: `${DIR}/causal-chain-concept.png`,
-  alt: 'Concept diagram of a causal chain showing cause, effect, cost and action for a fleet insight',
-  caption: 'The causal chain: what happened, what it causes, what it costs, and what to do.',
+  src: `${DIR}/severity-model.png`,
+  alt: 'Insight severity model showing two inputs, percent of fleet affected and financial impact per vehicle per month, with Critical and Action Needed thresholds',
+  caption:
+    'Severity from two inputs: how much of the fleet is affected, and dollars lost per vehicle per month. Either one crossing its threshold is enough to escalate.',
 }
 
 const SOLUTION_SCREENS = [
   {
-    src: `${DIR}/severity-tiers.png`,
-    alt: 'Severity tiers for fleet insights: Critical, Action Needed and Monitor, based on fleet impact and dollars lost',
-    caption: 'Severity escalates from how much of the fleet is affected and dollars lost per vehicle.',
+    src: `${DIR}/v2.png`,
+    alt: 'Full V2 Command Center with ranked action items above and a fleet events map with toll spend, bypass visits and safety alerts below',
+    caption:
+      'The full V2 dashboard: ranked actions up top, fleet events map and spend below so managers see what to do and where it is happening.',
   },
   {
-    src: `${DIR}/action-item-reasoning.png`,
-    alt: 'An action item that explains itself with what happened, what it causes, what it costs and what to do',
-    caption: 'Every item follows the causal chain so managers can judge the reasoning, not just a score.',
-  },
-  {
-    src: `${DIR}/action-state-modals.png`,
-    alt: 'Dismiss, ignore and snooze states for action items so the list stays useful',
-    caption: 'Dismiss, ignore and snooze keep the action list useful instead of noisy.',
+    src: `${DIR}/ai-chat.png`,
+    alt: 'Vantage AI chat open on a high plate tolls insight, with key findings, top vehicles and why it matters',
+    caption:
+      'Vantage opens on an insight: AI pulls the report, shows the reasoning, and leaves the decision with the manager.',
   },
 ] as const
 
@@ -224,10 +222,7 @@ export default function FleetworthyCaseStudyPage() {
       <CaseSection label="Approach">
         <p>
           I started researching before the project formally existed. Interviews with four enterprise
-          fleets, internal experts, and 16 survey responses showed the value was not &quot;one place
-          to manage vehicles.&quot; It was less work caused by mismatched data. That validated the
-          shared vehicle record as the foundation, and it set up the next question: once vehicles
-          are connected, what does that&nbsp;unlock?
+          fleets, internal experts, and 16 survey responses showed the value was not in only providing a single source of truth for fleet data, but in reducing the noise and providing a clear next step for fleet managers.
         </p>
         <p>
           Because the answer involved AI, I ran a separate survey of 60 customers on it. Three
@@ -260,9 +255,10 @@ export default function FleetworthyCaseStudyPage() {
         </ol>
         <p>
           I then explored ten concepts in Figma and converged on the simplest defensible version.
-          Two carried the most weight. The first was a causal chain (cause, effect, cost, action),
-          which became how every item explains itself. The second was putting the action list first,
-          so the dashboard leads with what to do instead of what&nbsp;happened.
+          Two carried the most weight. The first making sure every insight had a clear cause, effect, cost, and recommended action.
+          The second was putting the action list first,
+          so the dashboard leads with what to do instead of relying on the user to interpret the data. In order to keep the action list focused and useful, we needed to be intentional about the insights that were surfaced. 
+          I created a severity model that would help us decide which insights to surface based on the impact they had on the fleet.
         </p>
       </CaseSection>
 
@@ -278,8 +274,9 @@ export default function FleetworthyCaseStudyPage() {
           severity based on two inputs: how much of the fleet is affected, and dollars lost per
           vehicle per month. If either crosses its threshold, it escalates into Critical, Action
           Needed or Monitor. Each insight has its own thresholds and time window, plus a freshness
-          indicator so customers know how current the data is. A fleet manager opens the dashboard
-          and sees what to do&nbsp;first.
+          indicator so customers know how current the data is. Below the list, a fleet events map
+          and spend summary show where alert-triggered activity is happening. A fleet manager opens
+          the dashboard and sees what to do first, and where to look&nbsp;next.
         </p>
         <p>
           <strong>Every action explains itself.</strong> Each item follows the causal chain: what
@@ -287,16 +284,9 @@ export default function FleetworthyCaseStudyPage() {
           trust a score. They can read the reasoning and judge&nbsp;it.
         </p>
         <p>
-          <strong>AI starts the work, the user finishes it.</strong> Simple actions happen inline in
-          the assistant. Complex ones open a guided flow where AI sets up the task and the user
-          completes it. AI does not sit in a separate chat window waiting to be remembered. It is
-          how the action list gets built, explained and acted&nbsp;on.
-        </p>
-        <p>
           <strong>The details that build trust.</strong> Dismiss, ignore and snooze states for every
           insight, so the list stays useful instead of becoming noise. A state model for every
-          module and row. A rule that the map only shows alert-triggered events. And I caught a
-          summary stat that was mixing tracked data with alert-triggered data before it&nbsp;shipped.
+          module and row. A rule that the map only shows alert-triggered&nbsp;events.
         </p>
       </CaseSection>
 
@@ -315,10 +305,9 @@ export default function FleetworthyCaseStudyPage() {
           stacked
         />
         <p>
-          Once data from every service sat on one vehicle record, the dashboard exposed customers on
-          one service with clear signals they needed another, like plate-toll vehicles running
-          bypass routes without a subscription. Before, those signals lived in portals nobody
-          compared. Sales reviewed and qualified every&nbsp;lead.
+          Unifying every product into one Command Center let us surface the full suite in context,
+          with smartly placed upsells where a fleet was already feeling the gap. That exposure
+          turned into 700+ sales-qualified leads. 
         </p>
         <p>
           <strong>A severity model the platform was built on.</strong> Every insight now escalates
