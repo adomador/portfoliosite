@@ -69,9 +69,9 @@ export const PROJECTS: Project[] = [
     id: 'triumph',
     company: 'Triumph',
     logo: '/work/TriumphFAV2.svg',
-    scope: 'End-to-end design & research',
+    scope: 'Research & design',
     summary:
-      'Owned the full product & dev lifecycle: discovery and research, interaction design, and the details that survive contact with real users.',
+      'Research and design for a support tool that cut agent handle time by up to 49%. Shadowed agents, tested prototypes, shipped in one quarter.',
     href: '/work/triumph',
     visual: {
       src: '/work/Triumph.png',

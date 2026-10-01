@@ -138,28 +138,60 @@ export function CasePlaceholder({
   label,
   caption,
   tall,
+  alt,
 }: {
   label: string
   caption?: string
   tall?: boolean
+  /** Describes the image that will replace this placeholder. */
+  alt?: string
 }) {
   return (
     <CaseFigure caption={caption}>
-      <div className={`${styles.placeholder} ${tall ? styles.placeholderTall : ''}`}>
+      <div
+        className={`${styles.placeholder} ${tall ? styles.placeholderTall : ''}`}
+        role={alt ? 'img' : undefined}
+        aria-label={alt}
+      >
         <span>{label}</span>
       </div>
     </CaseFigure>
   )
 }
 
-export type Stat = { value: string; label: string }
+export type Stat = {
+  value: string
+  label: string
+  /** When the value was measured. Shown under the value in before/after stats. */
+  when?: string
+  before?: { value: string; when: string }
+}
 
-export function CaseStats({ stats }: { stats: readonly Stat[] }) {
+export function CaseStats({ stats, stacked }: { stats: readonly Stat[]; stacked?: boolean }) {
   return (
-    <div className={styles.stats}>
+    <div className={stacked ? `${styles.stats} ${styles.statsStacked}` : styles.stats}>
       {stats.map((stat) => (
         <div key={stat.label} className={styles.stat}>
-          <div className={styles.statValue}>{stat.value}</div>
+          {stat.before ? (
+            <div className={styles.statCompare}>
+              <div className={styles.statPoint}>
+                <span className={`${styles.statValue} ${styles.statBefore}`}>
+                  {stat.before.value}
+                </span>
+                <span className={styles.statWhen}>{stat.before.when}</span>
+              </div>
+              <span className={styles.statArrow} aria-hidden="true">
+                →
+              </span>
+              <span className={styles.srOnly}>to</span>
+              <div className={styles.statPoint}>
+                <span className={styles.statValue}>{stat.value}</span>
+                {stat.when && <span className={styles.statWhen}>{stat.when}</span>}
+              </div>
+            </div>
+          ) : (
+            <div className={styles.statValue}>{stat.value}</div>
+          )}
           <div className={styles.statLabel}>{stat.label}</div>
         </div>
       ))}
