@@ -69,8 +69,9 @@ export const PROJECTS: Project[] = [
     id: 'fleetworthy',
     company: 'Fleetworthy',
     logo: '/work/FW.svg',
-    scope: 'Design, Research, Strategy',
-    summary: 'Unifying a suite of powerful, but siloed, software products for fleets that want to win more business.',
+    scope: 'Research & product design',
+    summary:
+      'Turned a merged dashboard into a ranked list of actions for fleet managers, and surfaced 700+ sales-qualified upsell leads.',
     href: '/work/fleetworthy',
     visual: {
       src: '/work/Fleetworthy.png',

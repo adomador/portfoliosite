@@ -179,17 +179,42 @@
   max-width: 680px;
 }
 
-.body p {
+.body p,
+.body li {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--cs-ink-2);
   text-wrap: pretty;
 }
 
+.body strong {
+  font-weight: 500;
+  color: var(--cs-ink);
+}
+
 .body p + p,
 .body p + .stats,
-.body .stats + p {
+.body .stats + p,
+.body p + ul,
+.body p + ol,
+.body ul + p,
+.body ol + p {
   margin-top: 28px;
+}
+
+.body ul,
+.body ol {
+  display: grid;
+  gap: 12px;
+  padding-left: 1.25em;
+}
+
+.body ul {
+  list-style: disc;
+}
+
+.body ol {
+  list-style: decimal;
 }
 
 /* Impact stats */
@@ -271,7 +296,7 @@
 
 .moreGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   margin-top: 20px;
 }
