@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { TROCHI_COOKIE, accessToken } from '@/lib/caseStudyAccess'
+import { TROCHI_COOKIE, accessToken, caseStudyPassword } from '@/lib/caseStudyAccess'
 
 const LOCKED: Record<string, string> = {
   '/work/trochi': '/locked/trochi',
@@ -7,7 +7,7 @@ const LOCKED: Record<string, string> = {
 }
 
 export async function middleware(request: NextRequest) {
-  const password = process.env.TROCHI_PASSWORD
+  const password = caseStudyPassword()
   const cookie = request.cookies.get(TROCHI_COOKIE)?.value
 
   if (password && cookie && cookie === (await accessToken(password))) {
