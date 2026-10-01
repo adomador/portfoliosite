@@ -1,3 +1,4 @@
+/** Shared unlock cookie for password-gated case studies (Trochi, Fleetworthy). */
 export const TROCHI_COOKIE = 'trochi_access'
 
 /** Cookie value is a hash of the password, so the password itself never leaves the server. */
