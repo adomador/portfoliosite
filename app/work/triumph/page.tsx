@@ -51,19 +51,19 @@ const APPROACH_SCREENS = [
 
 const SOLUTION_SCREENS = [
   {
-    src: `${DIR}/global-search-hifi.png`,
-    alt: 'High fidelity Global Search results with invoice, payor and payee, and factoring and wallet cards in a 50/50 layout',
-    caption: 'High fidelity cards split 50/50 to match the existing grid.',
+    src: `${DIR}/search-entry.png`,
+    alt: 'Global Search empty state with Carrier, Invoice or Load, and Broker fields, and a prompt to fill in two fields to search',
+    caption: 'Search starts empty. Two fields are enough to look up a record.',
   },
   {
-    src: `${DIR}/tooltip-iteration.png`,
-    alt: 'Before and after of the invoice copy icon, with a tooltip added so one-click copy is discoverable',
-    caption: 'Tooltips made one-click copy discoverable.',
+    src: `${DIR}/possible-results.png`,
+    alt: 'Invoice results table listing multiple paid invoices for a broker, with carrier, reference, amount and status columns',
+    caption: 'When a search matches more than one invoice, agents get a scannable results list.',
   },
   {
-    src: `${DIR}/link-weight-iteration.png`,
-    alt: 'Before and after of the jump links to related profiles, with heavier link text',
-    caption: 'Heavier link text made the jump links easier to find.',
+    src: `${DIR}/search-results.png`,
+    alt: 'Single invoice detail view with Paid status, payor and payee relationship, entity status, and net amount on one screen',
+    caption: 'Selecting a row opens the full picture: invoice, relationship and status, no profile hopping.',
   },
 ] as const
 
@@ -225,12 +225,11 @@ export default function TriumphCaseStudyPage() {
       <CaseSection label="Solution">
         <p>
           Global Search lets an agent look up a carrier, invoice or load, or broker from one place.
-          Results show invoice details, the payor and payee relationship, and factoring and wallet
-          status, with links to jump to each related profile and one-click copy for invoice
-          details. In high fidelity, I split the cards 50/50 to match the existing grid and give the
-          content room to&nbsp;breathe.
+          Two fields are enough to run a search. When more than one record matches, a results table
+          lists every invoice with status and amount so the agent can pick the right one. Opening a
+          row puts invoice details, the payor and payee relationship, and factoring status on one
+          screen, with links out to each related&nbsp;profile.
         </p>
-      
       </CaseSection>
 
       <CaseFigure>
@@ -238,7 +237,7 @@ export default function TriumphCaseStudyPage() {
           slides={solution.slides}
           ratio={solution.ratio}
           label="Triumph Global Search screens"
-          tone="dark"
+          tone="light"
         />
       </CaseFigure>
 
