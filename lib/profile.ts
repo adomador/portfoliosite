@@ -116,7 +116,7 @@ export const PROJECTS: Project[] = [
     logo: '/work/FW.svg',
     scope: 'Product design',
     summary: 'Unifying a suite of powerful, but siloed, software products for fleets that want to win more business.',
-    status: 'Case study in progress',
+    href: '/work/fleetworthy',
     visual: {
       src: '/work/Fleetworthy.png',
       alt: 'Fleetworthy command center showing fleet health, critical action items with estimated impact, and a map of fleet events',
