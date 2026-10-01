@@ -125,12 +125,16 @@ function pngSize(src: string): { width: number; height: number } | null {
 function toSlides(screens: readonly { src: string; alt: string; caption: string }[]) {
   const sizes = screens.map((s) => pngSize(s.src))
   const first = sizes.find(Boolean)
-  const slides: CaseSlide[] = screens.map((s, i) => ({
-    src: sizes[i] ? s.src : undefined,
-    alt: s.alt,
-    caption: s.caption,
-    placeholder: path.basename(s.src),
-  }))
+  const slides: CaseSlide[] = screens.map((s, i) => {
+    const size = sizes[i]
+    return {
+      src: size ? s.src : undefined,
+      alt: s.alt,
+      caption: s.caption,
+      placeholder: path.basename(s.src),
+      ratio: size ? `${size.width} / ${size.height}` : undefined,
+    }
+  })
   return { slides, ratio: first ? `${first.width} / ${first.height}` : '16 / 10' }
 }
 
@@ -214,7 +218,7 @@ export default function TriumphCaseStudyPage() {
           slides={approach.slides}
           ratio={approach.ratio}
           label="Triumph research artifacts"
-          tone="dark"
+          tone="light"
         />
       </CaseFigure>
 

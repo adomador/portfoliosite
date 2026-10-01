@@ -11,6 +11,7 @@
   border: 1px solid var(--cs-rule);
   border-radius: 12px;
   background: #f6f7f9;
+  transition: aspect-ratio 420ms var(--ease-out-quart);
 }
 
 .frameDark {

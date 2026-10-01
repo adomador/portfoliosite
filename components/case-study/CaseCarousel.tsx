@@ -11,6 +11,8 @@ export type CaseSlide = {
   caption: string
   /** Label shown when `src` is missing. Defaults to `alt`. */
   placeholder?: string
+  /** Per-slide aspect ratio (e.g. "16 / 9"). Falls back to the carousel `ratio`. */
+  ratio?: string
 }
 
 export default function CaseCarousel({
@@ -31,18 +33,19 @@ export default function CaseCarousel({
   const slide = slides[index]
   const go = (next: number) => setIndex((next + slides.length) % slides.length)
   const canExpand = Boolean(slide.src && onExpand)
+  const frameRatio = slide.ratio ?? ratio
 
   return (
     <div className={styles.carousel} role="group" aria-roledescription="carousel" aria-label={label}>
       <button
         type="button"
         className={`${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`}
-        style={{ aspectRatio: ratio }}
+        style={{ aspectRatio: frameRatio }}
         onClick={() => {
           if (slide.src && onExpand) onExpand({ src: slide.src, alt: slide.alt })
         }}
         disabled={!canExpand}
-        aria-label={canExpand ? `${slide.alt} — click to expand` : slide.alt}
+        aria-label={canExpand ? `${slide.alt}. Click to expand` : slide.alt}
       >
         {slides.map((s, i) =>
           s.src ? (
