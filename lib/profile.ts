@@ -74,10 +74,10 @@ export const PROJECTS: Project[] = [
       'Research and design for a support tool that cut agent handle time by up to 49%. Shadowed agents, tested prototypes, shipped in one quarter.',
     href: '/work/triumph',
     visual: {
-      src: '/work/Triumph.png',
-      alt: 'TriumphPay Insights dashboard showing payment volume by QuickPay, Standard Pay, and Factored, plus customer support metrics',
-      width: 3808,
-      height: 2560,
+      src: '/work/triumph/hero-global-search.png',
+      alt: "TriumphPay Global Search showing invoice 117885 with Approved status, payor and payee relationship, and carrier factoring and wallet status",
+      width: 3762,
+      height: 2676,
     },
   },
   {

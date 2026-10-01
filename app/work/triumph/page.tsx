@@ -230,12 +230,7 @@ export default function TriumphCaseStudyPage() {
           details. In high fidelity, I split the cards 50/50 to match the existing grid and give the
           content room to&nbsp;breathe.
         </p>
-        <p>
-          I tested a prototype in Maze with four agents, two senior and two newer, so tribal
-          knowledge would not skew the results. Two problems surfaced: the copy icon was not
-          discoverable, and two of four testers took a longer path to the jump links. I added
-          tooltips and increased link text&nbsp;weight.
-        </p>
+      
       </CaseSection>
 
       <CaseFigure>
