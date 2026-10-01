@@ -19,15 +19,15 @@
 
 .visual {
   margin: clamp(30px, 4.4vh, 52px) 0 clamp(2px, 0.6vh, 8px);
-  /* The PNGs already ship with rounded corners + transparent pixels outside
-     them. A second border-radius / translucent fill here shows the page
-     through those corners as a "gap." Let the image do the framing. */
+  overflow: hidden;
+  border-radius: 12px;
 }
 
 .visualImg {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 12px;
 }
 
 .row {

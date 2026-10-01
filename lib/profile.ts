@@ -66,6 +66,21 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
+    id: 'fleetworthy',
+    company: 'Fleetworthy',
+    logo: '/work/FW.svg',
+    scope: 'Research & product design',
+    summary:
+      'Turned a merged dashboard into a ranked list of actions for fleet managers, and surfaced 700+ sales-qualified upsell leads.',
+    href: '/work/fleetworthy',
+    visual: {
+      src: '/work/fleetworthy/hero-command-center.png',
+      alt: 'Fleetworthy Command Center showing a ranked list of action items with severity, estimated impact, and fleet-at-a-glance metrics',
+      width: 3000,
+      height: 1687,
+    },
+  },
+  {
     id: 'triumph',
     company: 'Triumph',
     logo: '/work/TriumphFAV2.svg',
@@ -106,20 +121,6 @@ export const PROJECTS: Project[] = [
     visual: {
       src: '/work/diezl-app.png',
       alt: 'Diezl load profitability screen showing a Dallas to Chicago route with estimated profit and per-mile breakdown',
-      width: 3808,
-      height: 2560,
-    },
-  },
-  {
-    id: 'fleetworthy',
-    company: 'Fleetworthy',
-    logo: '/work/FW.svg',
-    scope: 'Product design',
-    summary: 'Unifying a suite of powerful, but siloed, software products for fleets that want to win more business.',
-    status: 'Case study in progress',
-    visual: {
-      src: '/work/Fleetworthy.png',
-      alt: 'Fleetworthy command center showing fleet health, critical action items with estimated impact, and a map of fleet events',
       width: 3808,
       height: 2560,
     },

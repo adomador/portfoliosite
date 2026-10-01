@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { TROCHI_COOKIE, accessToken } from '@/lib/caseStudyAccess'
 
+const LOCKED: Record<string, string> = {
+  '/work/trochi': '/locked/trochi',
+  '/work/fleetworthy': '/locked/fleetworthy',
+}
+
 export async function middleware(request: NextRequest) {
   const password = process.env.TROCHI_PASSWORD
   const cookie = request.cookies.get(TROCHI_COOKIE)?.value
@@ -9,13 +14,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  if (request.nextUrl.pathname === '/work/trochi') {
-    return NextResponse.rewrite(new URL(`/locked/trochi${request.nextUrl.search}`, request.url))
+  const path = request.nextUrl.pathname.replace(/\/$/, '') || '/'
+  const locked = LOCKED[path]
+  if (locked) {
+    return NextResponse.rewrite(new URL(`${locked}${request.nextUrl.search}`, request.url))
   }
 
   return new NextResponse(null, { status: 401 })
 }
 
 export const config = {
-  matcher: ['/work/trochi', '/work/trochi/:path*'],
+  // Exact page routes only. Do not match /work/fleetworthy/*.png or other public assets.
+  matcher: ['/work/trochi', '/work/fleetworthy'],
 }
