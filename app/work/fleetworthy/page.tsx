@@ -63,7 +63,7 @@ const SOLUTION_SCREENS = [
 
 const META = [
   { label: 'Product', lines: ['Fleetworthy Command Center (V2 dashboard)'] },
-  { label: 'My role', lines: ['Product designer & researcher'] },
+  { label: 'My role', lines: ['Senior Product Designer'] },
   {
     label: 'Impact',
     lines: [
