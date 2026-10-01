@@ -28,14 +28,21 @@ const DIR = '/work/fleetworthy'
 
 const HERO = {
   src: `${DIR}/hero-command-center.png`,
-  alt: 'Fleetworthy Command Center showing fleet health, a ranked list of critical action items with estimated impact, and a map of fleet events',
+  alt: 'Fleetworthy Command Center showing a ranked list of action items with severity, estimated impact, and fleet-at-a-glance metrics',
 }
 
-const PROBLEM_IMAGE = {
-  src: `${DIR}/v1-vs-v2.png`,
-  alt: 'Side by side of the V1 merged-data dashboard and the V2 ranked action list Command Center',
-  caption: 'V1 put every product on one screen. V2 leads with what to do next.',
-}
+const BEFORE_AFTER = [
+  {
+    src: `${DIR}/v1.png`,
+    alt: 'V1 Command Center: a merged dashboard of product metrics and charts with no clear next steps',
+    label: 'V1',
+  },
+  {
+    src: `${DIR}/v2.png`,
+    alt: 'V2 Command Center: a ranked list of Critical, Action Needed and Monitor items with estimated impact',
+    label: 'V2',
+  },
+] as const
 
 const APPROACH_IMAGE = {
   src: `${DIR}/causal-chain-concept.png`,
@@ -111,6 +118,44 @@ function CaseImage({
   )
 }
 
+function BeforeAfter({
+  images,
+  caption,
+}: {
+  images: readonly { src: string; alt: string; label: string }[]
+  caption: string
+}) {
+  return (
+    <CaseFigure caption={caption}>
+      <div className={styles.compare}>
+        {images.map((image) => {
+          const size = pngSize(image.src)
+          return (
+            <div key={image.src} className={styles.compareItem}>
+              <span className={styles.compareLabel}>{image.label}</span>
+              {size ? (
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={size.width}
+                  height={size.height}
+                  quality={90}
+                  sizes="(max-width: 760px) 100vw, 500px"
+                  className={styles.cover}
+                />
+              ) : (
+                <div className={styles.comparePlaceholder} role="img" aria-label={image.alt}>
+                  {path.basename(image.src)}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </CaseFigure>
+  )
+}
+
 export default function FleetworthyCaseStudyPage() {
   const solution = toSlides(SOLUTION_SCREENS)
 
@@ -171,10 +216,9 @@ export default function FleetworthyCaseStudyPage() {
         </p>
       </CaseSection>
 
-      <CaseImage
-        src={PROBLEM_IMAGE.src}
-        alt={PROBLEM_IMAGE.alt}
-        caption={PROBLEM_IMAGE.caption}
+      <BeforeAfter
+        images={BEFORE_AFTER}
+        caption="V1 put every product on one screen. V2 leads with what to do next."
       />
 
       <CaseSection label="Approach">
@@ -229,12 +273,6 @@ export default function FleetworthyCaseStudyPage() {
       />
 
       <CaseSection label="Solution">
-        <p>
-          <strong>One vehicle record connecting every service.</strong> Customers map their vehicles
-          once, and every product&apos;s data attaches to the same truck. That makes cross-service
-          insights possible, and it gives customers a reason to finish mapping: partial mapping
-          shows them what they are&nbsp;missing.
-        </p>
         <p>
           <strong>A ranked list of actions, not a wall of metrics.</strong> Each insight gets a
           severity based on two inputs: how much of the fleet is affected, and dollars lost per

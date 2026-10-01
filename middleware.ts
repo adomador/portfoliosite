@@ -24,10 +24,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/work/trochi',
-    '/work/trochi/:path*',
-    '/work/fleetworthy',
-    '/work/fleetworthy/:path*',
-  ],
+  // Exact page routes only. Do not match /work/fleetworthy/*.png or other public assets.
+  matcher: ['/work/trochi', '/work/fleetworthy'],
 }

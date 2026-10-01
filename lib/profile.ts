@@ -74,10 +74,10 @@ export const PROJECTS: Project[] = [
       'Turned a merged dashboard into a ranked list of actions for fleet managers, and surfaced 700+ sales-qualified upsell leads.',
     href: '/work/fleetworthy',
     visual: {
-      src: '/work/Fleetworthy.png',
-      alt: 'Fleetworthy command center showing fleet health, critical action items with estimated impact, and a map of fleet events',
-      width: 3808,
-      height: 2560,
+      src: '/work/fleetworthy/hero-command-center.png',
+      alt: 'Fleetworthy Command Center showing a ranked list of action items with severity, estimated impact, and fleet-at-a-glance metrics',
+      width: 3000,
+      height: 1687,
     },
   },
   {
