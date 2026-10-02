@@ -76,6 +76,7 @@ const META = [
       'SLA compliance 90% to 97%',
       'Chat handle time 8:52 to 4:32',
       'Phone handle time 4:10 to 2:47',
+      '7% operational cost reduction',
     ],
   },
 ] as const
@@ -98,6 +99,10 @@ const STATS = [
     before: { value: '4:10', when: "Apr '23" },
     value: '2:47',
     when: "Jun '23",
+  },
+  {
+    label: 'Operational cost reduction',
+    value: '7%',
   },
 ] as const
 

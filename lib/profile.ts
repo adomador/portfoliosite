@@ -41,9 +41,9 @@ export const ENDORSEMENTS = [
 
 /** Hero outcome metrics — keep labels short; the number does the talking. */
 export const METRICS = [
-  { value: '127%', label: 'Conversion lift' },
-  { value: '$530K', label: 'ARR retained' },
-  { value: '7%', label: 'Cost reduction' },
+  { value: '700+', label: 'Qualified upsell leads' },
+  { value: '49%', label: 'Chat handle time cut' },
+  { value: '7%', label: 'Operational cost reduction' },
 ] as const
 
 export type Project = {
