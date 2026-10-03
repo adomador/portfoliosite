@@ -13,30 +13,118 @@
 }
 
 /* ---------------------------------------------------------------
-   The sun. Sits high in the hero, sinks past the horizon around
-   two thirds down the page, and reddens on the way out.
+   Night. One layer over the day sky whose opacity is the animated
+   --night property, so the drop is a single decisive event rather
+   than something you scrub through.
+   --------------------------------------------------------------- */
+.nightSky {
+  position: absolute;
+  inset: 0;
+  background: var(--surface-night);
+  opacity: var(--night);
+}
+
+/* Two star fields with mismatched tile sizes so the repeat never reads. */
+.stars,
+.stars::after {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+}
+
+.stars {
+  opacity: 0;
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 80%);
+  background-image:
+    radial-gradient(1px 1px at 24px 38px, rgba(255, 246, 226, 0.9), transparent),
+    radial-gradient(1px 1px at 142px 96px, rgba(255, 246, 226, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 268px 214px, rgba(255, 238, 206, 0.85), transparent),
+    radial-gradient(1px 1px at 61px 281px, rgba(255, 246, 226, 0.6), transparent),
+    radial-gradient(1px 1px at 318px 22px, rgba(255, 246, 226, 0.75), transparent),
+    radial-gradient(1px 1px at 197px 330px, rgba(255, 246, 226, 0.5), transparent);
+  background-size: 347px 347px;
+  transition: opacity 300ms ease;
+}
+
+.stars::after {
+  content: '';
+  background-image:
+    radial-gradient(1px 1px at 88px 152px, rgba(255, 246, 226, 0.55), transparent),
+    radial-gradient(2px 2px at 402px 64px, rgba(255, 232, 196, 0.9), transparent),
+    radial-gradient(1px 1px at 236px 418px, rgba(255, 246, 226, 0.6), transparent),
+    radial-gradient(1px 1px at 470px 301px, rgba(255, 246, 226, 0.45), transparent);
+  background-size: 523px 523px;
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+:global(:root[data-phase='night']) .stars {
+  opacity: 0.7;
+  transition: opacity 2.4s var(--ease-out-quart) 900ms;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------------------------------------------------------------
+   The sun. The outer element follows scroll (sinking a little as
+   golden hour builds); the inner body is what falls, so its
+   transition never fights the per-frame scroll writes.
    --------------------------------------------------------------- */
 .sun {
   position: absolute;
   left: 50%;
-  top: calc(-34vh + var(--p) * 260vh);
+  top: calc(-34vh + var(--dusk) * 22vh);
   width: clamp(420px, 78vw, 1180px);
   aspect-ratio: 1;
-  transform: translateX(-50%) scale(calc(1 + var(--p) * 1.1));
-  opacity: clamp(0, calc(1.03 - var(--p) * 4), 1);
-  will-change: top, transform, opacity;
+  transform: translateX(-50%) scale(calc(1 + var(--dusk) * 0.14));
+  will-change: top, transform;
+}
+
+.sunBody {
+  position: absolute;
+  inset: 0;
+}
+
+/* Rising back: floods in fast, settles slowly. */
+:global(:root.nightfall-ready) .sunBody {
+  transition:
+    transform 1200ms var(--ease-out-expo),
+    opacity 400ms ease,
+    filter 1200ms ease;
+}
+
+/* Falling: accelerates like it has weight, reddens, and is gone on impact. */
+:global(:root[data-phase='night']) .sunBody {
+  transform: translateY(155vh) scale(0.86);
+  opacity: 0;
+  filter: hue-rotate(-16deg) saturate(1.9);
+}
+
+:global(:root.nightfall-ready[data-phase='night']) .sunBody {
+  transition:
+    transform 680ms cubic-bezier(0.5, 0, 0.75, 0),
+    opacity 140ms linear 560ms,
+    filter 420ms ease-in;
 }
 
 /* Outer bloom — this is what tints the whole upper page warm. */
-.sun::before {
+.sunBody::before {
   content: '';
   position: absolute;
   inset: -30%;
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(255, 214, 138, 0.22) 0%,
-    rgba(233, 168, 88, 0.12) 26%,
+    rgba(255, 214, 138, calc(0.22 + var(--dusk) * 0.08)) 0%,
+    rgba(233, 168, 88, calc(0.12 + var(--dusk) * 0.06)) 26%,
     rgba(196, 108, 62, 0.05) 48%,
     transparent 70%
   );
@@ -72,8 +160,8 @@
 }
 
 /* ---------------------------------------------------------------
-   Horizon haze — a warm band low in the viewport that peaks during
-   the dusk hand-off, then burns off into night.
+   Horizon haze — a warm band low in the viewport that thickens as
+   golden hour builds. The night sky covers it after the drop.
    --------------------------------------------------------------- */
 .haze {
   position: absolute;
@@ -84,8 +172,50 @@
     rgba(178, 92, 48, 0.14) 14%,
     transparent 42%
   );
-  opacity: clamp(0, calc(var(--p) * 8 * (1.1 - var(--p) * 3.4)), 1);
+  opacity: calc(var(--dusk) * 0.85);
   mix-blend-mode: multiply;
+}
+
+/* ---------------------------------------------------------------
+   Impact. The last light of the sun splashes up off the horizon
+   the instant it goes under, then dies.
+   --------------------------------------------------------------- */
+.flare {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 75% 42% at 50% 106%,
+      rgba(255, 168, 84, 0.62) 0%,
+      rgba(222, 92, 44, 0.3) 40%,
+      transparent 72%
+    ),
+    linear-gradient(to top, rgba(214, 96, 46, 0.22) 0%, transparent 22%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform-origin: 50% 100%;
+}
+
+:global(:root.nightfall-drop) .flare {
+  animation: flare 1800ms both;
+}
+
+@keyframes flare {
+  0%,
+  34% {
+    opacity: 0;
+    transform: scaleY(0.6);
+    animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  40% {
+    opacity: 1;
+    transform: scaleY(1.18);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
 }
 
 /* Constant top-to-bottom falloff so the viewport always has a light source. */
@@ -96,11 +226,12 @@
   opacity: calc(0.35 + var(--p) * 0.65);
 }
 
+/* Creeps in through golden hour, then closes hard with the night. */
 .vignette {
   position: absolute;
   inset: 0;
   background: radial-gradient(ellipse 120% 90% at 50% 42%, transparent 42%, rgba(0, 0, 0, 0.62) 100%);
-  opacity: clamp(0.12, calc(0.12 + var(--p) * 1.5), 0.85);
+  opacity: calc(0.12 + var(--dusk) * 0.16 + var(--night) * 0.57);
 }
 
 /* Film grain — keeps the large flat gradients from banding. */
@@ -125,7 +256,17 @@
 
 @media (prefers-reduced-motion: reduce) {
   .grain,
-  .sunCore {
+  .sunCore,
+  .stars::after {
+    animation: none;
+  }
+
+  /* Keep the colour drop, lose the movement. */
+  :global(:root[data-phase='night']) .sunBody {
+    transform: none;
+  }
+
+  :global(:root.nightfall-drop) .flare {
     animation: none;
   }
 }

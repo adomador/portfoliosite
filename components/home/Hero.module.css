@@ -8,8 +8,8 @@
   padding-block: clamp(120px, 18vh, 200px) clamp(80px, 12vh, 140px);
   text-align: left;
 
-  /* Gone by the time the palette flips, so the hand-off happens on a bare screen. */
-  opacity: clamp(0, calc(1.04 - var(--p) * 8.2), 1);
+  /* Gone by the time the sun drops, so the hand-off happens on a bare sky. */
+  opacity: clamp(0, calc(1.5 - var(--dusk) * 1.5), 1);
   transform: translateY(calc(var(--p) * -80px));
   will-change: opacity, transform;
 }
