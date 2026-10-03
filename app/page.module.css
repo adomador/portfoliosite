@@ -2,3 +2,35 @@
   position: relative;
   z-index: 2;
 }
+
+/* The hit when the sun goes under: a short dip and a damped rebound. */
+:global(:root.nightfall-drop) .main {
+  animation: impact 820ms 640ms both;
+}
+
+@keyframes impact {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  14% {
+    transform: translateY(9px);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1);
+  }
+  42% {
+    transform: translateY(-3px);
+    animation-timing-function: ease-in-out;
+  }
+  70% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(:root.nightfall-drop) .main {
+    animation: none;
+  }
+}

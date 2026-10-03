@@ -5,6 +5,11 @@
    a custom property is just a string and jumps instantly, which is
    what makes the day/night hand-off look broken.
    -------------------------------------------------------------- */
+@property --night {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
 @property --ink {
   syntax: '<color>';
   inherits: true;
@@ -59,9 +64,12 @@
   --night: #0a0908;
   --parchment: #f2e9d9;
 
-  /* Scroll progress + surface colour, written every frame by NightfallProvider. */
+  /* Scroll progress + surface colours, written every frame by NightfallProvider. */
   --p: 0;
+  --dusk: 0;
   --surface: #f2e9d9;
+  --surface-night: #1e1612;
+  --night: 0;
 
   /* Daylight ink. */
   --ink: #14100d;
@@ -94,8 +102,9 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Nightfall. Everything readable swaps together, in half a second. */
+/* Nightfall. Everything readable swaps together with the sky. */
 :root[data-phase='night'] {
+  --night: 1;
   --ink: #f7f2e8;
   --ink-2: #b9b0a2;
   --ink-3: #8a8175;
@@ -107,12 +116,17 @@
 }
 
 /* Added a beat after mount so a deep link doesn't fade in from daylight.
-   The easing matters more than the duration: a cross-fade between dark and
-   light ink is illegible at its midpoint, so this curve sprints through the
-   middle and eases at both ends. Roughly 50ms is spent in the muddy zone. */
+   The ink curve sprints through the middle because a dark/light cross-fade is
+   illegible at its midpoint. Its delay is tuned per direction so that midpoint
+   lands when the sky itself is half dark:
+   - Falling: the sky holds for a beat as the sun starts to drop, then slams
+     shut in under half a second. Ink crosses over ~440ms in.
+   - Rising: daylight floods back fast and settles slowly. Ink crosses ~160ms in. */
 :root.nightfall-ready {
-  --ink-swap: 280ms cubic-bezier(0.85, 0, 0.15, 1);
+  --sky-swap: 900ms var(--ease-out-quart);
+  --ink-swap: 280ms cubic-bezier(0.85, 0, 0.15, 1) 20ms;
   transition:
+    --night var(--sky-swap),
     --ink var(--ink-swap),
     --ink-2 var(--ink-swap),
     --ink-3 var(--ink-swap),
@@ -121,6 +135,11 @@
     --accent var(--ink-swap),
     --glass var(--ink-swap),
     --glass-border var(--ink-swap);
+}
+
+:root.nightfall-ready[data-phase='night'] {
+  --sky-swap: 480ms cubic-bezier(0.7, 0, 0.2, 1) 160ms;
+  --ink-swap: 280ms cubic-bezier(0.85, 0, 0.15, 1) 300ms;
 }
 
 * {
