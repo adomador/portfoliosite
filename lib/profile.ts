@@ -4,7 +4,7 @@
  */
 
 export const NAME = 'Alfredo Domador'
-export const ROLE = 'Product Designer & Builder'
+export const ROLE = 'Senior Product Designer & Builder'
 export const LOCATION = 'Pennsylvania'
 export const EMAIL = 'alfredo.domador13@gmail.com'
 export const LINKEDIN = 'https://www.linkedin.com/in/adomador13/'
