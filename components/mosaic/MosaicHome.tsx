@@ -16,13 +16,15 @@ import {
   type MosaicNode,
   type ProjectNode,
 } from '@/src/data/mosaic'
-import { MosaicEngine, type ActiveFrame } from './engine'
+import { MosaicEngine, type ActiveFrame, type PanelFrame } from './engine'
 import AboutPanel from './AboutPanel'
+import ProjectPanel from './ProjectPanel'
 import styles from './Mosaic.module.css'
 
 const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
 const FADE_MS = 380
 const HINT_DELAY_MS = 3200
+const PRIME_MS = 2400
 
 const NODE_BY_ID = new Map(MOSAIC_NODES.map((n) => [n.id, n]))
 
@@ -69,8 +71,13 @@ export default function MosaicHome() {
   const cardSize = useRef({ w: 0, h: 0 })
   const copyTimer = useRef<ReturnType<typeof setTimeout>>()
   const leaveTimer = useRef<ReturnType<typeof setTimeout>>()
+  const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const panelLead = useRef<string | null>(null)
 
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [primed, setPrimed] = useState(false)
+  const [reduced, setReduced] = useState(false)
   const [cardId, setCardId] = useState<string | null>(null)
   const [pinnedId, setPinnedId] = useState<string | null>(null)
   const [sheetId, setSheetId] = useState<string | null>(null)
@@ -150,6 +157,7 @@ export default function MosaicHome() {
     stage.appendChild(canvas)
 
     const reduced = prefersReducedMotion()
+    setReduced(reduced)
     let engine: MosaicEngine
     try {
       engine = new MosaicEngine(canvas, stage, {
@@ -165,6 +173,11 @@ export default function MosaicHome() {
           onNodeActivate: (id, type) => handlers.current.onNodeActivate(id, type),
           onEmptyActivate: (type) => handlers.current.onEmptyActivate(type),
           onActiveFrame: (frame) => placeCard(cardRef.current, cardSize.current, frame),
+          onExpandChange: (id) => {
+            setExpandedId(id)
+            if (id) setPrimed(true)
+          },
+          onPanelFrame: (frame) => placePanel(panelRefs.current, panelLead, frame),
         },
       })
     } catch {
@@ -186,9 +199,11 @@ export default function MosaicHome() {
     }
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
+    const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
 
     return () => {
       clearTimeout(hintTimer)
+      clearTimeout(primeTimer)
       engine.destroy()
       canvas.remove()
       engineRef.current = null
@@ -276,7 +291,8 @@ export default function MosaicHome() {
 
   const cardNode = cardId ? NODE_BY_ID.get(cardId) : undefined
   const card = cardNode ? copyFor(cardNode) : null
-  const cardVisible = Boolean(activeId) && !isTouch && !listView && !aboutOpen
+  const cardExpanded = cardNode?.kind === 'project' && expandedId === cardNode.id
+  const cardVisible = Boolean(activeId) && !isTouch && !listView && !aboutOpen && !cardExpanded
   const cardPinned = cardNode?.kind === 'concept' && pinnedId === cardNode.id
   const sheetNode = sheetId ? NODE_BY_ID.get(sheetId) : undefined
   const sheet = sheetNode ? copyFor(sheetNode) : null
@@ -384,6 +400,23 @@ export default function MosaicHome() {
           </section>
         </div>
       </main>
+
+      {!isTouch && (
+        <div className={styles.panels} aria-hidden>
+          {PROJECTS.map((project) => (
+            <ProjectPanel
+              key={project.id}
+              ref={(el) => {
+                panelRefs.current[project.id] = el
+              }}
+              project={project}
+              on={expandedId === project.id && !listView && !aboutOpen}
+              primed={primed}
+              reducedMotion={reduced}
+            />
+          ))}
+        </div>
+      )}
 
       {card && (
         <div
@@ -513,4 +546,25 @@ function placeCard(
   x = Math.max(16, x)
   const y = Math.min(Math.max(84, frame.y - size.h / 2), vh - size.h - 96)
   card.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`
+}
+
+/** Content appears only in the last stretch of the grow, once the frame around it has room. */
+function placePanel(
+  panels: Record<string, HTMLDivElement | null>,
+  lead: { current: string | null },
+  frame: PanelFrame | null
+) {
+  const nextId = frame?.id ?? null
+  if (lead.current && lead.current !== nextId) {
+    const prev = panels[lead.current]
+    if (prev) prev.style.opacity = '0'
+  }
+  lead.current = nextId
+  if (!frame) return
+  const el = panels[frame.id]
+  if (!el) return
+  const reveal = Math.min(1, Math.max(0, (frame.open - 0.72) / 0.28))
+  const lift = (1 - reveal) * 6
+  el.style.transform = `translate3d(${Math.round(frame.x)}px, ${Math.round(frame.y + lift)}px, 0)`
+  el.style.opacity = reveal.toFixed(3)
 }

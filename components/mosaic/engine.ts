@@ -45,9 +45,16 @@ type SimNode = {
   alpha: number
   labelAlpha: number
   labelHalf: number
+  /** Projects only. */
+  color: string | null
+  /** 0 is the resting terminal, 1 is the full panel. */
+  expand: number
 }
 
-type Edge = { a: number; b: number; rest: number; bow: number; hl: number }
+/** `color` is the brand of the project at either end, so traffic reads by system. */
+type Edge = { a: number; b: number; rest: number; bow: number; hl: number; color: string | null }
+
+type Rect = { x: number; y: number; w: number; h: number }
 
 type Pulse = { edge: number; t: number; speed: number; dir: 1 | -1; hot: boolean }
 
@@ -64,11 +71,18 @@ type Palette = {
   crimson: string
 }
 
+/** The panel's settled rect. `open` runs 0 to 1 (eased) as the node grows into it. */
+export type PanelFrame = Rect & { id: string; open: number }
+
 /** `reach` is how far the node and its label extend sideways from `x`. */
 export type ActiveFrame = { x: number; y: number; r: number; reach: number }
 
 export type EngineCallbacks = {
   onActiveChange?: (id: string | null) => void
+  /** The project currently growing into a panel, or null. */
+  onExpandChange?: (id: string | null) => void
+  /** Every frame while any panel is on screen, then once with null. */
+  onPanelFrame?: (frame: PanelFrame | null) => void
   onNodeActivate?: (id: string, pointerType: string) => void
   onEmptyActivate?: (pointerType: string) => void
   onActiveFrame?: (frame: ActiveFrame | null) => void
@@ -81,6 +95,12 @@ export type EngineOptions = {
   reducedMotion: boolean
   callbacks: EngineCallbacks
 }
+
+/** Must match the panel layout in Mosaic.module.css. */
+export const PANEL_W = 372
+export const PANEL_H = 408
+/** Clear space other nodes keep from an open panel: sides, above (their label hangs below), below. */
+const PANEL_CLEAR = { x: 96, top: 78, bottom: 30 }
 
 const COMPACT_MAX = 720
 /** Must match the breakpoint where Mosaic.module.css shows the index on the left. */
@@ -96,6 +116,8 @@ const SLOW_WINDOW_MS = 2000
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 const clamp01 = (n: number) => clamp(n, 0, 1)
 const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4)
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const easeOutBack = (t: number) => {
   const c = 1.25
   return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2)
@@ -164,6 +186,9 @@ export class MosaicEngine {
   private externalRing = false
   private active: number | null = null
   private activeSet = new Set<number>()
+  /** The project growing into a panel. Hover and list-hover only; touch uses the sheet. */
+  private expanded: number | null = null
+  private panelShown = false
 
   private maxPulses = 16
   private ambientCap = Infinity
@@ -291,6 +316,8 @@ export class MosaicEngine {
       alpha: 1,
       labelAlpha: 1,
       labelHalf: 0,
+      color: null,
+      expand: 0,
     }
   }
 
@@ -301,7 +328,10 @@ export class MosaicEngine {
     for (const item of nodes) {
       const n = this.makeNode(item.id, item.kind, item.label, 'tag' in item ? item.tag : '')
       if (item.kind === 'nucleus') n.bloomDelay = 0
-      if (item.kind === 'project') n.bloomDelay = 0.12 + projectIndex++ * 0.07
+      if (item.kind === 'project') {
+        n.bloomDelay = 0.12 + projectIndex++ * 0.07
+        n.color = item.color
+      }
       if (item.kind === 'concept') n.bloomDelay = 0.42 + conceptIndex++ * 0.05
       this.byId.set(n.id, this.nodes.length)
       this.nodes.push(n)
@@ -317,7 +347,8 @@ export class MosaicEngine {
         }
         continue
       }
-      this.edges.push({ a, b, rest: 100, bow: (Math.random() - 0.5) * 0.9, hl: 0 })
+      const color = this.nodes[a].color ?? this.nodes[b].color
+      this.edges.push({ a, b, rest: 100, bow: (Math.random() - 0.5) * 0.9, hl: 0, color })
       this.nodes[a].neighbors.push(b)
       this.nodes[b].neighbors.push(a)
     }
@@ -353,6 +384,7 @@ export class MosaicEngine {
     const w = this.w
     const h = this.h
     this.compact = w < COMPACT_MAX
+    this.syncExpanded()
     const left = w >= INDEX_MIN ? INDEX_INSET : 0
     const top = this.compact ? 168 : 150
     const bottom = this.compact ? 110 : 116
@@ -586,6 +618,10 @@ export class MosaicEngine {
   }
 
   private hitTest(x: number, y: number, slop: number): number | null {
+    if (this.expanded !== null && this.nodes[this.expanded].expand > 0.2) {
+      const r = this.panelBox(this.nodes[this.expanded])
+      if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return this.expanded
+    }
     let best: number | null = null
     let bestD = Infinity
     for (let i = 0; i < this.labeledCount; i++) {
@@ -613,10 +649,48 @@ export class MosaicEngine {
     return { x: n.px - width / 2, y: n.py + n.r + 6, w: width, h: height }
   }
 
+  /** Where a project's panel settles: centred on its resting spot, kept clear of the header and footer. */
+  private panelRect(n: SimNode): Rect {
+    const w = PANEL_W
+    const h = PANEL_H
+    const left = this.w >= INDEX_MIN ? INDEX_INSET + 16 : 16
+    return {
+      x: clamp(n.ax - w / 2, left, this.w - w - 16),
+      y: clamp(n.ay - h / 2, 104, this.h - h - 84),
+      w,
+      h,
+    }
+  }
+
+  /** The box actually drawn: the terminal, eased toward its panel. */
+  private panelBox(n: SimNode): Rect {
+    const from = this.nodeBox(n, 1 + n.focus * 0.06)
+    const to = this.panelRect(n)
+    const t = easeInOutCubic(n.expand)
+    return {
+      x: lerp(from.x, to.x, t),
+      y: lerp(from.y, to.y, t),
+      w: lerp(from.w, to.w, t),
+      h: lerp(from.h, to.h, t),
+    }
+  }
+
+  private syncExpanded() {
+    const a = this.active
+    const roomy = !this.compact && this.h >= PANEL_H + 190
+    const next = a !== null && this.pinned === null && roomy && this.nodes[a].kind === 'project' ? a : null
+    if (next === this.expanded) return
+    this.expanded = next
+    this.opts.callbacks.onExpandChange?.(next === null ? null : this.nodes[next].id)
+  }
+
   private refreshActive() {
     const next = this.pinned ?? this.hover ?? this.external
     this.dirty = true
-    if (next === this.active) return
+    if (next === this.active) {
+      this.syncExpanded()
+      return
+    }
     const prev = this.active
     this.active = next
     this.activeSet = new Set<number>()
@@ -633,8 +707,11 @@ export class MosaicEngine {
         })
         if (!this.opts.reducedMotion) this.burst(next)
       }
+      /* A project sends its own traffic out along every lane it owns. */
+      if (n.kind === 'project' && !this.opts.reducedMotion) this.burst(next)
     }
     if (prev !== next) this.opts.callbacks.onActiveChange?.(next === null ? null : this.nodes[next].id)
+    this.syncExpanded()
   }
 
   private burst(from: number) {
@@ -761,6 +838,34 @@ export class MosaicEngine {
       }
     }
 
+    /* An open panel claims its footprint. Anything inside the clear zone is
+       shoved out the nearest side, so lanes reroute around it. */
+    for (let p = 0; p < labeled; p++) {
+      const owner = nodes[p]
+      if (owner.kind !== 'project' || owner.expand < 0.01) continue
+      const box = this.panelBox(owner)
+      const left = box.x - PANEL_CLEAR.x
+      const right = box.x + box.w + PANEL_CLEAR.x
+      const top = box.y - PANEL_CLEAR.top
+      const bottom = box.y + box.h + PANEL_CLEAR.bottom
+      const strength = 70 * easeInOutCubic(owner.expand)
+      for (let i = 0; i < labeled; i++) {
+        if (i === p) continue
+        const n = nodes[i]
+        if (n.x <= left || n.x >= right || n.y <= top || n.y >= bottom) continue
+        const exits: Array<[number, number, number]> = [
+          [n.x - left, -1, 0],
+          [right - n.x, 1, 0],
+          [n.y - top, 0, -1],
+          [bottom - n.y, 0, 1],
+        ]
+        exits.sort((u, v) => u[0] - v[0])
+        const [depth, ux, uy] = exits[0]
+        fx[i] += (ux * depth * strength) / n.mass
+        fy[i] += (uy * depth * strength) / n.mass
+      }
+    }
+
     const damping = Math.exp(-3.2 * dt)
     for (let i = 0; i < count; i++) {
       const n = nodes[i]
@@ -789,7 +894,7 @@ export class MosaicEngine {
       /* A few pixels of lean, so a route notices the pointer without leaving its lane. */
       let tlx = 0
       let tly = 0
-      if (p.inside && !reduced && leanR > 0 && n.kind !== 'ambient') {
+      if (p.inside && !reduced && leanR > 0 && n.kind !== 'ambient' && n.expand < 0.01) {
         const dx = p.x - n.x
         const dy = p.y - n.y
         const d = Math.hypot(dx, dy)
@@ -812,6 +917,14 @@ export class MosaicEngine {
       if (Math.abs(nf - n.focus) > 0.0005 || Math.abs(nd - n.dim) > 0.0005) changed = true
       n.focus = nf
       n.dim = nd
+
+      if (n.kind === 'project') {
+        const target = this.expanded === i ? 1 : 0
+        const ne = reduced ? target : approach(n.expand, target, target ? 7 : 10, dt)
+        const settled = Math.abs(ne - target) < 0.002 ? target : ne
+        if (settled !== n.expand) changed = true
+        n.expand = settled
+      }
 
       let bloom = 1
       let fade = 1
@@ -1061,6 +1174,7 @@ export class MosaicEngine {
     this.drawRings()
     this.drawNodes()
     this.drawLabels()
+    this.drawPanels()
 
     const activeNode = this.active === null ? null : this.nodes[this.active]
     this.opts.callbacks.onActiveFrame?.(
@@ -1141,7 +1255,7 @@ export class MosaicEngine {
       ctx.stroke()
       if (e.hl > 0.02) {
         ctx.setLineDash([])
-        ctx.strokeStyle = pal.accent
+        ctx.strokeStyle = e.color ?? pal.accent
         ctx.lineWidth = 1.35
         ctx.globalAlpha = e.hl * 0.95
         ctx.stroke()
@@ -1164,8 +1278,12 @@ export class MosaicEngine {
       ctx.save()
       ctx.translate(x, y)
       ctx.rotate(ang)
-      ctx.globalAlpha = Math.min(a.alpha, b.alpha) * (hot ? 1 : 0.5)
-      ctx.fillStyle = hot ? pal.accent : pal.ink
+      const base = Math.min(a.alpha, b.alpha) * (hot ? 1 : 0.6)
+      ctx.fillStyle = e.color ?? pal.accent
+      /* A short wake behind the packet shows which way the load is moving. */
+      ctx.globalAlpha = base * 0.28
+      ctx.fillRect(pulse.dir === 1 ? -22 : 6, -0.75, 16, 1.5)
+      ctx.globalAlpha = base
       ctx.fillRect(-6, -1.5, 12, 3)
       ctx.restore()
     }
@@ -1196,10 +1314,14 @@ export class MosaicEngine {
       const scale = 1 + n.focus * 0.06
       const box = this.nodeBox(n, scale)
       const hot = n.focus > 0.35
+      const tint = n.color ?? pal.accent
+
+      /* An expanding terminal is drawn by drawPanels, above everything else. */
+      if (n.expand > 0.001) continue
 
       ctx.globalAlpha = n.alpha
       ctx.fillStyle = n.kind === 'nucleus' ? pal.bgDeep : pal.bg
-      ctx.strokeStyle = hot ? pal.accent : n.kind === 'concept' ? pal.ink2 : pal.ink
+      ctx.strokeStyle = hot ? tint : n.kind === 'concept' ? pal.ink2 : pal.ink
       ctx.lineWidth = hot ? 1.6 : 1
       this.roundRect(box.x, box.y, box.w, box.h, n.kind === 'concept' ? 1 : 2.5)
       ctx.fill()
@@ -1210,7 +1332,7 @@ export class MosaicEngine {
         this.roundRect(box.x + inset, box.y + inset, box.w - inset * 2, box.h - inset * 2, 1.5)
         ctx.stroke()
       } else if (n.kind === 'project') {
-        ctx.fillStyle = pal.accent
+        ctx.fillStyle = tint
         ctx.globalAlpha = n.alpha * (hot ? 1 : 0.8)
         ctx.fillRect(n.px - 2, n.py - 2, 4, 4)
       } else {
@@ -1228,7 +1350,7 @@ export class MosaicEngine {
         const p = (t - start) / PING_SECONDS
         if (p < 0 || p > 1) continue
         const grow = reduced ? 8 : 3 + easeOutQuart(p) * 18
-        ctx.strokeStyle = pal.accent
+        ctx.strokeStyle = tint
         ctx.lineWidth = 1.15
         ctx.globalAlpha = (1 - p) * 0.75
         this.cornerMarks(n.px, n.py, Math.max(box.w, box.h) / 2 + grow, 7)
@@ -1236,7 +1358,7 @@ export class MosaicEngine {
 
       if (this.externalRing && this.external === i) {
         ctx.save()
-        ctx.strokeStyle = pal.accent
+        ctx.strokeStyle = tint
         ctx.lineWidth = 1.2
         ctx.globalAlpha = 1
         ctx.setLineDash([3, 4])
@@ -1247,6 +1369,62 @@ export class MosaicEngine {
     }
     ctx.setLineDash([])
     ctx.globalAlpha = 1
+  }
+
+  /** Terminals growing into panels. The DOM fills in the content once the frame has room. */
+  private drawPanels() {
+    const ctx = this.ctx
+    const pal = this.palette
+    let lead: SimNode | null = null
+    for (let i = 0; i < this.labeledCount; i++) {
+      const n = this.nodes[i]
+      if (n.kind !== 'project' || n.expand <= 0.001) continue
+      if (!lead || n.expand > lead.expand) lead = n
+      const color = n.color ?? pal.accent
+      const { x, y, w, h } = this.panelBox(n)
+      const open = easeInOutCubic(n.expand)
+
+      ctx.globalAlpha = n.alpha
+      ctx.fillStyle = pal.bg
+      ctx.strokeStyle = color
+      ctx.lineWidth = 1.4
+      this.roundRect(x, y, w, h, lerp(2.5, 3, open))
+      ctx.fill()
+      ctx.stroke()
+
+      /* The terminal's centre square slides to become the panel's port. */
+      ctx.fillStyle = color
+      const px = lerp(n.px, x + 20, open)
+      const py = lerp(n.py, y + 28, open)
+      ctx.fillRect(px - 2, py - 2, 4, 4)
+
+      const arm = lerp(4, 12, open)
+      const gap = lerp(3, 7, open)
+      ctx.beginPath()
+      const corners: Array<[number, number, number, number]> = [
+        [x - gap, y - gap, 1, 1],
+        [x + w + gap, y - gap, -1, 1],
+        [x - gap, y + h + gap, 1, -1],
+        [x + w + gap, y + h + gap, -1, -1],
+      ]
+      for (const [cx, cy, sx, sy] of corners) {
+        ctx.moveTo(cx, cy + sy * arm)
+        ctx.lineTo(cx, cy)
+        ctx.lineTo(cx + sx * arm, cy)
+      }
+      ctx.lineWidth = 1
+      ctx.globalAlpha = n.alpha * open * 0.8
+      ctx.stroke()
+    }
+    ctx.globalAlpha = 1
+
+    if (lead) {
+      this.panelShown = true
+      this.opts.callbacks.onPanelFrame?.({ id: lead.id, open: easeInOutCubic(lead.expand), ...this.panelRect(lead) })
+    } else if (this.panelShown) {
+      this.panelShown = false
+      this.opts.callbacks.onPanelFrame?.(null)
+    }
   }
 
   private setFont(size: number, weight: number, tracking = 0) {
@@ -1297,7 +1475,7 @@ export class MosaicEngine {
 
     for (let i = 0; i < this.labeledCount; i++) {
       const n = this.nodes[i]
-      const a = n.labelAlpha * (1 - 0.75 * n.dim)
+      const a = n.labelAlpha * (1 - 0.75 * n.dim) * clamp01(1 - n.expand * 4)
       if (a <= 0.01) continue
       ctx.globalAlpha = a
       const scale = 1 + n.focus * 0.06
@@ -1309,7 +1487,10 @@ export class MosaicEngine {
         this.setFont(compact ? 15 : 18, 500, -0.2)
         half = this.haloText(n.label, n.px, top + (compact ? 21 : 26), pal.ink)
         this.setFont(compact ? 9.5 : 10.5, 500, compact ? 1.2 : 1.6)
-        half = Math.max(half, this.haloText(n.tag.toUpperCase(), n.px, top + (compact ? 36 : 44), pal.accent))
+        half = Math.max(
+          half,
+          this.haloText(n.tag.toUpperCase(), n.px, top + (compact ? 36 : 44), n.color ?? pal.accent)
+        )
       } else if (n.kind === 'nucleus') {
         this.setFont(compact ? 13 : 14, 500, 0.2)
         half = this.haloText(n.label, n.px, top + (compact ? 19 : 22), pal.ink)

@@ -1099,6 +1099,233 @@
   }
 }
 
+/* --------------------------------------------------------------
+   Expanded case-study node. The canvas draws the frame growing out
+   of the terminal; this layer is the content that settles inside it.
+   Size must match PANEL_W / PANEL_H in engine.ts.
+   -------------------------------------------------------------- */
+
+.panels {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 372px;
+  height: 408px;
+  padding: 18px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  padding-left: 14px;
+}
+
+.panelTag {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.panelLogo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.panelMedia {
+  position: relative;
+  height: 196px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--mz-bg-deep);
+  box-shadow: inset 0 0 0 1px var(--mz-line);
+}
+
+.panelFrame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 700ms var(--ease-out-quart);
+}
+
+.panelFrameOn {
+  opacity: 1;
+}
+
+.panelImg {
+  object-fit: cover;
+  object-position: top center;
+  transform: scale(1.08);
+  transform-origin: 30% 20%;
+}
+
+/* A slow push-in across each frame's dwell, like a camera settling on a screen. */
+.panelOn .panelFrameOn .panelImg {
+  animation: panelDrift var(--cycle) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes panelDrift {
+  from {
+    transform: scale(1.08) translate3d(1.5%, 1.5%, 0);
+  }
+  to {
+    transform: scale(1.015) translate3d(0, 0, 0);
+  }
+}
+
+/* A single trace line reads the new screen top to bottom on each change. */
+.panelScan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--brand);
+  opacity: 0;
+  animation: panelScan 900ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes panelScan {
+  0% {
+    opacity: 0.9;
+    transform: translate3d(0, 0, 0);
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 196px, 0);
+  }
+}
+
+.panelTrack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.panelSeg {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  background: var(--mz-line);
+}
+
+.panelSegFill {
+  position: absolute;
+  inset: 0;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.panelSegDone {
+  transform: scaleX(1);
+}
+
+.panelSegRun {
+  animation: panelFill var(--cycle) linear forwards;
+}
+
+@keyframes panelFill {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.panelCaption {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  line-height: 16px;
+  color: var(--mz-ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: panelCaption 420ms var(--ease-out-quart) both;
+}
+
+@keyframes panelCaption {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3px, 0);
+  }
+}
+
+.panelCount {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--brand);
+}
+
+.panelTitle {
+  margin-top: 16px;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.015em;
+  color: var(--mz-ink);
+}
+
+.panelLine {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  line-height: 20px;
+  color: var(--mz-ink-2);
+  text-wrap: pretty;
+}
+
+.panelCta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--mz-ink);
+}
+
+.panelCta span {
+  color: var(--brand);
+  transition: transform 300ms var(--ease-out-quart);
+}
+
+.panelOn .panelCta span {
+  transform: translate3d(3px, 0, 0);
+}
+
+.panelStill .panelImg,
+.panelStill .panelSegRun {
+  animation: none;
+}
+
+.panelStill .panelSegRun {
+  transform: scaleX(1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .grain,
   .leaf,

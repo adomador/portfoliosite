@@ -7,6 +7,8 @@
 
 import { HEADLINE, NAME } from '@/lib/profile'
 
+export type ProjectFrame = { src: string; caption: string }
+
 export type ProjectNode = {
   id: string
   kind: 'project'
@@ -16,6 +18,10 @@ export type ProjectNode = {
   line: string
   href: string
   logo: string
+  /** Brand color: the node's traffic, highlights and expanded panel all use it. */
+  color: string
+  /** Screens the expanded node cycles through on hover. Three reads best. */
+  frames: ProjectFrame[]
 }
 
 export type ConceptNode = {
@@ -57,6 +63,12 @@ export const PROJECTS: ProjectNode[] = [
     line: '700+ sales-qualified upsell leads from one connected view.',
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
+    color: '#ef444a',
+    frames: [
+      { src: '/work/fleetworthy/hero-command-center.png', caption: 'Ranked actions, not a wall of metrics' },
+      { src: '/work/fleetworthy/severity-model.png', caption: 'Severity from fleet share and $ per truck' },
+      { src: '/work/fleetworthy/ai-chat.png', caption: 'AI shows its reasoning; the manager decides' },
+    ],
   },
   {
     id: 'triumph',
@@ -66,6 +78,12 @@ export const PROJECTS: ProjectNode[] = [
     line: 'Cut chat handle time from 8:52 to 4:32.',
     href: '/work/triumph',
     logo: '/work/TriumphFAV2.svg',
+    color: '#1fa8c9',
+    frames: [
+      { src: '/work/triumph/hero-global-search.png', caption: 'Invoice, payor and factoring on one screen' },
+      { src: '/work/triumph/experience-map.png', caption: 'Every profile switch behind one payment question' },
+      { src: '/work/triumph/search-results.png', caption: 'One lookup, no impersonating the customer' },
+    ],
   },
   {
     id: 'diezl',
@@ -75,6 +93,12 @@ export const PROJECTS: ProjectNode[] = [
     line: 'Shipped alone. 406 installs, 901 loads evaluated.',
     href: '/work/diezl',
     logo: '/work/Diezl.svg',
+    color: '#f06b06',
+    frames: [
+      { src: '/work/diezl-voice-input.png', caption: 'Paste the load message or say it out loud' },
+      { src: '/work/diezl-profit-margin.png', caption: 'Profit first, then where the truck ends up' },
+      { src: '/work/diezl-cost-breakdown.png', caption: 'Show me the math: fuel, weight, terrain' },
+    ],
   },
   {
     id: 'trochi',
@@ -84,6 +108,12 @@ export const PROJECTS: ProjectNode[] = [
     line: 'An MVP concept that became the pitch to prospective cooperative members.',
     href: '/work/trochi',
     logo: '/work/Trochi.svg',
+    color: '#5abf91',
+    frames: [
+      { src: '/work/Trochi.png', caption: 'A lane rate with its confidence beside it' },
+      { src: '/work/trochi/screen-1.svg', caption: 'The day opens on a market briefing' },
+      { src: '/work/trochi/Lane_Results.png', caption: 'Spot intelligence for a single lane' },
+    ],
   },
 ]
 
