@@ -22,6 +22,13 @@ export default function Reveal({ children, delay = 0, as: Tag = 'div', className
       setShown(true)
       return
     }
+    if (
+      document.documentElement.hasAttribute('data-pixel-burst') &&
+      node.getBoundingClientRect().top < window.innerHeight
+    ) {
+      setShown(true)
+      return
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

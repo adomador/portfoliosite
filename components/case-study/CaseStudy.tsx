@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import Link from 'next/link'
 import Reveal from '@/components/Reveal'
+import { SoftDissolveLink } from '@/components/mosaic/SoftDissolve'
 import { EMAIL, NAME } from '@/lib/profile'
 import styles from './CaseStudy.module.css'
 
@@ -42,12 +43,12 @@ export function CaseStudy({
     <main className={styles.page} style={themeVars(theme)}>
       <header className={styles.bar}>
         <div className={styles.barInner}>
-          <Link href="/" className={styles.barName}>
+          <SoftDissolveLink href="/?section=work" className={styles.barName}>
             {NAME}
-          </Link>
-          <Link href="/?section=work" className={styles.barBack}>
+          </SoftDissolveLink>
+          <SoftDissolveLink href="/?section=work" className={styles.barBack}>
             <span aria-hidden="true">‹</span> All work
-          </Link>
+          </SoftDissolveLink>
         </div>
       </header>
 
