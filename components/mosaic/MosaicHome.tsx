@@ -128,6 +128,7 @@ export default function MosaicHome() {
         sourceRoot: root,
         origin: origin ?? lastPointer.current,
         accent: project?.color,
+        destBg: project?.surface,
       })
     },
     [play, router]

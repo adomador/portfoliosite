@@ -23,6 +23,8 @@ export type ProjectNode = {
   logo: string
   /** Brand color: the node's traffic, highlights and expanded panel all use it. */
   color: string
+  /** Case-study page background; the exit burst tints toward it. */
+  surface: string
   /** Screens the expanded node cycles through on hover. Three reads best. */
   frames: ProjectFrame[]
 }
@@ -68,6 +70,7 @@ export const PROJECTS: ProjectNode[] = [
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
     color: '#ef444a',
+    surface: '#101114',
     frames: [
       { src: '/work/fleetworthy/hero-command-center.png', caption: 'Ranked actions, not a wall of metrics' },
       { src: '/work/fleetworthy/severity-model.png', caption: 'Severity from fleet share and $ per truck' },
@@ -84,6 +87,7 @@ export const PROJECTS: ProjectNode[] = [
     href: '/work/triumph',
     logo: '/work/TriumphFAV2.svg',
     color: '#1fa8c9',
+    surface: '#101114',
     frames: [
       { src: '/work/triumph/hero-global-search.png', caption: 'Invoice, payor and factoring on one screen' },
       { src: '/work/triumph/experience-map.png', caption: 'Every profile switch behind one payment question' },
@@ -100,6 +104,7 @@ export const PROJECTS: ProjectNode[] = [
     href: '/work/diezl',
     logo: '/work/Diezl.svg',
     color: '#f06b06',
+    surface: '#101114',
     frames: [
       { src: '/work/diezl-voice-input.png', caption: 'Paste the load message or say it out loud' },
       { src: '/work/diezl-profit-margin.png', caption: 'Profit first, then where the truck ends up' },
@@ -116,6 +121,7 @@ export const PROJECTS: ProjectNode[] = [
     href: '/work/trochi',
     logo: '/work/Trochi.svg',
     color: '#5abf91',
+    surface: '#16181d',
     frames: [
       { src: '/work/Trochi.png', caption: 'A lane rate with its confidence beside it' },
       { src: '/work/trochi/screen-1.svg', caption: 'The day opens on a market briefing' },
