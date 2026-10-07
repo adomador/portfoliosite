@@ -7,13 +7,97 @@ import styles from './Mosaic.module.css'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-export default function AboutPanel({ onClose }: { onClose: () => void }) {
-  const panelRef = useRef<HTMLElement>(null)
-  const closeRef = useRef<HTMLButtonElement>(null)
+/** Intro, endorsements and toolkit — shared by the slide-over and the list view. */
+export function AboutBody({ titleId = 'about-title' }: { titleId?: string }) {
   const [index, setIndex] = useState(0)
   const labelId = useId()
   const total = ENDORSEMENTS.length
   const endorsement = ENDORSEMENTS[index]
+
+  return (
+    <>
+      <p className="u-label">About me</p>
+      <h2 id={titleId} className={styles.aboutTitle}>
+        Designer who ships his own code
+      </h2>
+
+      <p className={styles.aboutIntro}>{INTRO}</p>
+      <p className={styles.aboutAside}>
+        Off the clock I&apos;m usually playing chess, writing short stories, or reading fiction — find me on{' '}
+        {CHESS_LINKS.map((link, i) => (
+          <span key={link.label}>
+            <a
+              className={styles.inlineLink}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link.label}
+            </a>
+            {i < CHESS_LINKS.length - 1 ? ' or ' : '.'}
+          </span>
+        ))}
+      </p>
+
+      <figure className={styles.endorsement} aria-labelledby={labelId}>
+        <div className={styles.endorsementHead}>
+          <p className={`u-label ${styles.blockLabel}`} id={labelId}>
+            Endorsements
+          </p>
+          {total > 1 && (
+            <div className={styles.pager} role="group" aria-label="Endorsement navigation">
+              <button
+                type="button"
+                className={styles.pagerBtn}
+                onClick={() => setIndex((i) => (i - 1 + total) % total)}
+                aria-label="Previous endorsement"
+              >
+                <Chevron dir="prev" />
+              </button>
+              <span className={styles.pagerCount} aria-live="polite">
+                {index + 1} / {total}
+              </span>
+              <button
+                type="button"
+                className={styles.pagerBtn}
+                onClick={() => setIndex((i) => (i + 1) % total)}
+                aria-label="Next endorsement"
+              >
+                <Chevron dir="next" />
+              </button>
+            </div>
+          )}
+        </div>
+        <blockquote key={index} aria-live="polite">
+          <p>{endorsement.quote}</p>
+        </blockquote>
+        <figcaption className={styles.attribution}>
+          <span className={styles.author}>{endorsement.author}</span>
+          <span className={styles.authorRole}>{endorsement.role}</span>
+        </figcaption>
+      </figure>
+
+      <div className={styles.toolsBlock}>
+        <p className={`u-label ${styles.blockLabel}`}>Toolkit</p>
+        <ul className={styles.tools} role="list">
+          {TOOLS.map((tool) => (
+            <li
+              key={tool.name}
+              className={`${styles.tool} ${tool.invertOnDark ? styles.invert : ''}`}
+            >
+              <Image src={tool.icon} alt="" width={18} height={18} />
+              {tool.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )
+}
+
+export default function AboutPanel({ onClose }: { onClose: () => void }) {
+  const panelRef = useRef<HTMLElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const returnTo = document.activeElement as HTMLElement | null
@@ -60,82 +144,7 @@ export default function AboutPanel({ onClose }: { onClose: () => void }) {
           <span aria-hidden>×</span>
           <span className={styles.srOnly}>Close about</span>
         </button>
-
-        <p className="u-label">About me</p>
-        <h2 id="about-title" className={styles.aboutTitle}>
-          Designer who ships his own code
-        </h2>
-
-        <p className={styles.aboutIntro}>{INTRO}</p>
-        <p className={styles.aboutAside}>
-          Off the clock I&apos;m usually playing chess, writing short stories, or reading fiction — find me on{' '}
-          {CHESS_LINKS.map((link, i) => (
-            <span key={link.label}>
-              <a
-                className={styles.inlineLink}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.label}
-              </a>
-              {i < CHESS_LINKS.length - 1 ? ' or ' : '.'}
-            </span>
-          ))}
-        </p>
-
-        <figure className={styles.endorsement} aria-labelledby={labelId}>
-          <div className={styles.endorsementHead}>
-            <p className={`u-label ${styles.blockLabel}`} id={labelId}>
-              Endorsements
-            </p>
-            {total > 1 && (
-              <div className={styles.pager} role="group" aria-label="Endorsement navigation">
-                <button
-                  type="button"
-                  className={styles.pagerBtn}
-                  onClick={() => setIndex((i) => (i - 1 + total) % total)}
-                  aria-label="Previous endorsement"
-                >
-                  <Chevron dir="prev" />
-                </button>
-                <span className={styles.pagerCount} aria-live="polite">
-                  {index + 1} / {total}
-                </span>
-                <button
-                  type="button"
-                  className={styles.pagerBtn}
-                  onClick={() => setIndex((i) => (i + 1) % total)}
-                  aria-label="Next endorsement"
-                >
-                  <Chevron dir="next" />
-                </button>
-              </div>
-            )}
-          </div>
-          <blockquote key={index} aria-live="polite">
-            <p>{endorsement.quote}</p>
-          </blockquote>
-          <figcaption className={styles.attribution}>
-            <span className={styles.author}>{endorsement.author}</span>
-            <span className={styles.authorRole}>{endorsement.role}</span>
-          </figcaption>
-        </figure>
-
-        <div className={styles.toolsBlock}>
-          <p className={`u-label ${styles.blockLabel}`}>Toolkit</p>
-          <ul className={styles.tools} role="list">
-            {TOOLS.map((tool) => (
-              <li
-                key={tool.name}
-                className={`${styles.tool} ${tool.invertOnDark ? styles.invert : ''}`}
-              >
-                <Image src={tool.icon} alt="" width={18} height={18} />
-                {tool.name}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <AboutBody titleId="about-title" />
       </aside>
     </>
   )

@@ -17,7 +17,7 @@ import {
   type ProjectNode,
 } from '@/src/data/mosaic'
 import { MosaicEngine, type ActiveFrame, type PanelFrame } from './engine'
-import AboutPanel from './AboutPanel'
+import AboutPanel, { AboutBody } from './AboutPanel'
 import ProjectPanel from './ProjectPanel'
 import styles from './Mosaic.module.css'
 
@@ -73,6 +73,7 @@ export default function MosaicHome() {
   const leaveTimer = useRef<ReturnType<typeof setTimeout>>()
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const panelLead = useRef<string | null>(null)
+  const scrollToAbout = useRef(false)
 
   const [activeId, setActiveId] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -105,9 +106,16 @@ export default function MosaicHome() {
   )
 
   const openAbout = useCallback(() => {
+    if (listView) {
+      document.getElementById('list-about')?.scrollIntoView({
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        block: 'start',
+      })
+      return
+    }
     setSheetId(null)
     setAboutOpen(true)
-  }, [])
+  }, [listView])
   const closeAbout = useCallback(() => setAboutOpen(false), [])
 
   /* The engine is created once; it calls back through this ref so it always
@@ -193,7 +201,15 @@ export default function MosaicHome() {
     const params = new URLSearchParams(window.location.search)
     const section = params.get('section') ?? window.location.hash.replace('#', '')
     if (section === 'work') engine.pulse(PROJECTS.map((p) => p.id), reduced ? 0.1 : 1.5)
-    if (section === 'about') setAboutOpen(true)
+    if (section === 'about') {
+      const mobile = window.matchMedia('(max-width: 720px), (hover: none)').matches
+      if (mobile) {
+        scrollToAbout.current = true
+        setListView(true)
+      } else {
+        setAboutOpen(true)
+      }
+    }
     if (params.has('section') || window.location.hash) {
       window.history.replaceState(null, '', window.location.pathname)
     }
@@ -218,10 +234,29 @@ export default function MosaicHome() {
     return () => query.removeEventListener('change', sync)
   }, [])
 
+  /* Phones and narrow viewports open in list — the mosaic needs room to breathe. */
+  useEffect(() => {
+    const mobile = window.matchMedia('(max-width: 720px), (hover: none)')
+    if (mobile.matches) setListView(true)
+  }, [])
+
+  useEffect(() => {
+    if (!listView || !scrollToAbout.current) return
+    scrollToAbout.current = false
+    const id = window.setTimeout(() => {
+      document.getElementById('list-about')?.scrollIntoView({
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        block: 'start',
+      })
+    }, 80)
+    return () => clearTimeout(id)
+  }, [listView])
+
   useEffect(() => {
     engineRef.current?.setPaused(listView)
     if (listView) {
       setSheetId(null)
+      setAboutOpen(false)
       pin(null)
     }
   }, [listView, pin])
@@ -398,6 +433,16 @@ export default function MosaicHome() {
               })}
             </ul>
           </section>
+
+          {listView && (
+            <section
+              id="list-about"
+              className={styles.listAbout}
+              aria-labelledby="list-about-title"
+            >
+              <AboutBody titleId="list-about-title" />
+            </section>
+          )}
         </div>
       </main>
 
