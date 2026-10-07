@@ -49,6 +49,14 @@ type SimNode = {
   color: string | null
   /** 0 is the resting terminal, 1 is the full panel. */
   expand: number
+  /** Eased 0 to 1 while a junction is held. */
+  lift: number
+  /** Where the visitor dropped this junction, relative to the layout, so a resize keeps it. */
+  placed: { u: number; v: number } | null
+  /** Character count of the note, used to size junctions that have more to say. */
+  copyLen: number
+  /** Wrapped label lines, for hit-testing. */
+  labelLines: number
 }
 
 /** `color` is the brand of the project at either end, so traffic reads by system. */
@@ -86,6 +94,8 @@ export type EngineCallbacks = {
   onNodeActivate?: (id: string, pointerType: string) => void
   onEmptyActivate?: (pointerType: string) => void
   onActiveFrame?: (frame: ActiveFrame | null) => void
+  /** A junction was picked up (its id) or set down (null). */
+  onDragChange?: (id: string | null) => void
 }
 
 export type EngineOptions = {
@@ -112,6 +122,8 @@ const PING_SECONDS = 1.15
 const HEARTBEAT_SECONDS = 7
 const SLOW_FRAME_MS = 20
 const SLOW_WINDOW_MS = 2000
+/** Pointer travel before a press on a junction becomes a drag rather than a tap. */
+const DRAG_START_PX = 4
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 const clamp01 = (n: number) => clamp(n, 0, 1)
@@ -180,8 +192,11 @@ export class MosaicEngine {
 
   private pointer = { x: 0, y: 0, inside: false }
   private down: { x: number; y: number; time: number; type: string } | null = null
+  /** A junction under the pointer. `live` once it has travelled far enough to count as a drag. */
+  private drag: { index: number; ox: number; oy: number; live: boolean; pointerId: number } | null = null
   private hover: number | null = null
-  private pinned: number | null = null
+  /** Touch sheet only: keep this node lit while the sheet is open. Not a pin. */
+  private held: number | null = null
   private external: number | null = null
   private externalRing = false
   private active: number | null = null
@@ -250,8 +265,9 @@ export class MosaicEngine {
     else if (!document.hidden) this.start()
   }
 
-  setPinned(id: string | null) {
-    this.pinned = id === null ? null : this.byId.get(id) ?? null
+  /** Keep a node lit from outside the canvas (the touch sheet). */
+  setHeld(id: string | null) {
+    this.held = id === null ? null : this.byId.get(id) ?? null
     this.refreshActive()
   }
 
@@ -318,6 +334,10 @@ export class MosaicEngine {
       labelHalf: 0,
       color: null,
       expand: 0,
+      lift: 0,
+      placed: null,
+      copyLen: 0,
+      labelLines: 1,
     }
   }
 
@@ -332,7 +352,10 @@ export class MosaicEngine {
         n.bloomDelay = 0.12 + projectIndex++ * 0.07
         n.color = item.color
       }
-      if (item.kind === 'concept') n.bloomDelay = 0.42 + conceptIndex++ * 0.05
+      if (item.kind === 'concept') {
+        n.bloomDelay = 0.42 + conceptIndex++ * 0.05
+        n.copyLen = item.line?.length ?? 0
+      }
       this.byId.set(n.id, this.nodes.length)
       this.nodes.push(n)
     }
@@ -400,7 +423,13 @@ export class MosaicEngine {
     for (const n of this.nodes) {
       if (n.kind === 'nucleus') n.r = this.compact ? 22 : 30
       if (n.kind === 'project') n.r = this.compact ? 17 : 24
-      if (n.kind === 'concept') n.r = this.compact ? 5.5 : 7
+      /* Junctions that more systems use, or that carry a longer note, read a little larger. */
+      if (n.kind === 'concept') {
+        const byLinks = 1 + 0.16 * Math.max(0, n.neighbors.length - 1)
+        const byCopy = 1 + 0.2 * clamp01((n.copyLen - 180) / 280)
+        n.r = (this.compact ? 5.5 : 7.5) * byLinks * byCopy
+        n.mass = 1 + 0.18 * n.neighbors.length + n.copyLen / 900
+      }
     }
 
     const corners: Array<[number, number]> = [
@@ -432,13 +461,25 @@ export class MosaicEngine {
         sx += this.nodes[j].ax
         sy += this.nodes[j].ay
       }
-      const k = Math.max(1, n.neighbors.length)
+      /* A junction with one system sits on the way in from the centre, not beyond the corner. */
+      const single = n.neighbors.length === 1
+      if (single) {
+        sx += this.cx
+        sy += this.cy
+      }
+      const k = Math.max(1, n.neighbors.length + (single ? 1 : 0))
       sx /= k
       sy /= k
-      const dx = sx - this.cx
-      const dy = sy - this.cy
+      let dx = sx - this.cx
+      let dy = sy - this.cy
+      /* Shared by every system: the average lands on the nucleus, so drop it below. */
+      if (Math.hypot(dx, dy) < 1) {
+        dx = 0
+        dy = 1
+        sy = this.cy + ry * 0.55
+      }
       const d = Math.hypot(dx, dy) || 1
-      const push = this.spread * (this.compact ? -0.14 : 0.12)
+      const push = single ? 0 : this.spread * (this.compact ? -0.14 : 0.12)
       n.ax = sx + (dx / d) * push
       n.ay = sy + (dy / d) * push
     }
@@ -501,6 +542,14 @@ export class MosaicEngine {
       }
     }
 
+    /* Junctions the visitor has moved keep their spot through a resize. */
+    for (const a of concepts) {
+      if (!a.placed) continue
+      const at = this.fromPlaced(a.placed)
+      a.ax = at.x
+      a.ay = at.y
+    }
+
     for (const e of this.edges) {
       const a = this.nodes[e.a]
       const b = this.nodes[e.b]
@@ -526,6 +575,28 @@ export class MosaicEngine {
     if (this.opts.reducedMotion) this.settle(300)
     this.dirty = true
     if (!this.running && !this.paused && !this.destroyed) this.render()
+  }
+
+  /** The area a junction can be dragged within: clear of the index, header and footer. */
+  private dragBounds() {
+    const left = this.w >= INDEX_MIN ? INDEX_INSET : 0
+    const pad = this.compact ? 40 : 64
+    return {
+      x0: left + pad,
+      x1: this.w - pad,
+      y0: this.compact ? 150 : 120,
+      y1: this.h - (this.compact ? 120 : 110),
+    }
+  }
+
+  private toPlaced(x: number, y: number) {
+    const b = this.dragBounds()
+    return { u: clamp01((x - b.x0) / (b.x1 - b.x0 || 1)), v: clamp01((y - b.y0) / (b.y1 - b.y0 || 1)) }
+  }
+
+  private fromPlaced(p: { u: number; v: number }) {
+    const b = this.dragBounds()
+    return { x: lerp(b.x0, b.x1, p.u), y: lerp(b.y0, b.y1, p.v) }
   }
 
   /** Run the simulation without drawing, so a static layout is already at rest. */
@@ -572,18 +643,39 @@ export class MosaicEngine {
       this.pointer.x = p.x
       this.pointer.y = p.y
       this.pointer.inside = e.pointerType !== 'touch'
+
+      const drag = this.drag
+      if (drag && drag.pointerId === e.pointerId) {
+        const start = this.down
+        if (!drag.live && start && Math.hypot(p.x - start.x, p.y - start.y) > DRAG_START_PX) {
+          drag.live = true
+          this.hover = drag.index
+          this.nodes[drag.index].pings.push(this.clock)
+          this.refreshActive()
+          this.opts.callbacks.onDragChange?.(this.nodes[drag.index].id)
+        }
+        if (drag.live) {
+          this.moveDragged(p.x + drag.ox, p.y + drag.oy)
+          this.canvas.style.cursor = 'grabbing'
+          this.dirty = true
+          return
+        }
+      }
+
       if (e.pointerType === 'touch') return
       const hit = this.hitTest(p.x, p.y, 0)
       if (hit !== this.hover) {
         this.hover = hit
         this.refreshActive()
       }
-      this.canvas.style.cursor = hit === null ? 'default' : 'pointer'
+      this.canvas.style.cursor =
+        hit === null ? 'default' : this.nodes[hit].kind === 'concept' ? 'grab' : 'pointer'
       this.dirty = true
     }) as EventListener)
 
     on(this.canvas, 'pointerleave', (() => {
       this.pointer.inside = false
+      if (this.drag?.live) return
       if (this.hover !== null) {
         this.hover = null
         this.refreshActive()
@@ -593,13 +685,24 @@ export class MosaicEngine {
     on(this.canvas, 'pointerdown', ((e: PointerEvent) => {
       const p = local(e)
       this.down = { x: p.x, y: p.y, time: performance.now(), type: e.pointerType }
+      const hit = this.hitTest(p.x, p.y, e.pointerType === 'touch' ? 10 : 0)
+      if (hit !== null && this.nodes[hit].kind === 'concept') {
+        const n = this.nodes[hit]
+        this.drag = { index: hit, ox: n.ax - p.x, oy: n.ay - p.y, live: false, pointerId: e.pointerId }
+        this.canvas.setPointerCapture?.(e.pointerId)
+      }
     }) as EventListener)
 
     on(this.canvas, 'pointerup', ((e: PointerEvent) => {
       const start = this.down
       this.down = null
-      if (!start) return
       const p = local(e)
+      if (this.drag) {
+        const wasLive = this.drag.live
+        this.endDrag(e.pointerId, p.x, p.y)
+        if (wasLive) return
+      }
+      if (!start) return
       const moved = Math.hypot(p.x - start.x, p.y - start.y)
       if (moved > 12 || performance.now() - start.time > 700) return
       const slop = e.pointerType === 'touch' ? 10 : 0
@@ -612,9 +715,64 @@ export class MosaicEngine {
       }
     }) as EventListener)
 
-    on(this.canvas, 'pointercancel', (() => {
+    on(this.canvas, 'pointercancel', ((e: PointerEvent) => {
       this.down = null
+      if (this.drag) this.endDrag(e.pointerId, this.pointer.x, this.pointer.y)
     }) as EventListener)
+  }
+
+  /** Move a held junction's resting spot. Its lanes reroute and the physics catches up. */
+  private moveDragged(x: number, y: number) {
+    const drag = this.drag
+    if (!drag) return
+    const b = this.dragBounds()
+    const n = this.nodes[drag.index]
+    n.ax = clamp(x, b.x0, b.x1)
+    n.ay = clamp(y, b.y0, b.y1)
+    /* Reduced motion skips the physics, so place it directly. */
+    if (this.opts.reducedMotion) {
+      n.x = n.ax
+      n.y = n.ay
+    }
+    /* Lanes stay a touch short, so the systems it connects lean in as it travels. */
+    for (const e of this.edges) {
+      if (e.a !== drag.index && e.b !== drag.index) continue
+      const a = this.nodes[e.a]
+      const c = this.nodes[e.b]
+      e.rest = Math.hypot(a.ax - c.ax, a.ay - c.ay) * 0.94
+    }
+  }
+
+  private endDrag(pointerId: number, x: number, y: number) {
+    const drag = this.drag
+    if (!drag) return
+    this.drag = null
+    if (this.canvas.hasPointerCapture?.(pointerId)) this.canvas.releasePointerCapture(pointerId)
+    if (!drag.live) return
+
+    const n = this.nodes[drag.index]
+    n.placed = this.toPlaced(n.ax, n.ay)
+    for (const e of this.edges) {
+      if (e.a !== drag.index && e.b !== drag.index) continue
+      const a = this.nodes[e.a]
+      const c = this.nodes[e.b]
+      e.rest = Math.hypot(a.ax - c.ax, a.ay - c.ay)
+    }
+    /* Set down: the junction registers, then each system it feeds answers, nearest first. */
+    n.pings.push(this.clock)
+    n.neighbors.forEach((j) => {
+      const m = this.nodes[j]
+      m.pings.push(this.clock + 0.08 + Math.hypot(m.x - n.x, m.y - n.y) / 1100)
+    })
+    if (!this.opts.reducedMotion) this.burst(drag.index)
+
+    this.opts.callbacks.onDragChange?.(null)
+    const hit = this.pointer.inside ? this.hitTest(x, y, 0) : null
+    this.hover = hit
+    this.canvas.style.cursor =
+      hit === null ? 'default' : this.nodes[hit].kind === 'concept' ? 'grab' : 'pointer'
+    this.refreshActive()
+    this.dirty = true
   }
 
   private hitTest(x: number, y: number, slop: number): number | null {
@@ -644,8 +802,10 @@ export class MosaicEngine {
   }
 
   private labelBox(n: SimNode) {
-    const width = n.kind === 'project' ? (this.compact ? 116 : 160) : n.kind === 'nucleus' ? 90 : this.compact ? 100 : 156
-    const height = n.kind === 'project' ? 44 : n.kind === 'nucleus' ? 36 : this.compact ? 36 : 22
+    const width =
+      n.kind === 'project' ? (this.compact ? 116 : 160) : n.kind === 'nucleus' ? 90 : this.compact ? 100 : 168
+    const height =
+      n.kind === 'project' ? 44 : n.kind === 'nucleus' ? 36 : 8 + Math.max(1, n.labelLines) * (this.compact ? 14 : 16)
     return { x: n.px - width / 2, y: n.py + n.r + 6, w: width, h: height }
   }
 
@@ -678,14 +838,17 @@ export class MosaicEngine {
   private syncExpanded() {
     const a = this.active
     const roomy = !this.compact && this.h >= PANEL_H + 190
-    const next = a !== null && this.pinned === null && roomy && this.nodes[a].kind === 'project' ? a : null
+    const next =
+      a !== null && this.held === null && !this.drag?.live && roomy && this.nodes[a].kind === 'project'
+        ? a
+        : null
     if (next === this.expanded) return
     this.expanded = next
     this.opts.callbacks.onExpandChange?.(next === null ? null : this.nodes[next].id)
   }
 
   private refreshActive() {
-    const next = this.pinned ?? this.hover ?? this.external
+    const next = this.held ?? this.hover ?? this.external
     this.dirty = true
     if (next === this.active) {
       this.syncExpanded()
@@ -775,8 +938,10 @@ export class MosaicEngine {
           ty += wave(t, n.seed + 5) * 2.5
         }
       } else if (n.kind === 'concept') {
-        k = 4.5
-        if (drift) {
+        /* Held: a stiff spring, so it trails the pointer by a beat instead of snapping to it. */
+        const held = this.drag?.live && this.drag.index === i
+        k = held ? 34 : 4.5
+        if (drift && !held) {
           tx += wave(t * 1.3, n.seed) * 2
           ty += wave(t * 1.3, n.seed + 2) * 2
         }
@@ -791,9 +956,12 @@ export class MosaicEngine {
       }
       fx[i] += (tx - n.x) * k
       fy[i] += (ty - n.y) * k
-      /* Gentle centering keeps a hard ripple from flinging anything away. */
-      fx[i] += (this.cx - n.x) * 0.04
-      fy[i] += (this.cy - n.y) * 0.04
+      /* Gentle centering keeps a hard ripple from flinging anything away.
+         A held junction follows the pointer, so skip it. */
+      if (!(this.drag?.live && this.drag.index === i)) {
+        fx[i] += (this.cx - n.x) * 0.04
+        fy[i] += (this.cy - n.y) * 0.04
+      }
     }
 
     for (const e of this.edges) {
@@ -894,7 +1062,7 @@ export class MosaicEngine {
       /* A few pixels of lean, so a route notices the pointer without leaving its lane. */
       let tlx = 0
       let tly = 0
-      if (p.inside && !reduced && leanR > 0 && n.kind !== 'ambient' && n.expand < 0.01) {
+      if (p.inside && !reduced && leanR > 0 && n.kind !== 'ambient' && n.expand < 0.01 && n.lift < 0.01) {
         const dx = p.x - n.x
         const dy = p.y - n.y
         const d = Math.hypot(dx, dy)
@@ -917,6 +1085,14 @@ export class MosaicEngine {
       if (Math.abs(nf - n.focus) > 0.0005 || Math.abs(nd - n.dim) > 0.0005) changed = true
       n.focus = nf
       n.dim = nd
+
+      if (n.kind === 'concept') {
+        const target = this.drag?.live && this.drag.index === i ? 1 : 0
+        const nl = reduced ? target : approach(n.lift, target, target ? 14 : 6, dt)
+        const settled = Math.abs(nl - target) < 0.002 ? target : nl
+        if (settled !== n.lift) changed = true
+        n.lift = settled
+      }
 
       if (n.kind === 'project') {
         const target = this.expanded === i ? 1 : 0
@@ -1169,10 +1345,12 @@ export class MosaicEngine {
     ctx.setLineDash([])
 
     this.drawField(w, h)
+    this.drawGuides()
     this.drawEdges()
     this.drawPulses()
     this.drawRings()
     this.drawNodes()
+    this.drawSelection()
     this.drawLabels()
     this.drawPanels()
 
@@ -1312,7 +1490,7 @@ export class MosaicEngine {
     for (let i = 0; i < this.labeledCount; i++) {
       const n = this.nodes[i]
       if (n.alpha <= 0.01) continue
-      const scale = 1 + n.focus * 0.06
+      const scale = 1 + n.focus * 0.06 + n.lift * 0.22
       const box = this.nodeBox(n, scale)
       const hot = n.focus > 0.35
       /* Brand tint only while this node is the focus. Idle stays on the gold palette. */
@@ -1370,6 +1548,47 @@ export class MosaicEngine {
       }
     }
     ctx.setLineDash([])
+    ctx.globalAlpha = 1
+  }
+
+  /** Alignment lines through a held junction, the way a drafting tool snaps a part to the sheet. */
+  private drawGuides() {
+    const ctx = this.ctx
+    const b = this.dragBounds()
+    for (let i = 0; i < this.labeledCount; i++) {
+      const n = this.nodes[i]
+      if (n.lift <= 0.01) continue
+      const reach = easeOutQuart(n.lift)
+      const x = Math.round(n.px) + 0.5
+      const y = Math.round(n.py) + 0.5
+      ctx.save()
+      ctx.strokeStyle = this.palette.ink
+      ctx.lineWidth = 1
+      ctx.setLineDash([2, 5])
+      ctx.globalAlpha = 0.16 * n.lift
+      ctx.beginPath()
+      ctx.moveTo(lerp(x, b.x0 - 24, reach), y)
+      ctx.lineTo(lerp(x, b.x1 + 24, reach), y)
+      ctx.moveTo(x, lerp(y, b.y0 - 24, reach))
+      ctx.lineTo(x, lerp(y, b.y1 + 24, reach))
+      ctx.stroke()
+      ctx.restore()
+    }
+  }
+
+  /** Crop brackets close in on a held junction, like a selected part. */
+  private drawSelection() {
+    const ctx = this.ctx
+    for (let i = 0; i < this.labeledCount; i++) {
+      const n = this.nodes[i]
+      if (n.lift <= 0.01) continue
+      const box = this.nodeBox(n, 1 + n.focus * 0.06 + n.lift * 0.22)
+      const half = Math.max(box.w, box.h) / 2 + lerp(16, 7, easeOutQuart(n.lift))
+      ctx.strokeStyle = this.palette.accent
+      ctx.lineWidth = 1.2
+      ctx.globalAlpha = n.lift * 0.9
+      this.cornerMarks(n.px, n.py, half, 5)
+    }
     ctx.globalAlpha = 1
   }
 
@@ -1480,7 +1699,7 @@ export class MosaicEngine {
       const a = n.labelAlpha * (1 - 0.75 * n.dim) * clamp01(1 - n.expand * 4)
       if (a <= 0.01) continue
       ctx.globalAlpha = a
-      const scale = 1 + n.focus * 0.06
+      const scale = 1 + n.focus * 0.06 + n.lift * 0.22
       const box = this.nodeBox(n, scale)
       const top = box.y + box.h
 
@@ -1506,9 +1725,10 @@ export class MosaicEngine {
       } else {
         this.setFont(compact ? 11 : 12.5, 500, 0.2)
         const color = n.focus > 0.5 ? pal.ink : pal.ink2
-        const lines = compact ? this.wrap(n.label, 84) : [n.label]
+        const lines = this.wrap(n.label, compact ? 84 : 148)
+        n.labelLines = lines.length
         lines.forEach((line, k) => {
-          half = Math.max(half, this.haloText(line, n.px, top + (compact ? 15 : 18) + k * 13, color))
+          half = Math.max(half, this.haloText(line, n.px, top + (compact ? 15 : 18) + k * 15, color))
         })
       }
       n.labelHalf = half

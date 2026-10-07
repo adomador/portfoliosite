@@ -28,7 +28,7 @@ export type ConceptNode = {
   id: string
   kind: 'concept'
   label: string
-  /** Optional. When unset, the card lists the projects this concept connects to. */
+  /** Shown in the hover card, which widens to fit longer copy. */
   line?: string
 }
 
@@ -119,34 +119,28 @@ export const PROJECTS: ProjectNode[] = [
 
 export const CONCEPTS: ConceptNode[] = [
   {
-    id: 'shared-key',
+    id: 'systems-thinking',
     kind: 'concept',
-    label: 'Shared key',
-    line: 'Triumph pulls the invoice, the payor, and factoring from one lookup. Fleetworthy hangs tolls, bypass, safety, and compliance off one vehicle.',
+    label: 'Systems thinking',
+    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it surfaced problems no single product could see, plus 700+ sales-qualified upsell leads.',
   },
   {
-    id: 'the-lane',
+    id: 'initiative',
     kind: 'concept',
-    label: 'The lane',
-    line: 'Diezl prices the whole move, including where the truck ends. Trochi searches by lane and shows how solid the rate is.',
+    label: 'Initiative & ownership',
+    line: 'I like early, ambiguous problems where nobody has told me what to build yet. I use the latest tools to get from idea to working code fast, and I know when to move fast and when to slow down. I solo-built an entire native mobile application, Diezl, that currently helps over 400 owner operators make better decisions.',
   },
   {
-    id: 'threshold',
+    id: 'love-the-problem',
     kind: 'concept',
-    label: 'Set a threshold',
-    line: 'Fleetworthy only promotes an insight when fleet share or dollars per truck cross a line. Diezl leads with profit and keeps the breakdown one tap away.',
+    label: 'Love the Problem',
+    line: "Solutions, no matter how elegant, fall flat when they solve the wrong problem. That's why I watch how people actually work before deciding what to build. At Triumph, six 90-minute sessions shadowing support agents showed they were jumping between customer profiles just to find basic information. We built one search that pulled it all together, and chat handle time dropped from 8:52 to 4:32.",
   },
   {
-    id: 'show-inputs',
+    id: 'details',
     kind: 'concept',
-    label: 'Show the inputs',
-    line: 'Fleetworthy puts cause, cost, and the action on the same row. Diezl opens the cost math. Trochi will not show a rate without a confidence.',
-  },
-  {
-    id: 'person-closes',
-    kind: 'concept',
-    label: 'A person closes',
-    line: 'Fleetworthy suggests and waits. Diezl returns take or pass; the driver still decides. Triumph assembles the record; the agent still answers.',
+    label: 'Sweating the details',
+    line: 'I care a lot about craft, especially in enterprise tools where people stare at dense data all day. A screen can be beautiful and still be fast to read, and getting that balance right is most of the work. In Trochi, every card leads with a plain-language takeaway and the number a broker actually needs, the rate, is always the biggest thing on the screen.',
   },
 ]
 
@@ -159,22 +153,20 @@ export const NUCLEUS: NucleusNode = {
 }
 
 export const EDGES: MosaicEdge[] = [
-  { from: 'shared-key', to: 'triumph' },
-  { from: 'shared-key', to: 'fleetworthy' },
+  { from: 'systems-thinking', to: 'fleetworthy' },
 
-  { from: 'the-lane', to: 'trochi' },
-  { from: 'the-lane', to: 'diezl' },
+  { from: 'initiative', to: 'fleetworthy' },
+  { from: 'initiative', to: 'diezl' },
+  { from: 'initiative', to: 'trochi' },
 
-  { from: 'threshold', to: 'fleetworthy' },
-  { from: 'threshold', to: 'diezl' },
+  { from: 'love-the-problem', to: 'fleetworthy' },
+  { from: 'love-the-problem', to: 'triumph' },
+  { from: 'love-the-problem', to: 'diezl' },
 
-  { from: 'show-inputs', to: 'fleetworthy' },
-  { from: 'show-inputs', to: 'diezl' },
-  { from: 'show-inputs', to: 'trochi' },
-
-  { from: 'person-closes', to: 'fleetworthy' },
-  { from: 'person-closes', to: 'diezl' },
-  { from: 'person-closes', to: 'triumph' },
+  { from: 'details', to: 'triumph' },
+  { from: 'details', to: 'fleetworthy' },
+  { from: 'details', to: 'diezl' },
+  { from: 'details', to: 'trochi' },
 
   { from: 'nucleus', to: 'triumph' },
   { from: 'nucleus', to: 'trochi' },

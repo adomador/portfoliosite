@@ -25,6 +25,16 @@ const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
 const FADE_MS = 380
 const HINT_DELAY_MS = 3200
 const PRIME_MS = 2400
+/** Project cards stay compact. Junction notes grow toward a ~62-character measure. */
+const CARD_PROJECT_W = 300
+const CARD_NOTE_MIN = 360
+const CARD_NOTE_MAX = 528
+
+function cardWidthFor(kind: MosaicNode['kind'], text: string) {
+  if (kind !== 'concept') return CARD_PROJECT_W
+  const t = Math.min(1, Math.max(0, (text.length - 140) / 280))
+  return Math.round(CARD_NOTE_MIN + (CARD_NOTE_MAX - CARD_NOTE_MIN) * t)
+}
 
 const NODE_BY_ID = new Map(MOSAIC_NODES.map((n) => [n.id, n]))
 
@@ -54,7 +64,7 @@ function copyFor(node: MosaicNode): Copy {
   }
   const names = projectsFor(node.id).map((p) => p.label)
   return {
-    eyebrow: 'Junction',
+    eyebrow: names.length ? joinNames(names) : 'Junction',
     title: node.label,
     line: node.line ?? `Shows up in ${joinNames(names)}.`,
   }
@@ -80,7 +90,7 @@ export default function MosaicHome() {
   const [primed, setPrimed] = useState(false)
   const [reduced, setReduced] = useState(false)
   const [cardId, setCardId] = useState<string | null>(null)
-  const [pinnedId, setPinnedId] = useState<string | null>(null)
+  const [dragging, setDragging] = useState(false)
   const [sheetId, setSheetId] = useState<string | null>(null)
   const [aboutOpen, setAboutOpen] = useState(false)
   const [listView, setListView] = useState(false)
@@ -90,9 +100,9 @@ export default function MosaicHome() {
   const [isTouch, setIsTouch] = useState(false)
   const [hint, setHint] = useState<'hidden' | 'shown' | 'done'>('hidden')
 
-  const pin = useCallback((id: string | null) => {
-    setPinnedId(id)
-    engineRef.current?.setPinned(id)
+  /** Holds the canvas highlight on whatever the touch sheet is showing. */
+  const select = useCallback((id: string | null) => {
+    engineRef.current?.setHeld(id)
   }, [])
 
   const navigate = useCallback(
@@ -130,7 +140,7 @@ export default function MosaicHome() {
       if (!node) return
       setHint('done')
       if (node.kind === 'nucleus') {
-        pin(null)
+        select(null)
         openAbout()
         return
       }
@@ -140,18 +150,14 @@ export default function MosaicHome() {
           return
         }
         setSheetId(id)
-        pin(id)
+        select(id)
         return
       }
-      if (node.kind === 'project') {
-        navigate(node.href)
-        return
-      }
-      pin(pinnedId === id ? null : id)
+      if (node.kind === 'project') navigate(node.href)
     },
     onEmptyActivate: () => {
       setSheetId(null)
-      pin(null)
+      select(null)
     },
   }
 
@@ -186,6 +192,10 @@ export default function MosaicHome() {
             if (id) setPrimed(true)
           },
           onPanelFrame: (frame) => placePanel(panelRefs.current, panelLead, frame),
+          onDragChange: (id) => {
+            setDragging(id !== null)
+            if (id) setHint('done')
+          },
         },
       })
     } catch {
@@ -257,9 +267,9 @@ export default function MosaicHome() {
     if (listView) {
       setSheetId(null)
       setAboutOpen(false)
-      pin(null)
+      select(null)
     }
-  }, [listView, pin])
+  }, [listView, select])
 
   useEffect(() => {
     /* Coming back through the bfcache would otherwise show the fade veil. */
@@ -277,11 +287,11 @@ export default function MosaicHome() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       setSheetId(null)
-      pin(null)
+      select(null)
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [aboutOpen, pin])
+  }, [aboutOpen, select])
 
   useEffect(() => {
     if (activeId && hint === 'shown') {
@@ -290,11 +300,15 @@ export default function MosaicHome() {
     }
   }, [activeId, hint])
 
+  const cardNode = cardId ? NODE_BY_ID.get(cardId) : undefined
+  const card = cardNode ? copyFor(cardNode) : null
+  const cardWidth = card && cardNode ? cardWidthFor(cardNode.kind, card.line) : CARD_PROJECT_W
+
   useLayoutEffect(() => {
-    const card = cardRef.current
-    if (!card) return
-    cardSize.current = { w: card.offsetWidth, h: card.offsetHeight }
-  }, [cardId])
+    const el = cardRef.current
+    if (!el) return
+    cardSize.current = { w: el.offsetWidth, h: el.offsetHeight }
+  }, [cardId, cardWidth, card?.line])
 
   const copyEmail = async () => {
     try {
@@ -324,11 +338,10 @@ export default function MosaicHome() {
 
   const external = (id: string | null, ring = false) => engineRef.current?.setExternal(id, ring)
 
-  const cardNode = cardId ? NODE_BY_ID.get(cardId) : undefined
-  const card = cardNode ? copyFor(cardNode) : null
   const cardExpanded = cardNode?.kind === 'project' && expandedId === cardNode.id
-  const cardVisible = Boolean(activeId) && !isTouch && !listView && !aboutOpen && !cardExpanded
-  const cardPinned = cardNode?.kind === 'concept' && pinnedId === cardNode.id
+  const cardVisible =
+    Boolean(activeId) && !isTouch && !listView && !aboutOpen && !cardExpanded && !dragging
+  const cardUses = cardNode?.kind === 'concept' ? projectsFor(cardNode.id).map((p) => p.label) : []
   const sheetNode = sheetId ? NODE_BY_ID.get(sheetId) : undefined
   const sheet = sheetNode ? copyFor(sheetNode) : null
   const sheetProjects = sheetNode?.kind === 'concept' ? projectsFor(sheetNode.id) : []
@@ -419,8 +432,6 @@ export default function MosaicHome() {
                     <button
                       type="button"
                       className={styles.conceptItem}
-                      aria-pressed={pinnedId === concept.id}
-                      onClick={() => pin(pinnedId === concept.id ? null : concept.id)}
                       onFocus={() => external(concept.id, true)}
                       onBlur={() => external(null)}
                     >
@@ -466,21 +477,30 @@ export default function MosaicHome() {
       {card && (
         <div
           ref={cardRef}
-          className={`${styles.card} ${cardVisible ? styles.cardOn : ''}`}
+          className={`${styles.card} ${cardNode?.kind === 'concept' ? styles.cardNote : ''} ${
+            cardVisible ? styles.cardOn : ''
+          }`}
+          style={{ width: cardWidth }}
           aria-hidden
         >
-          <p className={styles.cardEyebrow}>{card.eyebrow}</p>
-          <p className={styles.cardTitle}>{card.title}</p>
-          <p className={styles.cardLine}>{card.line}</p>
-          <p className={styles.cardHint}>
-            {cardNode?.kind === 'project'
-              ? 'Open case study →'
-              : cardNode?.kind === 'nucleus'
-                ? 'Click to read more'
-                : cardPinned
-                  ? 'Pinned. Click anywhere to release.'
-                  : 'Click to pin'}
-          </p>
+          <div key={cardId} className={styles.cardBody}>
+            <p className={styles.cardEyebrow}>{card.eyebrow}</p>
+            <p className={styles.cardTitle}>{card.title}</p>
+            <p className={styles.cardLine}>{card.line}</p>
+            {cardNode?.kind === 'concept' ? (
+              <div className={styles.cardFoot}>
+                <span className={styles.cardUses}>{cardUses.join(' · ')}</span>
+                <span className={styles.cardDrag}>
+                  <DragGlyph />
+                  Drag to move
+                </span>
+              </div>
+            ) : (
+              <p className={styles.cardHint}>
+                {cardNode?.kind === 'project' ? 'Open case study →' : 'Click to read more'}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
@@ -497,7 +517,7 @@ export default function MosaicHome() {
             className={styles.sheetClose}
             onClick={() => {
               setSheetId(null)
-              pin(null)
+              select(null)
             }}
           >
             <span aria-hidden>×</span>
@@ -533,7 +553,9 @@ export default function MosaicHome() {
         className={`${styles.hint} ${hint === 'shown' && !listView ? styles.hintOn : ''}`}
         aria-hidden
       >
-        {isTouch ? 'Tap a junction to see which systems use it' : 'Hover a junction to see which systems use it'}
+        {isTouch
+          ? 'Tap a junction to read it. Drag to rearrange.'
+          : 'Hover a junction to read it. Drag to rearrange.'}
       </p>
 
       <footer className={styles.bar}>
@@ -577,6 +599,20 @@ export default function MosaicHome() {
   )
 }
 
+function DragGlyph() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+      <path
+        d="M6 1v10M1 6h10M6 1 4.5 2.5M6 1l1.5 1.5M6 11l-1.5-1.5M6 11l1.5-1.5M1 6l1.5-1.5M1 6l1.5 1.5M11 6 9.5 4.5M11 6 9.5 7.5"
+        stroke="currentColor"
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 function placeCard(
   card: HTMLDivElement | null,
   size: { w: number; h: number },
@@ -585,11 +621,16 @@ function placeCard(
   if (!card || !frame) return
   const vw = window.innerWidth
   const vh = window.innerHeight
+  const w = card.offsetWidth || size.w
+  const h = card.offsetHeight || size.h
   const gap = frame.reach + 18
-  let x = frame.x + gap
-  if (x + size.w > vw - 20) x = frame.x - gap - size.w
-  x = Math.max(16, x)
-  const y = Math.min(Math.max(84, frame.y - size.h / 2), vh - size.h - 96)
+  /* Wide notes prefer the open side of the sheet so they don't sit on a case study. */
+  const preferLeft = frame.x > vw * 0.52
+  let x = preferLeft ? frame.x - gap - w : frame.x + gap
+  if (x + w > vw - 20) x = frame.x - gap - w
+  if (x < 16) x = frame.x + gap
+  x = Math.max(16, Math.min(x, vw - w - 16))
+  const y = Math.min(Math.max(84, frame.y - h / 2), vh - h - 96)
   card.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`
 }
 
