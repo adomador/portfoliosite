@@ -628,6 +628,10 @@
   padding: 16px 18px 15px;
 }
 
+.cardNote .cardTitle {
+  margin-top: 0;
+}
+
 .cardOn {
   opacity: 1;
 }

@@ -125,7 +125,7 @@ export const PROJECTS: ProjectNode[] = [
     frames: [
       { src: '/work/Trochi.png', caption: 'A lane rate with its confidence beside it' },
       { src: '/work/trochi/screen-1.svg', caption: 'The day opens on a market briefing' },
-      { src: '/work/trochi/Lane_Results.png', caption: 'Spot intelligence for a single lane' },
+      { src: '/work/trochi/screen-2.svg', caption: 'Search as the filter. Find lanes by intent' },
     ],
   },
 ]

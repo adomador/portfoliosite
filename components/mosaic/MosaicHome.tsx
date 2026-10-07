@@ -480,7 +480,9 @@ export default function MosaicHome() {
           aria-hidden
         >
           <div key={cardId} className={styles.cardBody}>
-            <p className={styles.cardEyebrow}>{card.eyebrow}</p>
+            {cardNode?.kind !== 'concept' && (
+              <p className={styles.cardEyebrow}>{card.eyebrow}</p>
+            )}
             <p className={styles.cardTitle}>{card.title}</p>
             <p className={styles.cardLine}>{card.line}</p>
             {cardNode?.kind === 'concept' ? (
