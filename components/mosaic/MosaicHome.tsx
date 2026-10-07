@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
 import { usePixelBurst } from './PixelBurst'
+import { warmBurst } from './mosaicBurst'
 import { EMAIL, GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
 import {
   AMBIENT,
@@ -122,6 +123,7 @@ export default function MosaicHome() {
         router.push(href)
         return
       }
+      engineRef.current?.stop()
       const project = PROJECTS.find((p) => p.href === href)
       play({
         href,
@@ -245,10 +247,26 @@ export default function MosaicHome() {
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
     const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
+    /* Download case-study payloads and snapshot the mosaic before anyone clicks,
+       so production doesn't pay for either during the shatter. */
+    PROJECTS.forEach((p) => router.prefetch(p.href))
+    const warm = () => {
+      if (stage.isConnected) warmBurst(stage.parentElement ?? stage)
+    }
+    const warmTimer = window.setTimeout(warm, 900)
+    let resizeTimer = 0
+    const onResize = () => {
+      window.clearTimeout(resizeTimer)
+      resizeTimer = window.setTimeout(warm, 240)
+    }
+    window.addEventListener('resize', onResize)
 
     return () => {
       clearTimeout(hintTimer)
       clearTimeout(primeTimer)
+      clearTimeout(warmTimer)
+      clearTimeout(resizeTimer)
+      window.removeEventListener('resize', onResize)
       engine.destroy()
       /* Only detach if we still own it. During Strict Mode remounts / HMR, React
          may already have cleared the stage; calling remove() then can throw. */

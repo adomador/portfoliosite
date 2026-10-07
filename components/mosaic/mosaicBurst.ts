@@ -5,13 +5,12 @@
  * so React's route work hides inside the chaos.
  */
 
-export const PIXEL_BURST_MS = 420
+/** How long the shatter itself runs. Navigation waits until this finishes. */
+export const PIXEL_BURST_MS = 340
 
-const SCALE = 0.42
-const SPLIT = 0.42
-const FADE_START = 0.78
-const CAP_DESKTOP = 9000
-const CAP_MOBILE = 4500
+const SCALE = 0.38
+const CAP_DESKTOP = 6400
+const CAP_MOBILE = 3200
 const BG_THRESH = 28
 /** Skip every Nth pixel when scanning so getImageData work stays bounded. */
 const SCAN_STEP = 2
@@ -168,6 +167,45 @@ function packBg(rgb: RGB): number {
   return (255 << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]
 }
 
+type Field = {
+  w: number
+  h: number
+  n: number
+  x: Float32Array
+  y: Float32Array
+  r: Uint8Array
+  g: Uint8Array
+  b: Uint8Array
+  bg: RGB
+}
+
+/** Built while the mosaic is idle so a click never has to scan pixels. */
+let warmed: Field | null = null
+
+export function warmBurst(root: HTMLElement) {
+  const cssW = window.innerWidth
+  const cssH = window.innerHeight
+  const w = Math.max(1, Math.round(cssW * SCALE))
+  const h = Math.max(1, Math.round(cssH * SCALE))
+  if (warmed && warmed.w === w && warmed.h === h && warmed.n > 0) return
+  const bg = parseRgb(getComputedStyle(root).backgroundColor, [20, 16, 14])
+  const source = rasterizeMosaic(root, w, h, SCALE)
+  const cap = cssW < 720 ? CAP_MOBILE : CAP_DESKTOP
+  const sampled = sample(source, bg, cap)
+  if (sampled.n < 8) return
+  warmed = {
+    w,
+    h,
+    n: sampled.n,
+    x: sampled.x,
+    y: sampled.y,
+    r: sampled.r,
+    g: sampled.g,
+    b: sampled.b,
+    bg,
+  }
+}
+
 export class PixelBurstController {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
@@ -182,13 +220,13 @@ export class PixelBurstController {
   private bw = 1
   private bh = 1
   private n = 0
-  private ox = new Float32Array(0)
-  private oy = new Float32Array(0)
-  private vx = new Float32Array(0)
-  private vy = new Float32Array(0)
-  private sr = new Uint8Array(0)
-  private sg = new Uint8Array(0)
-  private sb = new Uint8Array(0)
+  private ox: Float32Array<ArrayBufferLike> = new Float32Array(0)
+  private oy: Float32Array<ArrayBufferLike> = new Float32Array(0)
+  private vx: Float32Array<ArrayBufferLike> = new Float32Array(0)
+  private vy: Float32Array<ArrayBufferLike> = new Float32Array(0)
+  private sr: Uint8Array<ArrayBufferLike> = new Uint8Array(0)
+  private sg: Uint8Array<ArrayBufferLike> = new Uint8Array(0)
+  private sb: Uint8Array<ArrayBufferLike> = new Uint8Array(0)
   private fromBg: RGB = [20, 16, 14]
   private toBg: RGB = [16, 17, 20]
   private fromPacked = 0
@@ -216,20 +254,30 @@ export class PixelBurstController {
     this.buffer = this.ctx.createImageData(bw, bh)
     this.pixels = new Uint32Array(this.buffer.data.buffer)
 
-    this.fromBg = parseRgb(getComputedStyle(opts.sourceRoot).backgroundColor, [20, 16, 14])
+    const cached = warmed && warmed.w === bw && warmed.h === bh && warmed.n > 0 ? warmed : null
+    this.fromBg = cached?.bg ?? parseRgb(getComputedStyle(opts.sourceRoot).backgroundColor, [20, 16, 14])
     this.toBg = opts.destBg ? parseRgb(opts.destBg, [16, 17, 20]) : this.fromBg
     this.fromPacked = packBg(this.fromBg)
     this.toPacked = packBg(this.toBg)
 
-    const source = rasterizeMosaic(opts.sourceRoot, bw, bh, SCALE)
-    const cap = cssW < 720 ? CAP_MOBILE : CAP_DESKTOP
-    const sampled = sample(source, this.fromBg, cap)
-    this.n = sampled.n
-    this.ox = sampled.x
-    this.oy = sampled.y
-    this.sr = sampled.r
-    this.sg = sampled.g
-    this.sb = sampled.b
+    if (!cached) {
+      const source = rasterizeMosaic(opts.sourceRoot, bw, bh, SCALE)
+      const cap = cssW < 720 ? CAP_MOBILE : CAP_DESKTOP
+      const sampled = sample(source, this.fromBg, cap)
+      this.n = sampled.n
+      this.ox = sampled.x
+      this.oy = sampled.y
+      this.sr = sampled.r
+      this.sg = sampled.g
+      this.sb = sampled.b
+    } else {
+      this.n = cached.n
+      this.ox = cached.x
+      this.oy = cached.y
+      this.sr = cached.r
+      this.sg = cached.g
+      this.sb = cached.b
+    }
     this.vx = new Float32Array(this.n)
     this.vy = new Float32Array(this.n)
 
@@ -299,23 +347,15 @@ export class PixelBurstController {
   private tick = (now: number) => {
     if (!this.running) return
     const t = clamp01((now - this.startAt) / PIXEL_BURST_MS)
-
-    /* Push the route once the field is chaos, so RSC work hides in the burst. */
-    if (!this.navSent && t >= SPLIT) {
-      this.navSent = true
-      this.onReadyToNav()
-    }
-
     this.draw(t)
     if (t >= 1) {
+      /* Hold the last frame. Route work happens now, under a still picture,
+         so it can't stutter the shatter. The overlay fades once the page lands. */
       this.running = false
       if (!this.navSent) {
         this.navSent = true
         this.onReadyToNav()
       }
-      this.canvas.classList.remove('pixelBurstOn')
-      this.canvas.style.opacity = '1'
-      this.onComplete()
       return
     }
     this.raf = requestAnimationFrame(this.tick)
@@ -327,47 +367,43 @@ export class PixelBurstController {
     if (!img || !pixels) return
     const w = this.bw
     const h = this.bh
-    const fade = t < FADE_START ? 1 : 1 - (t - FADE_START) / (1 - FADE_START)
-    const bgT = t < SPLIT ? 0 : easeInOutCubic((t - SPLIT) / (1 - SPLIT))
-    const packed = bgT < 0.01 ? this.fromPacked : bgT > 0.99 ? this.toPacked : packBg([
-      mix(this.fromBg[0], this.toBg[0], bgT) | 0,
-      mix(this.fromBg[1], this.toBg[1], bgT) | 0,
-      mix(this.fromBg[2], this.toBg[2], bgT) | 0,
-    ])
+    const bgT = easeInOutCubic(t)
+    const packed =
+      bgT < 0.01
+        ? this.fromPacked
+        : bgT > 0.99
+          ? this.toPacked
+          : packBg([
+              mix(this.fromBg[0], this.toBg[0], bgT) | 0,
+              mix(this.fromBg[1], this.toBg[1], bgT) | 0,
+              mix(this.fromBg[2], this.toBg[2], bgT) | 0,
+            ])
     pixels.fill(packed)
 
-    const explode = t < SPLIT ? easeOutQuart(t / SPLIT) : 1
-    const reform = t < SPLIT ? 0 : easeInOutCubic((t - SPLIT) / (1 - SPLIT))
-    const colorT = reform
+    const explode = easeOutQuart(t)
     const to = this.toBg
 
     for (let i = 0; i < this.n; i++) {
-      const ex = this.ox[i] + this.vx[i] * explode
-      const ey = this.oy[i] + this.vy[i] * explode
-      const x = mix(ex, this.ox[i], reform) | 0
-      const y = mix(ey, this.oy[i], reform) | 0
+      const x = (this.ox[i] + this.vx[i] * explode) | 0
+      const y = (this.oy[i] + this.vy[i] * explode) | 0
       if ((x | y) < 0 || x >= w || y >= h) continue
-      const r = mix(this.sr[i], to[0], colorT * 0.55) | 0
-      const g = mix(this.sg[i], to[1], colorT * 0.55) | 0
-      const b = mix(this.sb[i], to[2], colorT * 0.55) | 0
-      const packedPx = (255 << 24) | (b << 16) | (g << 8) | r
-      const p = y * w + x
-      pixels[p] = packedPx
-      if (x + 1 < w) pixels[p + 1] = packedPx
+      const r = mix(this.sr[i], to[0], t * 0.45) | 0
+      const g = mix(this.sg[i], to[1], t * 0.45) | 0
+      const b = mix(this.sb[i], to[2], t * 0.45) | 0
+      pixels[y * w + x] = (255 << 24) | (b << 16) | (g << 8) | r
     }
 
     this.ctx.putImageData(img, 0, 0)
-    this.canvas.style.opacity = String(fade)
   }
 }
 
-function growF32(src: Float32Array, n: number) {
+function growF32(src: Float32Array<ArrayBufferLike>, n: number) {
   const next = new Float32Array(n)
   next.set(src)
   return next
 }
 
-function growU8(src: Uint8Array, n: number) {
+function growU8(src: Uint8Array<ArrayBufferLike>, n: number) {
   const next = new Uint8Array(n)
   next.set(src)
   return next

@@ -8,7 +8,7 @@ import {
   useRef,
   type ReactNode,
 } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { PixelBurstController } from './mosaicBurst'
 import styles from './PixelBurst.module.css'
 
@@ -33,15 +33,27 @@ export function usePixelBurst() {
   return ctx
 }
 
+const FADE_MS = 280
+
 export function PixelBurstProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
+  const pathname = usePathname()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const controller = useRef<PixelBurstController | null>(null)
   const playing = useRef(false)
+  const pendingHref = useRef<string | null>(null)
   const startRaf = useRef(0)
+  const fadeTimer = useRef<ReturnType<typeof setTimeout>>()
 
   const finish = useCallback(() => {
+    const canvas = canvasRef.current
     playing.current = false
+    pendingHref.current = null
+    if (canvas) {
+      canvas.style.transition = ''
+      canvas.style.opacity = '1'
+      canvas.classList.remove('pixelBurstOn')
+    }
     document.documentElement.removeAttribute('data-pixel-burst')
     document.documentElement.style.overflow = ''
   }, [])
@@ -55,15 +67,16 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
       }
 
       cancelAnimationFrame(startRaf.current)
+      clearTimeout(fadeTimer.current)
       controller.current?.cancel()
 
-      /* Cover the screen this frame so the click feels instant, then sample. */
+      canvas.style.transition = ''
       canvas.style.opacity = '1'
       canvas.classList.add('pixelBurstOn')
       playing.current = true
+      pendingHref.current = null
       document.documentElement.setAttribute('data-pixel-burst', '')
       document.documentElement.style.overflow = 'hidden'
-      router.prefetch(opts.href)
 
       startRaf.current = requestAnimationFrame(() => {
         const burst = new PixelBurstController(canvas)
@@ -74,12 +87,14 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
             origin: opts.origin,
             accent: opts.accent,
             destBg: opts.destBg,
-            onReadyToNav: () => router.push(opts.href),
+            onReadyToNav: () => {
+              pendingHref.current = opts.href
+              router.push(opts.href)
+            },
             onComplete: finish,
           })
         } catch {
           finish()
-          canvas.classList.remove('pixelBurstOn')
           router.push(opts.href)
         }
       })
@@ -87,9 +102,32 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
     [finish, router]
   )
 
+  /* Lift the still frame only after the case study has actually painted. */
+  useEffect(() => {
+    const href = pendingHref.current
+    if (!playing.current || !href) return
+    const path = href.split('?')[0] || '/'
+    if (pathname !== path) return
+    const canvas = canvasRef.current
+    if (!canvas) {
+      finish()
+      return
+    }
+    const id = requestAnimationFrame(() => {
+      canvas.style.transition = `opacity ${FADE_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
+      canvas.style.opacity = '0'
+    })
+    fadeTimer.current = setTimeout(finish, FADE_MS + 40)
+    return () => {
+      cancelAnimationFrame(id)
+      clearTimeout(fadeTimer.current)
+    }
+  }, [pathname, finish])
+
   useEffect(() => {
     return () => {
       cancelAnimationFrame(startRaf.current)
+      clearTimeout(fadeTimer.current)
       controller.current?.cancel()
       document.documentElement.removeAttribute('data-pixel-burst')
       document.documentElement.style.overflow = ''
