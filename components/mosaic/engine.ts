@@ -1279,7 +1279,8 @@ export class MosaicEngine {
       ctx.translate(x, y)
       ctx.rotate(ang)
       const base = Math.min(a.alpha, b.alpha) * (hot ? 1 : 0.6)
-      ctx.fillStyle = e.color ?? pal.accent
+      /* Brand only while a route is live; the idle heartbeat stays gold. */
+      ctx.fillStyle = hot && e.color ? e.color : pal.accent
       /* A short wake behind the packet shows which way the load is moving. */
       ctx.globalAlpha = base * 0.28
       ctx.fillRect(pulse.dir === 1 ? -22 : 6, -0.75, 16, 1.5)
@@ -1314,7 +1315,8 @@ export class MosaicEngine {
       const scale = 1 + n.focus * 0.06
       const box = this.nodeBox(n, scale)
       const hot = n.focus > 0.35
-      const tint = n.color ?? pal.accent
+      /* Brand tint only while this node is the focus. Idle stays on the gold palette. */
+      const tint = hot && n.color ? n.color : pal.accent
 
       /* An expanding terminal is drawn by drawPanels, above everything else. */
       if (n.expand > 0.001) continue
@@ -1358,7 +1360,7 @@ export class MosaicEngine {
 
       if (this.externalRing && this.external === i) {
         ctx.save()
-        ctx.strokeStyle = tint
+        ctx.strokeStyle = n.color ?? pal.accent
         ctx.lineWidth = 1.2
         ctx.globalAlpha = 1
         ctx.setLineDash([3, 4])
@@ -1489,7 +1491,12 @@ export class MosaicEngine {
         this.setFont(compact ? 9.5 : 10.5, 500, compact ? 1.2 : 1.6)
         half = Math.max(
           half,
-          this.haloText(n.tag.toUpperCase(), n.px, top + (compact ? 36 : 44), n.color ?? pal.accent)
+          this.haloText(
+            n.tag.toUpperCase(),
+            n.px,
+            top + (compact ? 36 : 44),
+            n.focus > 0.35 && n.color ? n.color : pal.accent
+          )
         )
       } else if (n.kind === 'nucleus') {
         this.setFont(compact ? 13 : 14, 500, 0.2)
