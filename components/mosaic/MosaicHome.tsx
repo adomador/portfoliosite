@@ -438,6 +438,7 @@ export default function MosaicHome() {
                     <span className={styles.indexText}>
                       <span className={styles.indexName}>{project.label}</span>
                       <span className={styles.indexTag}>{project.tag}</span>
+                      <span className={styles.indexDates}>{project.dates}</span>
                       <span className={styles.indexLine}>{project.line}</span>
                     </span>
                     <span className={styles.indexArrow} aria-hidden>

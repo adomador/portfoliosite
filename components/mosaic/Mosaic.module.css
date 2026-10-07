@@ -318,9 +318,17 @@
 .indexTag {
   margin-top: 2px;
   font-size: 0.6875rem;
-  line-height: 1.4;
-  letter-spacing: 0.06em;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
   color: var(--mz-ink-2);
+}
+
+.indexDates {
+  margin-top: 1px;
+  font-size: 0.625rem;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  color: var(--mz-ink-3);
 }
 
 .indexLine {
@@ -506,12 +514,19 @@
 }
 
 .isList .indexTag {
-  margin-top: 4px;
-  font-size: 0.75rem;
+  margin-top: 6px;
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--mz-accent);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--mz-ink-2);
+}
+
+.isList .indexDates {
+  margin-top: 3px;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--mz-ink-3);
 }
 
 .isList .indexLine {

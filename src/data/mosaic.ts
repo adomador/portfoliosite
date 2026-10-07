@@ -13,7 +13,10 @@ export type ProjectNode = {
   id: string
   kind: 'project'
   label: string
+  /** Role on the engagement. Shown under the name in Selected work and on the sheet. */
   tag: string
+  /** Tenure, shown under the role in Selected work. */
+  dates: string
   /** One-line result, shown in the hover card and the list view. */
   line: string
   href: string
@@ -59,7 +62,8 @@ export const PROJECTS: ProjectNode[] = [
     id: 'fleetworthy',
     kind: 'project',
     label: 'Fleetworthy',
-    tag: 'Research & product design',
+    tag: 'Senior Product Designer',
+    dates: '2025 – Present',
     line: '700+ sales-qualified upsell leads from one connected view.',
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
@@ -73,8 +77,9 @@ export const PROJECTS: ProjectNode[] = [
   {
     id: 'triumph',
     kind: 'project',
-    label: 'Triumph',
-    tag: 'Research & design',
+    label: 'Triumph Financial',
+    tag: 'Product Designer',
+    dates: '2022 – 2025',
     line: 'Cut chat handle time from 8:52 to 4:32.',
     href: '/work/triumph',
     logo: '/work/TriumphFAV2.svg',
@@ -89,7 +94,8 @@ export const PROJECTS: ProjectNode[] = [
     id: 'diezl',
     kind: 'project',
     label: 'Diezl',
-    tag: 'Solo design & build',
+    tag: 'Founder',
+    dates: '2025 – Present',
     line: 'Shipped alone. 406 installs, 901 loads evaluated.',
     href: '/work/diezl',
     logo: '/work/Diezl.svg',
@@ -104,7 +110,8 @@ export const PROJECTS: ProjectNode[] = [
     id: 'trochi',
     kind: 'project',
     label: 'Trochi',
-    tag: '0 to 1 product design',
+    tag: 'Freelance Product Designer',
+    dates: '2025 – Present',
     line: 'An MVP concept that became the pitch to prospective cooperative members.',
     href: '/work/trochi',
     logo: '/work/Trochi.svg',

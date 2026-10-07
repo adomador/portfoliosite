@@ -1,0 +1,26 @@
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  background: #14100e;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 380ms var(--ease-out-quart);
+}
+
+.veilOn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.veilOut {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms var(--ease-out-quart);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil {
+    transition: none;
+  }
+}
