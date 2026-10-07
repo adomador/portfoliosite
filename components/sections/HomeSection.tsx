@@ -8,6 +8,7 @@ import ResumeBook from '@/components/ResumeBook'
 import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
+import { ROLE } from '@/lib/profile'
 
 /* Nav row: About left, Work middle, Resume right. Leaf stays haphazard (varied spots in LabyrinthContext). */
 const SPOTS_DESKTOP = {
@@ -64,7 +65,7 @@ export default function HomeSection() {
           <main className={styles.homeMain}>
             <div className={styles.identity}>
               <h1 className={styles.name}>Alfredo Domador</h1>
-              <p className={styles.role}>Product Designer | Builder </p>
+              <p className={styles.role}>{ROLE}</p>
             </div>
           </main>
           <div className={styles.homeNav} aria-hidden />

@@ -199,7 +199,7 @@ export default function MosaicHome() {
         },
       })
     } catch {
-      canvas.remove()
+      if (canvas.parentNode === stage) stage.removeChild(canvas)
       setListView(true)
       return
     }
@@ -231,7 +231,9 @@ export default function MosaicHome() {
       clearTimeout(hintTimer)
       clearTimeout(primeTimer)
       engine.destroy()
-      canvas.remove()
+      /* Only detach if we still own it. During Strict Mode remounts / HMR, React
+         may already have cleared the stage; calling remove() then can throw. */
+      if (canvas.parentNode === stage) stage.removeChild(canvas)
       engineRef.current = null
     }
   }, [])

@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from 'next'
+import { NAME, ROLE } from '@/lib/profile'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Alfredo Domador — Senior Product Designer & Builder',
+  title: `${NAME} — ${ROLE}`,
   description:
-    'Product designer and builder working in freight tech. Selected work and how to get in touch.',
+    'Senior product designer and builder working in freight tech. Selected work and how to get in touch.',
 }
 
 export const viewport: Viewport = {

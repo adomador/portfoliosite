@@ -5,7 +5,7 @@
  * Every edge must point at an `id` that exists below. Unknown ids are skipped.
  */
 
-import { HEADLINE, NAME } from '@/lib/profile'
+import { HEADLINE, NAME, ROLE } from '@/lib/profile'
 
 export type ProjectFrame = { src: string; caption: string }
 
@@ -46,7 +46,7 @@ export type MosaicEdge = { from: string; to: string }
 
 export const MOSAIC_COPY = {
   name: NAME,
-  role: 'Product Designer & Builder',
+  role: ROLE,
   headline: HEADLINE,
 } as const
 
@@ -148,8 +148,8 @@ export const NUCLEUS: NucleusNode = {
   id: 'nucleus',
   kind: 'nucleus',
   label: 'Alfredo',
-  tag: 'Product Designer & Builder',
-  line: 'The same moves show up in every system here. Open to read more about me.',
+  tag: ROLE,
+  line: 'Open to read more about me.',
 }
 
 export const EDGES: MosaicEdge[] = [
