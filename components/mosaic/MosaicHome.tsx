@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
+import { usePixelBurst } from './PixelBurst'
 import { EMAIL, GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
 import {
   AMBIENT,
@@ -22,7 +23,6 @@ import ProjectPanel from './ProjectPanel'
 import styles from './Mosaic.module.css'
 
 const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
-const FADE_MS = 380
 const HINT_DELAY_MS = 3200
 const PRIME_MS = 2400
 /** Project cards stay compact. Junction notes grow toward a ~62-character measure. */
@@ -75,6 +75,9 @@ const prefersReducedMotion = () =>
 
 export default function MosaicHome() {
   const router = useRouter()
+  const { play } = usePixelBurst()
+  const rootRef = useRef<HTMLDivElement>(null)
+  const lastPointer = useRef({ x: 0, y: 0 })
   const stageRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<MosaicEngine | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -106,13 +109,28 @@ export default function MosaicHome() {
   }, [])
 
   const navigate = useCallback(
-    (href: string) => {
+    (href: string, origin?: { x: number; y: number }) => {
       router.prefetch(href)
-      setLeaving(true)
-      clearTimeout(leaveTimer.current)
-      leaveTimer.current = setTimeout(() => router.push(href), prefersReducedMotion() ? 0 : FADE_MS)
+      if (prefersReducedMotion()) {
+        setLeaving(true)
+        clearTimeout(leaveTimer.current)
+        leaveTimer.current = setTimeout(() => router.push(href), 0)
+        return
+      }
+      const root = rootRef.current
+      if (!root) {
+        router.push(href)
+        return
+      }
+      const project = PROJECTS.find((p) => p.href === href)
+      play({
+        href,
+        sourceRoot: root,
+        origin: origin ?? lastPointer.current,
+        accent: project?.color,
+      })
     },
-    [router]
+    [play, router]
   )
 
   const openAbout = useCallback(() => {
@@ -246,6 +264,14 @@ export default function MosaicHome() {
     return () => query.removeEventListener('change', sync)
   }, [])
 
+  useEffect(() => {
+    const onPointer = (e: PointerEvent) => {
+      lastPointer.current = { x: e.clientX, y: e.clientY }
+    }
+    window.addEventListener('pointerdown', onPointer)
+    return () => window.removeEventListener('pointerdown', onPointer)
+  }, [])
+
   /* Phones and narrow viewports open in list — the mosaic needs room to breathe. */
   useEffect(() => {
     const mobile = window.matchMedia('(max-width: 720px), (hover: none)')
@@ -328,7 +354,7 @@ export default function MosaicHome() {
       return
     }
     e.preventDefault()
-    navigate(href)
+    navigate(href, { x: e.clientX, y: e.clientY })
   }
 
   const onLeaf = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -351,6 +377,7 @@ export default function MosaicHome() {
 
   return (
     <div
+      ref={rootRef}
       className={`${styles.root} ${listView ? styles.isList : ''} ${
         sheetOpen ? styles.sheetOpen : ''
       }`}
