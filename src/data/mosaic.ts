@@ -122,7 +122,7 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'systems-thinking',
     kind: 'concept',
     label: 'Systems thinking',
-    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it surfaced problems no single product could see, plus 700+ sales-qualified upsell leads.',
+    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it surfaced problems no single product could see, and generated 700+ sales-qualified upsell leads.',
   },
   {
     id: 'initiative',
@@ -134,7 +134,7 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'love-the-problem',
     kind: 'concept',
     label: 'Love the Problem',
-    line: "Solutions, no matter how elegant, fall flat when they solve the wrong problem. That's why I watch how people actually work before deciding what to build. At Triumph, six 90-minute sessions shadowing support agents showed they were jumping between customer profiles just to find basic information. We built one search that pulled it all together, and chat handle time dropped from 8:52 to 4:32.",
+    line: "Solutions, no matter how elegant, fall flat when they solve the wrong problem. That's why I dive into understanding how people actually work before deciding what to build. At Triumph, six 90-minute sessions shadowing support agents showed they were jumping between customer profiles just to find basic information. We built one search that pulled it all together, and chat handle time dropped from 8:52 to 4:32.",
   },
   {
     id: 'details',
