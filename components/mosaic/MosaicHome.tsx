@@ -5,8 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
-import { usePixelBurst } from './PixelBurst'
-import { warmBurst, warmDest } from './mosaicBurst'
+import { useSoftDissolve } from './SoftDissolve'
 import { EMAIL, GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
 import {
   AMBIENT,
@@ -76,15 +75,13 @@ const prefersReducedMotion = () =>
 
 export default function MosaicHome() {
   const router = useRouter()
-  const { play } = usePixelBurst()
+  const { dissolve } = useSoftDissolve()
   const rootRef = useRef<HTMLDivElement>(null)
-  const lastPointer = useRef({ x: 0, y: 0 })
   const stageRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<MosaicEngine | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const cardSize = useRef({ w: 0, h: 0 })
   const copyTimer = useRef<ReturnType<typeof setTimeout>>()
-  const leaveTimer = useRef<ReturnType<typeof setTimeout>>()
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const panelLead = useRef<string | null>(null)
   const scrollToAbout = useRef(false)
@@ -98,7 +95,6 @@ export default function MosaicHome() {
   const [sheetId, setSheetId] = useState<string | null>(null)
   const [aboutOpen, setAboutOpen] = useState(false)
   const [listView, setListView] = useState(false)
-  const [leaving, setLeaving] = useState(false)
   const [copied, setCopied] = useState(false)
   const [glitching, setGlitching] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
@@ -110,40 +106,11 @@ export default function MosaicHome() {
   }, [])
 
   const navigate = useCallback(
-    (href: string, origin?: { x: number; y: number }) => {
-      if (prefersReducedMotion()) {
-        setLeaving(true)
-        clearTimeout(leaveTimer.current)
-        leaveTimer.current = setTimeout(() => router.push(href), 0)
-        return
-      }
-      const root = rootRef.current
-      if (!root) {
-        router.push(href)
-        return
-      }
-      const project = PROJECTS.find((p) => p.href === href)
-      const cover = project?.cover ?? project?.frames[0]?.src
-      /* Overlay first frame is painted synchronously inside play, then we
-         stop the mosaic so they never fight for a frame. */
-      play({
-        href,
-        sourceRoot: root,
-        origin: origin ?? lastPointer.current,
-        accent: project?.color,
-        dest: project && cover
-          ? {
-              href,
-              label: project.label,
-              tag: project.tag,
-              surface: project.surface,
-              cover,
-            }
-          : undefined,
-      })
+    (href: string) => {
       engineRef.current?.stop()
+      dissolve(href)
     },
-    [play, router]
+    [dissolve]
   )
 
   const openAbout = useCallback(() => {
@@ -257,44 +224,11 @@ export default function MosaicHome() {
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
     const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
-    /* Download case-study payloads and bake mosaic + dest first-folds before
-       anyone clicks, so production doesn't pay for sampling during the burst. */
     PROJECTS.forEach((p) => router.prefetch(p.href))
-    const warm = () => {
-      if (!stage.isConnected) return
-      warmBurst(stage.parentElement ?? stage)
-      for (const p of PROJECTS) {
-        const cover = p.cover ?? p.frames[0]?.src
-        if (!cover) continue
-        void warmDest({
-          href: p.href,
-          label: p.label,
-          tag: p.tag,
-          surface: p.surface,
-          cover,
-        })
-      }
-    }
-    const idleRic = typeof window.requestIdleCallback === 'function'
-    const idle = idleRic
-      ? window.requestIdleCallback(warm, { timeout: 400 })
-      : window.setTimeout(warm, 120)
-    const warmTimer = window.setTimeout(warm, 900)
-    let resizeTimer = 0
-    const onResize = () => {
-      window.clearTimeout(resizeTimer)
-      resizeTimer = window.setTimeout(warm, 240)
-    }
-    window.addEventListener('resize', onResize)
 
     return () => {
       clearTimeout(hintTimer)
       clearTimeout(primeTimer)
-      if (idleRic) window.cancelIdleCallback(idle)
-      else clearTimeout(idle)
-      clearTimeout(warmTimer)
-      clearTimeout(resizeTimer)
-      window.removeEventListener('resize', onResize)
       engine.destroy()
       /* Only detach if we still own it. During Strict Mode remounts / HMR, React
          may already have cleared the stage; calling remove() then can throw. */
@@ -309,14 +243,6 @@ export default function MosaicHome() {
     sync()
     query.addEventListener('change', sync)
     return () => query.removeEventListener('change', sync)
-  }, [])
-
-  useEffect(() => {
-    const onPointer = (e: PointerEvent) => {
-      lastPointer.current = { x: e.clientX, y: e.clientY }
-    }
-    window.addEventListener('pointerdown', onPointer)
-    return () => window.removeEventListener('pointerdown', onPointer)
   }, [])
 
   /* Phones and narrow viewports open in list — the mosaic needs room to breathe. */
@@ -347,14 +273,7 @@ export default function MosaicHome() {
   }, [listView, select])
 
   useEffect(() => {
-    /* Coming back through the bfcache would otherwise show the fade veil. */
-    const onShow = () => setLeaving(false)
-    window.addEventListener('pageshow', onShow)
-    return () => {
-      window.removeEventListener('pageshow', onShow)
-      clearTimeout(leaveTimer.current)
-      clearTimeout(copyTimer.current)
-    }
+    return () => clearTimeout(copyTimer.current)
   }, [])
 
   useEffect(() => {
@@ -401,7 +320,7 @@ export default function MosaicHome() {
       return
     }
     e.preventDefault()
-    navigate(href, { x: e.clientX, y: e.clientY })
+    navigate(href)
   }
 
   const onLeaf = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -670,7 +589,6 @@ export default function MosaicHome() {
 
       {aboutOpen && <AboutPanel onClose={closeAbout} />}
 
-      <div className={`${styles.veil} ${leaving ? styles.veilOn : ''}`} aria-hidden />
       {glitching && <GlitchOverlay />}
     </div>
   )

@@ -1170,25 +1170,6 @@
 }
 
 /* --------------------------------------------------------------
-   Page fade on the way out
-   -------------------------------------------------------------- */
-
-.veil {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
-  background: var(--mz-bg-deep);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 380ms var(--ease-out-quart);
-}
-
-.veilOn {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* --------------------------------------------------------------
    Small screens
    -------------------------------------------------------------- */
 

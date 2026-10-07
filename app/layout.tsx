@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { NAME, ROLE } from '@/lib/profile'
-import { PixelBurstProvider } from '@/components/mosaic/PixelBurst'
 import { SoftDissolveProvider } from '@/components/mosaic/SoftDissolve'
 import './globals.css'
 
@@ -25,9 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <PixelBurstProvider>
-          <SoftDissolveProvider>{children}</SoftDissolveProvider>
-        </PixelBurstProvider>
+        <SoftDissolveProvider>{children}</SoftDissolveProvider>
       </body>
     </html>
   )

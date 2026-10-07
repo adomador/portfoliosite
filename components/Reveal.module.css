@@ -6,13 +6,6 @@
     transform 900ms var(--ease-out-expo);
 }
 
-/* Incoming pixel burst needs the first fold visible so it can sample the page. */
-:global(html[data-pixel-burst]) .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
-}
-
 .shown {
   opacity: 1;
   transform: none;

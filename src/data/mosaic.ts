@@ -23,14 +23,8 @@ export type ProjectNode = {
   logo: string
   /** Brand color: the node's traffic, highlights and expanded panel all use it. */
   color: string
-  /** Case-study page background; the exit burst tints toward it. */
+  /** Case-study page background. */
   surface: string
-  /**
-   * First-fold image the exit burst reforms into. Defaults to frames[0]
-   * when omitted — set this when the case study opens on a different figure
-   * (e.g. Diezl's cover).
-   */
-  cover?: string
   /** Screens the expanded node cycles through on hover. Three reads best. */
   frames: ProjectFrame[]
 }
@@ -111,7 +105,6 @@ export const PROJECTS: ProjectNode[] = [
     logo: '/work/Diezl.svg',
     color: '#f06b06',
     surface: '#101114',
-    cover: '/work/diezl-cover.png',
     frames: [
       { src: '/work/diezl-voice-input.png', caption: 'Paste the load message or say it out loud' },
       { src: '/work/diezl-profit-margin.png', caption: 'Profit first, then where the truck ends up' },
