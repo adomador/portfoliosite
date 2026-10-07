@@ -13,5 +13,7 @@
 
 .overlay:global(.pixelBurstOn) {
   display: block;
-  pointer-events: auto;
+  /* Never capture clicks — if lift fails, the back button must still work.
+     Overflow lock on <html> already blocks scrolling during the burst. */
+  pointer-events: none;
 }
