@@ -78,6 +78,23 @@ export function SoftDissolveProvider({ children }: { children: ReactNode }) {
     return () => window.cancelAnimationFrame(id)
   }, [pathname, phase, finish])
 
+  /* Safety: never leave the veil or overflow lock stuck if navigation aborts. */
+  useEffect(() => {
+    if (phase === 'idle' || phase === 'out') return
+    const safety = window.setTimeout(() => {
+      if (targetHref.current) {
+        const path = targetHref.current.split('?')[0] || '/'
+        if (window.location.pathname === path || phase === 'hold') {
+          setPhase('out')
+          clearTimer.current = setTimeout(finish, DISSOLVE_MS)
+          return
+        }
+      }
+      finish()
+    }, DISSOLVE_MS * 4)
+    return () => window.clearTimeout(safety)
+  }, [phase, finish])
+
   useEffect(() => {
     return () => {
       clearTimeout(leaveTimer.current)

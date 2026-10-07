@@ -424,15 +424,31 @@
   pointer-events: none;
 }
 
+/* The directory is the only scroller in list view. It inherits
+   pointer-events: none from mosaic mode (so the canvas can take
+   drags); on phones that blocks touch scrolling entirely. */
+.isList .main {
+  pointer-events: auto;
+}
+
 .isList .directory {
   position: absolute;
   inset: 0;
+  z-index: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  pointer-events: auto;
   padding: 168px var(--mz-pad) 120px;
   -webkit-mask-image: linear-gradient(180deg, transparent 96px, #000 150px, #000 calc(100% - 120px), transparent calc(100% - 72px));
   mask-image: linear-gradient(180deg, transparent 96px, #000 150px, #000 calc(100% - 120px), transparent calc(100% - 72px));
   animation: listIn 520ms var(--ease-out-expo) both;
+}
+
+.isList .directory > * {
+  pointer-events: auto;
 }
 
 .isList .index {
