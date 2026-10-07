@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { PixelBurstController } from './mosaicBurst'
+import { PixelBurstController, type DestWarmOpts } from './mosaicBurst'
 import styles from './PixelBurst.module.css'
 
 type PlayOpts = {
@@ -17,8 +17,8 @@ type PlayOpts = {
   sourceRoot: HTMLElement
   origin: { x: number; y: number }
   accent?: string
-  /** Case-study page background; used instead of a mid-flight DOM sample. */
-  destBg?: string
+  /** Baked first-fold recipe; particles home into a precomposed picture of this. */
+  dest?: DestWarmOpts
 }
 
 type PixelBurstApi = {
@@ -33,7 +33,8 @@ export function usePixelBurst() {
   return ctx
 }
 
-const FADE_MS = 280
+/** Last frame already looks like the case study — keep the lift short. */
+const FADE_MS = 100
 
 export function PixelBurstProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
@@ -42,6 +43,9 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
   const controller = useRef<PixelBurstController | null>(null)
   const playing = useRef(false)
   const pendingHref = useRef<string | null>(null)
+  const reformDone = useRef(false)
+  const pageReady = useRef(false)
+  const lifting = useRef(false)
   const startRaf = useRef(0)
   const fadeTimer = useRef<ReturnType<typeof setTimeout>>()
 
@@ -49,6 +53,9 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
     const canvas = canvasRef.current
     playing.current = false
     pendingHref.current = null
+    reformDone.current = false
+    pageReady.current = false
+    lifting.current = false
     if (canvas) {
       canvas.style.transition = ''
       canvas.style.opacity = '1'
@@ -57,6 +64,21 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
     document.documentElement.removeAttribute('data-pixel-burst')
     document.documentElement.style.overflow = ''
   }, [])
+
+  const tryLift = useCallback(() => {
+    if (!playing.current || lifting.current) return
+    if (!reformDone.current || !pageReady.current) return
+    const canvas = canvasRef.current
+    if (!canvas) {
+      finish()
+      return
+    }
+    lifting.current = true
+    canvas.style.transition = `opacity ${FADE_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
+    canvas.style.opacity = '0'
+    clearTimeout(fadeTimer.current)
+    fadeTimer.current = setTimeout(finish, FADE_MS + 40)
+  }, [finish])
 
   const play = useCallback(
     (opts: PlayOpts) => {
@@ -75,6 +97,9 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
       canvas.classList.add('pixelBurstOn')
       playing.current = true
       pendingHref.current = null
+      reformDone.current = false
+      pageReady.current = false
+      lifting.current = false
       document.documentElement.setAttribute('data-pixel-burst', '')
       document.documentElement.style.overflow = 'hidden'
 
@@ -86,12 +111,18 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
             sourceRoot: opts.sourceRoot,
             origin: opts.origin,
             accent: opts.accent,
-            destBg: opts.destBg,
+            dest: opts.dest,
             onReadyToNav: () => {
               pendingHref.current = opts.href
+              /* If the route already matches (warm soft nav), count it ready. */
+              const path = opts.href.split('?')[0] || '/'
+              if (window.location.pathname === path) pageReady.current = true
               router.push(opts.href)
             },
-            onComplete: finish,
+            onComplete: () => {
+              reformDone.current = true
+              tryLift()
+            },
           })
         } catch {
           finish()
@@ -99,30 +130,18 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
         }
       })
     },
-    [finish, router]
+    [finish, router, tryLift]
   )
 
-  /* Lift the still frame only after the case study has actually painted. */
+  /* Page must have painted under the reformed frame before we lift. */
   useEffect(() => {
     const href = pendingHref.current
     if (!playing.current || !href) return
     const path = href.split('?')[0] || '/'
     if (pathname !== path) return
-    const canvas = canvasRef.current
-    if (!canvas) {
-      finish()
-      return
-    }
-    const id = requestAnimationFrame(() => {
-      canvas.style.transition = `opacity ${FADE_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
-      canvas.style.opacity = '0'
-    })
-    fadeTimer.current = setTimeout(finish, FADE_MS + 40)
-    return () => {
-      cancelAnimationFrame(id)
-      clearTimeout(fadeTimer.current)
-    }
-  }, [pathname, finish])
+    pageReady.current = true
+    tryLift()
+  }, [pathname, tryLift])
 
   useEffect(() => {
     return () => {

@@ -25,6 +25,12 @@ export type ProjectNode = {
   color: string
   /** Case-study page background; the exit burst tints toward it. */
   surface: string
+  /**
+   * First-fold image the exit burst reforms into. Defaults to frames[0]
+   * when omitted — set this when the case study opens on a different figure
+   * (e.g. Diezl's cover).
+   */
+  cover?: string
   /** Screens the expanded node cycles through on hover. Three reads best. */
   frames: ProjectFrame[]
 }
@@ -105,6 +111,7 @@ export const PROJECTS: ProjectNode[] = [
     logo: '/work/Diezl.svg',
     color: '#f06b06',
     surface: '#101114',
+    cover: '/work/diezl-cover.png',
     frames: [
       { src: '/work/diezl-voice-input.png', caption: 'Paste the load message or say it out loud' },
       { src: '/work/diezl-profit-margin.png', caption: 'Profit first, then where the truck ends up' },
@@ -147,13 +154,13 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'love-the-problem',
     kind: 'concept',
     label: 'Love the Problem',
-    line: "Solutions, no matter how elegant, fall flat when they solve the wrong problem. That's why I dive into understanding how people actually work before deciding what to build. At Triumph, six 90-minute sessions shadowing support agents showed they were jumping between customer profiles just to find basic information. We built one search that pulled it all together, and chat handle time dropped from 8:52 to 4:32.",
+    line: "Solutions, no matter how elegant, fall flat when they solve the wrong problem. That's why I dive into understanding how people actually work before deciding what to build. At Triumph, six 90-minute sessions shadowing support agents showed they were jumping between customer profiles just to find basic information. We built one search that pulled it all together, and chat handle time dropped 49%.",
   },
   {
     id: 'details',
     kind: 'concept',
     label: 'Sweating the details',
-    line: 'I care a lot about craft, especially in enterprise tools where people stare at dense data all day. A screen can be beautiful and still be fast to read, and getting that balance right is most of the work. In Trochi, every card leads with a plain-language takeaway and the number a broker actually needs, the rate, is always the biggest thing on the screen.',
+    line: 'I care a lot about craft, especially in enterprise tools where people stare at dense data all day. A screen can be beautiful and but difficult to read, and getting that balance right is most of the work. In Trochi, every surface leads with a plain-language takeaway and the number a broker actually needs, the rate, is always the biggest thing on the screen.',
   },
 ]
 

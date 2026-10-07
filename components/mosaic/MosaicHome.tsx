@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
 import { usePixelBurst } from './PixelBurst'
-import { warmBurst } from './mosaicBurst'
+import { warmBurst, warmDest } from './mosaicBurst'
 import { EMAIL, GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
 import {
   AMBIENT,
@@ -125,12 +125,21 @@ export default function MosaicHome() {
       }
       engineRef.current?.stop()
       const project = PROJECTS.find((p) => p.href === href)
+      const cover = project?.cover ?? project?.frames[0]?.src
       play({
         href,
         sourceRoot: root,
         origin: origin ?? lastPointer.current,
         accent: project?.color,
-        destBg: project?.surface,
+        dest: project && cover
+          ? {
+              href,
+              label: project.label,
+              tag: project.tag,
+              surface: project.surface,
+              cover,
+            }
+          : undefined,
       })
     },
     [play, router]
@@ -247,11 +256,23 @@ export default function MosaicHome() {
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
     const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
-    /* Download case-study payloads and snapshot the mosaic before anyone clicks,
-       so production doesn't pay for either during the shatter. */
+    /* Download case-study payloads and bake mosaic + dest first-folds before
+       anyone clicks, so production doesn't pay for sampling during the burst. */
     PROJECTS.forEach((p) => router.prefetch(p.href))
     const warm = () => {
-      if (stage.isConnected) warmBurst(stage.parentElement ?? stage)
+      if (!stage.isConnected) return
+      warmBurst(stage.parentElement ?? stage)
+      for (const p of PROJECTS) {
+        const cover = p.cover ?? p.frames[0]?.src
+        if (!cover) continue
+        void warmDest({
+          href: p.href,
+          label: p.label,
+          tag: p.tag,
+          surface: p.surface,
+          cover,
+        })
+      }
     }
     const warmTimer = window.setTimeout(warm, 900)
     let resizeTimer = 0
