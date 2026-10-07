@@ -1,17 +1,19 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import Image from 'next/image'
 import { CHESS_LINKS, ENDORSEMENTS, INTRO, TOOLS } from '@/lib/profile'
 import styles from './Mosaic.module.css'
-
-const ENDORSEMENT = ENDORSEMENTS.find((e) => e.author === 'Rob Daffin') ?? ENDORSEMENTS[0]
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 export default function AboutPanel({ onClose }: { onClose: () => void }) {
   const panelRef = useRef<HTMLElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const [index, setIndex] = useState(0)
+  const labelId = useId()
+  const total = ENDORSEMENTS.length
+  const endorsement = ENDORSEMENTS[index]
 
   useEffect(() => {
     const returnTo = document.activeElement as HTMLElement | null
@@ -82,14 +84,41 @@ export default function AboutPanel({ onClose }: { onClose: () => void }) {
           ))}
         </p>
 
-        <figure className={styles.endorsement}>
-          <p className={`u-label ${styles.blockLabel}`}>Endorsement</p>
-          <blockquote>
-            <p>{ENDORSEMENT.quote}</p>
+        <figure className={styles.endorsement} aria-labelledby={labelId}>
+          <div className={styles.endorsementHead}>
+            <p className={`u-label ${styles.blockLabel}`} id={labelId}>
+              Endorsements
+            </p>
+            {total > 1 && (
+              <div className={styles.pager} role="group" aria-label="Endorsement navigation">
+                <button
+                  type="button"
+                  className={styles.pagerBtn}
+                  onClick={() => setIndex((i) => (i - 1 + total) % total)}
+                  aria-label="Previous endorsement"
+                >
+                  <Chevron dir="prev" />
+                </button>
+                <span className={styles.pagerCount} aria-live="polite">
+                  {index + 1} / {total}
+                </span>
+                <button
+                  type="button"
+                  className={styles.pagerBtn}
+                  onClick={() => setIndex((i) => (i + 1) % total)}
+                  aria-label="Next endorsement"
+                >
+                  <Chevron dir="next" />
+                </button>
+              </div>
+            )}
+          </div>
+          <blockquote key={index} aria-live="polite">
+            <p>{endorsement.quote}</p>
           </blockquote>
           <figcaption className={styles.attribution}>
-            <span className={styles.author}>{ENDORSEMENT.author}</span>
-            <span className={styles.authorRole}>{ENDORSEMENT.role}</span>
+            <span className={styles.author}>{endorsement.author}</span>
+            <span className={styles.authorRole}>{endorsement.role}</span>
           </figcaption>
         </figure>
 
@@ -109,5 +138,19 @@ export default function AboutPanel({ onClose }: { onClose: () => void }) {
         </div>
       </aside>
     </>
+  )
+}
+
+function Chevron({ dir }: { dir: 'prev' | 'next' }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d={dir === 'prev' ? 'M10 3.5 5.5 8 10 12.5' : 'M6 3.5 10.5 8 6 12.5'}
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }

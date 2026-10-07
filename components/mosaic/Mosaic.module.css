@@ -944,6 +944,51 @@
   border-top: 1px solid var(--mz-line);
 }
 
+.endorsementHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.endorsementHead .blockLabel {
+  margin-bottom: 0;
+}
+
+.pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pagerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: var(--mz-ink-3);
+  transition:
+    color 220ms var(--ease-out-quart),
+    background 220ms var(--ease-out-quart);
+}
+
+.pagerBtn:hover {
+  color: var(--mz-ink);
+  background: color-mix(in srgb, var(--mz-ink) 8%, transparent);
+}
+
+.pagerCount {
+  min-width: 2.6em;
+  text-align: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--mz-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
 .endorsement blockquote p {
   font-size: var(--type-small);
   line-height: 1.6;

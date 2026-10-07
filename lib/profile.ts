@@ -27,7 +27,7 @@ export const ENDORSEMENTS = [
   },
   {
     quote:
-      'Alfredo consistently impresses with his ability to lead in end-to-end research and design efforts. That combined skillset of user research and design thinking has been invaluable, allowing us to translate user needs seamlessly into experiences that achieve business goals and deliver delightful user experiences. Working with him has been a pleasure, and I wholeheartedly recommend him for any design leadership role.',
+      'Alfredo consistently impresses with his ability to lead in end-to-end research and design efforts. Working with him has been a pleasure, and I wholeheartedly recommend him for any design leadership role.',
     author: 'Kyle LeGrand',
     role: 'Group Product Manager - Triumph Financial',
   },
