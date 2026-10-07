@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
@@ -337,6 +338,9 @@ export default function MosaicHome() {
                   >
                     <span className={styles.numeral} aria-hidden>
                       {NUMERALS[i] ?? i + 1}
+                    </span>
+                    <span className={styles.indexLogo} aria-hidden>
+                      <Image src={project.logo} alt="" width={40} height={40} />
                     </span>
                     <span className={styles.indexText}>
                       <span className={styles.indexName}>{project.label}</span>

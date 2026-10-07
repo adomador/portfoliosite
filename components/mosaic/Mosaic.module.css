@@ -297,6 +297,10 @@
   color: var(--mz-accent);
 }
 
+.indexLogo {
+  display: none;
+}
+
 .indexText {
   display: flex;
   flex-direction: column;
@@ -422,8 +426,7 @@
   animation: listIn 520ms var(--ease-out-expo) both;
 }
 
-.isList .index,
-.isList .concepts {
+.isList .index {
   position: static;
   width: auto;
   height: auto;
@@ -436,8 +439,15 @@
   transform: none;
 }
 
+/* Junctions stay available to the canvas and screen readers; list view is cases only. */
 .isList .concepts {
-  margin-top: 56px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .isList .indexLabel {
@@ -451,7 +461,9 @@
 }
 
 .isList .indexItem {
-  grid-template-columns: 56px 1fr auto;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 0 22px;
   padding: 26px 8px;
   border-radius: 0;
   border-bottom: 1px solid var(--mz-line);
@@ -463,7 +475,28 @@
 }
 
 .isList .numeral {
-  font-size: 0.8125rem;
+  display: none;
+}
+
+.isList .indexLogo {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+.isList .indexLogo img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  opacity: 0.88;
+  transition: opacity 260ms var(--ease-out-quart);
+}
+
+.isList .indexItem:hover .indexLogo img,
+.isList .indexItem:focus-visible .indexLogo img,
+.isList .indexItemOn .indexLogo img {
+  opacity: 1;
 }
 
 .isList .indexName {

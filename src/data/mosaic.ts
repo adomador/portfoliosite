@@ -15,6 +15,7 @@ export type ProjectNode = {
   /** One-line result, shown in the hover card and the list view. */
   line: string
   href: string
+  logo: string
 }
 
 export type ConceptNode = {
@@ -49,20 +50,22 @@ export const MOSAIC_COPY = {
  */
 export const PROJECTS: ProjectNode[] = [
   {
+    id: 'fleetworthy',
+    kind: 'project',
+    label: 'Fleetworthy',
+    tag: 'Research & product design',
+    line: '700+ sales-qualified upsell leads from one connected view.',
+    href: '/work/fleetworthy',
+    logo: '/work/FW.svg',
+  },
+  {
     id: 'triumph',
     kind: 'project',
     label: 'Triumph',
     tag: 'Research & design',
     line: 'Cut chat handle time from 8:52 to 4:32.',
     href: '/work/triumph',
-  },
-  {
-    id: 'trochi',
-    kind: 'project',
-    label: 'Trochi',
-    tag: '0 to 1 product design',
-    line: 'An MVP concept that became the pitch to prospective cooperative members.',
-    href: '/work/trochi',
+    logo: '/work/TriumphFAV2.svg',
   },
   {
     id: 'diezl',
@@ -71,14 +74,16 @@ export const PROJECTS: ProjectNode[] = [
     tag: 'Solo design & build',
     line: 'Shipped alone. 406 installs, 901 loads evaluated.',
     href: '/work/diezl',
+    logo: '/work/Diezl.svg',
   },
   {
-    id: 'fleetworthy',
+    id: 'trochi',
     kind: 'project',
-    label: 'Fleetworthy',
-    tag: 'Research & product design',
-    line: '700+ sales-qualified upsell leads from one connected view.',
-    href: '/work/fleetworthy',
+    label: 'Trochi',
+    tag: '0 to 1 product design',
+    line: 'An MVP concept that became the pitch to prospective cooperative members.',
+    href: '/work/trochi',
+    logo: '/work/Trochi.svg',
   },
 ]
 
