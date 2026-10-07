@@ -111,7 +111,6 @@ export default function MosaicHome() {
 
   const navigate = useCallback(
     (href: string, origin?: { x: number; y: number }) => {
-      router.prefetch(href)
       if (prefersReducedMotion()) {
         setLeaving(true)
         clearTimeout(leaveTimer.current)
@@ -123,9 +122,10 @@ export default function MosaicHome() {
         router.push(href)
         return
       }
-      engineRef.current?.stop()
       const project = PROJECTS.find((p) => p.href === href)
       const cover = project?.cover ?? project?.frames[0]?.src
+      /* Overlay first frame is painted synchronously inside play, then we
+         stop the mosaic so they never fight for a frame. */
       play({
         href,
         sourceRoot: root,
@@ -141,6 +141,7 @@ export default function MosaicHome() {
             }
           : undefined,
       })
+      engineRef.current?.stop()
     },
     [play, router]
   )
@@ -274,6 +275,10 @@ export default function MosaicHome() {
         })
       }
     }
+    const idleRic = typeof window.requestIdleCallback === 'function'
+    const idle = idleRic
+      ? window.requestIdleCallback(warm, { timeout: 400 })
+      : window.setTimeout(warm, 120)
     const warmTimer = window.setTimeout(warm, 900)
     let resizeTimer = 0
     const onResize = () => {
@@ -285,6 +290,8 @@ export default function MosaicHome() {
     return () => {
       clearTimeout(hintTimer)
       clearTimeout(primeTimer)
+      if (idleRic) window.cancelIdleCallback(idle)
+      else clearTimeout(idle)
       clearTimeout(warmTimer)
       clearTimeout(resizeTimer)
       window.removeEventListener('resize', onResize)

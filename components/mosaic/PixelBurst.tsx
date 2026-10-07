@@ -39,11 +39,43 @@ export function usePixelBurst() {
 
 /** Last frame already looks like the case study — keep the lift short. */
 const FADE_MS = 100
-/** Never leave the overlay trapping clicks if nav/reform signals miss each other. */
-const SAFETY_MS = PIXEL_BURST_MS + 800
+/** Hold the reconstituted still while the real page decodes underneath. */
+const FOLD_WAIT_MS = 700
+/** Never leave the overlay up if nav/reform signals miss each other. */
+const SAFETY_MS = PIXEL_BURST_MS + 2200
 
 function pathOf(href: string) {
   return href.split('?')[0] || '/'
+}
+
+/** Wait until first-fold images have decoded, or time out. Two rAFs after. */
+function waitForFirstFold(timeoutMs: number): Promise<void> {
+  return new Promise((resolve) => {
+    const t0 = performance.now()
+    const finish = () => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+    }
+    const tick = () => {
+      if (performance.now() - t0 >= timeoutMs) {
+        finish()
+        return
+      }
+      const imgs = document.querySelectorAll('main img')
+      let pending = 0
+      for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i] as HTMLImageElement
+        const r = img.getBoundingClientRect()
+        if (r.height < 48 || r.top > window.innerHeight) continue
+        if (!img.complete || img.naturalWidth === 0) pending++
+      }
+      if (pending === 0) {
+        finish()
+        return
+      }
+      window.setTimeout(tick, 40)
+    }
+    tick()
+  })
 }
 
 export function PixelBurstProvider({ children }: { children: ReactNode }) {
@@ -55,8 +87,8 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
   const pendingHref = useRef<string | null>(null)
   const reformDone = useRef(false)
   const pageReady = useRef(false)
+  const foldWait = useRef(false)
   const lifting = useRef(false)
-  const startRaf = useRef(0)
   const fadeTimer = useRef<ReturnType<typeof setTimeout>>()
   const safetyTimer = useRef<ReturnType<typeof setTimeout>>()
   const pollTimer = useRef<ReturnType<typeof setTimeout>>()
@@ -67,6 +99,7 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
     pendingHref.current = null
     reformDone.current = false
     pageReady.current = false
+    foldWait.current = false
     lifting.current = false
     clearTimeout(fadeTimer.current)
     clearTimeout(safetyTimer.current)
@@ -96,10 +129,15 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
     fadeTimer.current = setTimeout(finish, FADE_MS + 40)
   }, [finish])
 
-  const markPageReady = useCallback(() => {
-    if (!playing.current || pageReady.current) return
-    pageReady.current = true
-    tryLift()
+  const armPageReady = useCallback(() => {
+    if (!playing.current || pageReady.current || foldWait.current) return
+    foldWait.current = true
+    void waitForFirstFold(FOLD_WAIT_MS).then(() => {
+      foldWait.current = false
+      if (!playing.current) return
+      pageReady.current = true
+      tryLift()
+    })
   }, [tryLift])
 
   const play = useCallback(
@@ -110,7 +148,6 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      cancelAnimationFrame(startRaf.current)
       clearTimeout(fadeTimer.current)
       clearTimeout(safetyTimer.current)
       clearTimeout(pollTimer.current)
@@ -120,75 +157,69 @@ export function PixelBurstProvider({ children }: { children: ReactNode }) {
       canvas.style.opacity = '1'
       canvas.classList.add('pixelBurstOn')
       playing.current = true
-      /* Set early so a fast pathname update can't race past an empty pendingHref. */
       pendingHref.current = opts.href
       reformDone.current = false
       pageReady.current = false
+      foldWait.current = false
       lifting.current = false
       document.documentElement.setAttribute('data-pixel-burst', '')
       document.documentElement.style.overflow = 'hidden'
 
       safetyTimer.current = setTimeout(() => {
         if (!playing.current || lifting.current) return
-        /* Force the lift even if one signal never arrives — better a hard cut
-           than a forever-blocking overlay that eats the back button. */
         reformDone.current = true
         pageReady.current = true
         tryLift()
         if (!lifting.current) finish()
       }, SAFETY_MS)
 
-      startRaf.current = requestAnimationFrame(() => {
-        const burst = new PixelBurstController(canvas)
-        controller.current = burst
-        try {
-          burst.start({
-            sourceRoot: opts.sourceRoot,
-            origin: opts.origin,
-            accent: opts.accent,
-            dest: opts.dest,
-            onReadyToNav: () => {
-              pendingHref.current = opts.href
-              const destPath = pathOf(opts.href)
-              if (window.location.pathname === destPath) markPageReady()
-              router.push(opts.href)
-              /* Poll in case the pathname effect misses a soft-nav edge case. */
-              let tries = 0
-              const poll = () => {
-                if (!playing.current || pageReady.current) return
-                if (window.location.pathname === destPath) {
-                  markPageReady()
-                  return
-                }
-                if (++tries < 40) pollTimer.current = setTimeout(poll, 50)
+      /* Start on this turn so the overlay covers the mosaic before we stop it.
+         No extra rAF of a dead mosaic. */
+      const burst = new PixelBurstController(canvas)
+      controller.current = burst
+      try {
+        burst.start({
+          sourceRoot: opts.sourceRoot,
+          origin: opts.origin,
+          accent: opts.accent,
+          dest: opts.dest,
+          onReadyToNav: () => {
+            pendingHref.current = opts.href
+            router.push(opts.href)
+            const destPath = pathOf(opts.href)
+            let tries = 0
+            const poll = () => {
+              if (!playing.current || pageReady.current) return
+              if (window.location.pathname === destPath) {
+                armPageReady()
+                return
               }
-              pollTimer.current = setTimeout(poll, 50)
-            },
-            onComplete: () => {
-              reformDone.current = true
-              tryLift()
-            },
-          })
-        } catch {
-          finish()
-          router.push(opts.href)
-        }
-      })
+              if (++tries < 50) pollTimer.current = setTimeout(poll, 40)
+            }
+            pollTimer.current = setTimeout(poll, 40)
+          },
+          onComplete: () => {
+            reformDone.current = true
+            tryLift()
+          },
+        })
+      } catch {
+        finish()
+        router.push(opts.href)
+      }
     },
-    [finish, markPageReady, router, tryLift]
+    [armPageReady, finish, router, tryLift]
   )
 
-  /* Page must have painted under the reformed frame before we lift. */
   useEffect(() => {
     const href = pendingHref.current
     if (!playing.current || !href) return
     if (pathname !== pathOf(href)) return
-    markPageReady()
-  }, [pathname, markPageReady])
+    armPageReady()
+  }, [pathname, armPageReady])
 
   useEffect(() => {
     return () => {
-      cancelAnimationFrame(startRaf.current)
       clearTimeout(fadeTimer.current)
       clearTimeout(safetyTimer.current)
       clearTimeout(pollTimer.current)

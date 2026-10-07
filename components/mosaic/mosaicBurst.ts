@@ -11,8 +11,6 @@ export const PIXEL_SHATTER_MS = 180
 export const PIXEL_REFORM_MS = 320
 /** Total motion window (shatter + reform). */
 export const PIXEL_BURST_MS = PIXEL_SHATTER_MS + PIXEL_REFORM_MS
-/** Fire navigation partway through reform so RSC work hides under motion. */
-const NAV_AT_MS = PIXEL_SHATTER_MS + PIXEL_REFORM_MS * 0.35
 
 const SCALE = 0.38
 const CAP_DESKTOP = 6400
@@ -376,19 +374,12 @@ export async function warmDest(opts: DestWarmOpts) {
   if (field) warmedDest.set(opts.href, field)
 }
 
-function getDestField(opts: DestWarmOpts | undefined, bw: number, bh: number, cap: number): Field | null {
+function getDestField(opts: DestWarmOpts | undefined, bw: number, bh: number): Field | null {
   if (!opts) return null
   const cached = warmedDest.get(opts.href)
+  /* Cache only — never paint or getImageData on the click frame. */
   if (cached && cached.w === bw && cached.h === bh && cached.n > 0) return cached
-
-  /* Sync fallback: paint with whatever cover is already decoded. */
-  const cover = coverCache.get(opts.cover) ?? null
-  const ready = cover && cover.complete && cover.naturalWidth > 0 ? cover : null
-  const bg = parseRgb(opts.surface, [16, 17, 20])
-  const canvas = paintDestFold(opts, bw, bh, SCALE, ready)
-  const field = fieldFromCanvas(canvas, bg, cap, bw, bh)
-  if (field) warmedDest.set(opts.href, field)
-  return field
+  return null
 }
 
 export class PixelBurstController {
@@ -444,7 +435,7 @@ export class PixelBurstController {
 
     const cached = warmed && warmed.w === bw && warmed.h === bh && warmed.n > 0 ? warmed : null
     this.fromBg = cached?.bg ?? parseRgb(getComputedStyle(opts.sourceRoot).backgroundColor, [20, 16, 14])
-    const destField = getDestField(opts.dest, bw, bh, cap)
+    const destField = getDestField(opts.dest, bw, bh)
     this.toBg = destField?.bg ?? (opts.dest ? parseRgb(opts.dest.surface, [16, 17, 20]) : this.fromBg)
     this.fromPacked = packBg(this.fromBg)
     this.toPacked = packBg(this.toBg)
@@ -461,11 +452,11 @@ export class PixelBurstController {
       this.sb = sampled.b
     } else {
       this.n = cached.n
-      this.ox = cached.x
-      this.oy = cached.y
-      this.sr = cached.r
-      this.sg = cached.g
-      this.sb = cached.b
+      this.ox = cached.x.slice()
+      this.oy = cached.y.slice()
+      this.sr = cached.r.slice()
+      this.sg = cached.g.slice()
+      this.sb = cached.b.slice()
     }
     this.vx = new Float32Array(this.n)
     this.vy = new Float32Array(this.n)
@@ -628,11 +619,6 @@ export class PixelBurstController {
     if (!this.running) return
     const elapsed = now - this.startAt
 
-    if (!this.navSent && elapsed >= NAV_AT_MS) {
-      this.navSent = true
-      this.onReadyToNav()
-    }
-
     if (elapsed < PIXEL_SHATTER_MS) {
       const shatterT = clamp01(elapsed / PIXEL_SHATTER_MS)
       this.draw(shatterT, 0)
@@ -644,6 +630,8 @@ export class PixelBurstController {
     this.draw(1, reformT)
 
     if (reformT >= 1) {
+      /* Hold the reconstituted frame. Route work starts now, under a still
+         picture that already looks like the case study — never during rAF. */
       this.running = false
       if (!this.navSent) {
         this.navSent = true
