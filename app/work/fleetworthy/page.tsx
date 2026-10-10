@@ -342,13 +342,11 @@ export default function FleetworthyCaseStudyPage() {
       <section className={styles.chapter}>
         <div className={styles.prose}>
           <h2 className={styles.chapterTitle}>Approach</h2>
-          <h3 className={styles.subhead}>Unify the experience</h3>
-          <p>And be plain about where that holds and where it doesn’t.</p>
           <h3 className={styles.subhead}>I started from evidence</h3>
           <p>
-            Before designing anything, I interviewed enterprise carriers: JB Hunt, Forward Air,
+            Before designing anything, I interviewed our customers, includingenterprise carriers like JB Hunt, Forward Air,
             Challenger, and White Cap. The same three asks kept coming up. They wanted data sync
-            they could control, a way to enroll one vehicle into several products at once, and a
+           between all Fleetworthy products, a way to enroll one vehicle into several products at once, and a
             way to know which product a given piece of data came from. Most of the vehicle work
             traces back to those conversations.
           </p>
@@ -377,11 +375,11 @@ export default function FleetworthyCaseStudyPage() {
           <p>
             It was approved, and it handled both the large-customer and single-account problems before they could show up as bugs.
           </p>
-          <h3 className={styles.subhead}>The dashboard is for wayfinding</h3>
+          <h3 className={styles.subhead}>A non-negotiable: The dashboard is for wayfinding</h3>
           <p>
-            With our engineering lead, I also set the framing the dashboard is still built on.
-            Customers fall into two tiers: single-product and multi-product. It points you to where
-            the work is. It isn’t another place to do the work or consume tons of data.
+            In collaboration with Product and Engineering, I set the framing the dashboard is still built on.
+            Customers would fall into two tiers: single-product and multi-product. And crucially, it points you to where
+            the work needs to be done. It isn’t a place to consume tons of data. 
           </p>
         </div>
       </section>
@@ -408,7 +406,7 @@ export default function FleetworthyCaseStudyPage() {
           </p>
           <h3 className={styles.subhead}>I picked correct over tidy</h3>
           <p>
-            A lot of calls came down to the version that wouldn’t break, rather than the one that
+            A lot of calls throughout the project came down to the version that wouldn’t break, rather than the one that
             looked cleaner.
           </p>
         </div>
@@ -466,9 +464,7 @@ export default function FleetworthyCaseStudyPage() {
           </h3>
           <p>
             The full vehicle lifecycle across three products with three write paths: adding,
-            enrolling, connecting, unenrolling, disconnecting, and resolving conflicts. Account
-            views, device management, conflict resolution, unenroll, and the filter improvements have
-            shipped. Disconnect and Bulk Enroll are in progress.
+            enrolling, editing, and removing. Connecting, data sync, and conflict resolution have also shipped.
           </p>
         </div>
         <CaseFigure>
@@ -486,11 +482,9 @@ export default function FleetworthyCaseStudyPage() {
             User permissions
           </h3>
           <p>
-            One screen to add a user and set their access, with CP Suite’s 300+ configs hidden behind
-            role grants. I prototyped it in HTML twice: an account picker with a dataset switcher, so
+            One screen to add a user and set their access. I prototyped the experience using Claude: an account picker with a dataset switcher, so
             I could test it at one account and at 50+, and a review screen that keeps multi-value
-            fields readable at that scale. The four-role framework is designed and parked until CP
-            Suite is ready to map to it.
+            fields readable at that scale. The four-role framework is designed and parked until Compliance is ready to map to it.
           </p>
         </div>
         <CaseFigure>
