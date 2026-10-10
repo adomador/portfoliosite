@@ -85,16 +85,42 @@
 .frameImg {
   object-fit: contain;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 420ms var(--ease-out-quart);
 }
 
 .frameImgActive {
   opacity: 1;
+  pointer-events: auto;
+}
+
+.frameFit {
+  height: auto;
+}
+
+.custom {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.customActive {
+  opacity: 1;
+}
+
+.frameFit .customActive {
+  position: relative;
+  inset: auto;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .placeholder {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   display: grid;
   place-items: center;
   font-size: 0.6875rem;

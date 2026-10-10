@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import Image from 'next/image'
 import styles from './CaseCarousel.module.css'
 
@@ -13,6 +13,8 @@ export type CaseSlide = {
   placeholder?: string
   /** Per-slide aspect ratio (e.g. "16 / 9"). Falls back to the carousel `ratio`. */
   ratio?: string
+  /** Drawn figure in place of an image. The frame sizes to the figure. */
+  content?: ReactNode
 }
 
 function SelectionMarks() {
@@ -48,12 +50,21 @@ export default function CaseCarousel({
   const go = (next: number) => setIndex((next + slides.length) % slides.length)
   const canExpand = Boolean(slide.src && onExpand)
   const frameRatio = slide.ratio ?? ratio
-  const frameClass = `${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`
+  const fit = Boolean(slide.content)
+  const frameClass = `${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${fit ? styles.frameFit : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`
 
   const frameBody = (
     <>
       {slides.map((s, i) =>
-        s.src ? (
+        s.content ? (
+          <div
+            key={s.alt}
+            className={`${styles.custom} ${i === index ? styles.customActive : ''}`}
+            aria-hidden={i !== index}
+          >
+            {s.content}
+          </div>
+        ) : s.src ? (
           <Image
             key={s.src}
             src={s.src}
@@ -83,7 +94,7 @@ export default function CaseCarousel({
         <button
           type="button"
           className={frameClass}
-          style={{ aspectRatio: frameRatio }}
+          style={fit ? undefined : { aspectRatio: frameRatio }}
           onClick={() => {
             if (slide.src && onExpand) onExpand({ src: slide.src, alt: slide.alt })
           }}
@@ -92,7 +103,7 @@ export default function CaseCarousel({
           {frameBody}
         </button>
       ) : (
-        <div className={frameClass} style={{ aspectRatio: frameRatio }}>
+        <div className={frameClass} style={fit ? undefined : { aspectRatio: frameRatio }}>
           {frameBody}
         </div>
       )}

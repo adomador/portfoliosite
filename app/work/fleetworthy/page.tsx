@@ -10,6 +10,7 @@ import {
 } from '@/components/case-study/CaseStudy'
 import CaseCarousel from '@/components/case-study/CaseCarousel'
 import { pngSize, toSlides } from '@/lib/caseImages'
+import HierarchyMap from './HierarchyMap'
 import styles from './page.module.css'
 
 const THEME: CaseTheme = {
@@ -42,13 +43,7 @@ const VEHICLE_RECORDS: Screen = {
   label: 'Vehicle records',
 }
 
-const HIERARCHY: Screen = {
-  src: `${DIR}/account-hierarchy.png`,
-  alt: 'Account hierarchy diagram with a set switcher, a screen-level account filter, and product sub-filters',
-  caption:
-    'Three levels, used on every screen. Pick a set of accounts, filter the screen, then filter inside the product.',
-  label: 'Account hierarchy',
-}
+const HIERARCHY_SCREENS = `${DIR}/hierarchy-screens.png`
 
 const VEHICLES: readonly Screen[] = [
   {
@@ -233,6 +228,24 @@ export default function FleetworthyCaseStudyPage() {
   const vehicles = slidesFor(VEHICLES)
   const people = slidesFor(PEOPLE)
   const attention = slidesFor(ATTENTION)
+  const hierarchyScreens = pngSize(HIERARCHY_SCREENS)
+  const hierarchySlides = [
+    {
+      alt: 'Account hierarchy from the global switcher down to product sub-filters',
+      caption:
+        'Three levels, used on every screen. Pick a set of accounts, filter the screen, then filter inside the product.',
+      content: <HierarchyMap />,
+    },
+    {
+      src: hierarchyScreens ? HIERARCHY_SCREENS : undefined,
+      alt: 'Designs for the switcher, the account filter, and each product sub-filter',
+      caption: 'The same three levels, as they appear on the screens.',
+      placeholder: 'Level screens',
+      ratio: hierarchyScreens
+        ? `${hierarchyScreens.width} / ${hierarchyScreens.height}`
+        : '16 / 10',
+    },
+  ]
 
   return (
     <CaseStudy theme={THEME} more={MORE}>
@@ -345,7 +358,15 @@ export default function FleetworthyCaseStudyPage() {
             <li>Sub-filters inside each product’s own view</li>
           </ol>
         </div>
-        <Shot {...HIERARCHY} />
+        <CaseFigure>
+          <CaseCarousel
+            slides={hierarchySlides}
+            ratio="16 / 10"
+            label="Account hierarchy"
+            tone="dark"
+            brackets
+          />
+        </CaseFigure>
         <div className={styles.prose}>
           <p>
             It was approved, and it handled the large-customer and single-account problems before
