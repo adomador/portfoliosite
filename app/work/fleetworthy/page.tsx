@@ -303,7 +303,7 @@ export default function FleetworthyCaseStudyPage() {
         <div className={styles.prose}>
           <p>
             Under all of that was a structural issue. Not only did we have to connect multiple accounts together into singular object,
-            we had also allow for customers to be able to filter through their data on a per-account & product basis.
+            we had to also allow for customers to be able to filter through their data on a per-account & product basis.
           </p>
           <p>
             Merging the backends would have been the clean fix. It was never on the table.
@@ -365,21 +365,20 @@ export default function FleetworthyCaseStudyPage() {
           <h2 className={styles.chapterTitle}>Managing Tradeoffs</h2>
           <h3 className={styles.subhead}>I shelved the cleaner model when the cost was too high</h3>
           <p>
-            Permissions is where this got tested. Engineering had ruled out a central permissions
-            backend, and governance wanted one source of truth. I designed four plain-language
+            User management is where my framework got tested. The ideal experience required one source of truth, which required data federation. I designed four plain-language
             roles, Read only, Worker, Manager, and Admin, that would live in the UI and translate
             into each product’s native permissions on save.
           </p>
           <p>
-            It held up on paper. In practice, CP Suite would have had to rename and tag every role to
+            It held up on paper. In practice, the Compliance product would have had to rename and tag every role to
             fit those four buckets. That’s a real operational lift for a team that hadn’t bought into
             the idea yet. I made the case to Product that we should park it until those stakeholders
             were invested, instead of forcing it through in order to not block development.
           </p>
           <p>
             What shipped still does most of the job. You can add a user and set all their permissions
-            on one screen. CP Suite’s 300+ permission configs stay out of the flow, so admins grant
-            roles. The complexity is still underneath. The admin never has to see it.
+            on one screen. 300+ permission configs for Compliance stay out of the flow, so admins grant only
+            roles. The complexity remains hidden. The admin never has to see it.
           </p>
           <h3 className={styles.subhead}>I picked correct over tidy</h3>
           <p>
