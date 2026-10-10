@@ -76,6 +76,14 @@ export const PROJECTS: ProjectNode[] = [
         src: '/work/fleetworthy/account-switchers.png',
         caption: 'Account hierarchy, three levels',
       },
+      {
+        src: '/work/fleetworthy/v2.png',
+        caption: 'Dashboard: fleet, actions, and the map',
+      },
+      {
+        src: '/work/fleetworthy/severity-model.png',
+        caption: 'Severity from fleet share and $ per truck',
+      },
     ],
   },
   {
