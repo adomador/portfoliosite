@@ -66,7 +66,7 @@ export const PROJECTS: ProjectNode[] = [
     label: 'Fleetworthy',
     tag: 'Senior Product Designer',
     dates: '2025 – Present',
-    line: 'Made four products behave like one. Connect Vehicles went from 0% to 23–40%.',
+    line: 'Made four products behave like one. 700+ qualified upsell leads. Vehicle connection is at 40%.',
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
     color: '#ef444a',

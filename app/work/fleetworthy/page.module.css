@@ -87,6 +87,10 @@
   margin: 8px 0 32px;
 }
 
+.statBlock > div {
+  gap: 32px;
+}
+
 .statBlock > div > div {
   border-top: 0;
   padding-top: 0;

@@ -159,7 +159,10 @@ const META = [
   },
   {
     label: 'Impact',
-    lines: ['Connect Vehicles conversion 23–40%'],
+    lines: [
+      'Vehicle connection rate 40%',
+      '700+ qualified upsell leads',
+    ],
   },
 ] as const
 
@@ -388,14 +391,14 @@ export default function FleetworthyCaseStudyPage() {
           <h2 className={styles.chapterTitle}>Managing Tradeoffs</h2>
           <h3 className={styles.subhead}>I shelved the cleaner model when the cost was too high</h3>
           <p>
-            User management is where my framework got tested. The ideal experience required one source of truth. I designed four plain-language
+            User management is where my framework got tested. The ideal experience required one source of truth, so I designed four plain-language
             roles, Read only, Worker, Manager, and Admin, that would live in the UI and translate
             into each product’s native permissions on save.
           </p>
           <p>
             It held up on paper. In practice, the Compliance product would have had to rename and tag every role to
             fit those four buckets, since they had already built their own roles and permissions infrastructure. That’s a real operational lift for a team that hadn’t bought into
-            the idea yet. I made the case to Product that we should park it until those stakeholders
+            the idea and needed more time to get invested. I made the case to Product that we should park it until those stakeholders
             were invested, instead of forcing it through in order to not block development.
           </p>
           <p>
@@ -438,24 +441,7 @@ export default function FleetworthyCaseStudyPage() {
             </table>
           </div>
         </div>
-        <div className={styles.prose}>
-          <h3 className={styles.subhead}>I checked the work against the code</h3>
-          <p>
-            Before handing off permissions, I checked the role mapping against the codebase instead
-            of trusting my earlier analysis. Two things came out of that.
-          </p>
-          <ul>
-            <li>
-              CP Suite’s “Administrator (Full Access)” role is meant for internal admins only, and it
-              requires approval. My first mapping would have shown it to customers.
-            </li>
-            <li>
-              CP Suite roles aren’t shared. Every client has its own hand-built copy. Lookup logic
-              that assumed a shared role ID would have worked on our reference client and broken for
-              everyone else.
-            </li>
-          </ul>
-        </div>
+      
       </section>
 
       <section className={styles.chapter}>
@@ -548,53 +534,29 @@ export default function FleetworthyCaseStudyPage() {
         <div className={styles.prose}>
           <h2 className={styles.chapterTitle}>Impact</h2>
           <div className={styles.statBlock}>
-          <CaseStats
-            stacked
-            stats={[
-              {
-                label: 'Connect Vehicles conversion',
-                before: { value: '0%', when: 'Before' },
-                value: '23–40%',
-                when: 'After',
-              },
-            ]}
-          />
+            <CaseStats
+              stacked
+              stats={[
+                { value: '40%', label: 'Vehicle connection rate' },
+                { value: '700+', label: 'Qualified upsell leads' },
+              ]}
+            />
           </div>
           <p>
-            After launch I went through six recorded sessions in Pendo and found four places the
-            vehicle flow was breaking. The onboarding guide didn’t fire. The banner didn’t show. The
-            account switcher didn’t default to the connected account. The mapping guide came back
-            after the person had already finished. Once those were fixed, Connect Vehicles
-            conversion went from flat zero to 23–40%.
+            Vehicle connection is at a flat 40%. We are continuously doing outreach and improving
+            onboarding so more people connect their accounts and their vehicles.  Until the rest of
+            the products are actually embedded in Command Center, that number will likely not go
+            much higher because customers are still accustomed to managing their fleet in each product separately.
           </p>
           <p>
-            On the structural side, the account hierarchy became the model for embedding CP Suite in
-            Command Center, and the severity model is being reused on other surfaces.
-          </p>
-          <p>
-            Some of the impact is in things that never reached customers. An internal-only admin role
-            that would have shown up in their role list. Role lookups that would have broken for
-            every client but one. Partial saves from a combined edit drawer. A “Connect vehicles”
-            name that collided with an existing Connect feature. “Resolve & Sync” button copy that
-            promised more than sync actually does.
+            The 700+ qualified upsell leads come from customers noticing the consolidation. Once the
+            products started behaving like one place, they were interested in the ones they didn’t
+            already have.
           </p>
         </div>
       </section>
 
-      <section className={styles.chapter}>
-        <div className={styles.prose}>
-          <h2 className={styles.chapterTitle}>Next</h2>
-          <p>
-            The biggest open dependency is data. Once events can be joined at the vehicle level
-            across products, the dashboard can go past “these two problems are on the same truck” and
-            start showing how they relate. The cause-and-effect work I set aside is waiting on that.
-          </p>
-          <p>
-            Still open on my side: picking the four-role framework back up once CP Suite is on board,
-            and figuring out who owns creating users in our identity provider.
-          </p>
-        </div>
-      </section>
+
     </CaseStudy>
   )
 }
