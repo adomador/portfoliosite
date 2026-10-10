@@ -15,6 +15,8 @@ export type CaseSlide = {
   ratio?: string
   /** Drawn figure in place of an image. The frame sizes to the figure. */
   content?: ReactNode
+  /** Frame color behind this slide. Used when the image has transparent corners. */
+  surface?: string
 }
 
 function SelectionMarks() {
@@ -52,6 +54,10 @@ export default function CaseCarousel({
   const frameRatio = slide.ratio ?? ratio
   const fit = Boolean(slide.content)
   const frameClass = `${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${fit ? styles.frameFit : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`
+  const frameStyle = {
+    ...(fit ? {} : { aspectRatio: frameRatio }),
+    ...(slide.surface ? { backgroundColor: slide.surface } : {}),
+  }
 
   const frameBody = (
     <>
@@ -94,7 +100,7 @@ export default function CaseCarousel({
         <button
           type="button"
           className={frameClass}
-          style={fit ? undefined : { aspectRatio: frameRatio }}
+          style={frameStyle}
           onClick={() => {
             if (slide.src && onExpand) onExpand({ src: slide.src, alt: slide.alt })
           }}
@@ -103,7 +109,7 @@ export default function CaseCarousel({
           {frameBody}
         </button>
       ) : (
-        <div className={frameClass} style={fit ? undefined : { aspectRatio: frameRatio }}>
+        <div className={frameClass} style={frameStyle}>
           {frameBody}
         </div>
       )}

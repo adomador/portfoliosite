@@ -43,7 +43,7 @@ const VEHICLE_RECORDS: Screen = {
   label: 'Vehicle records',
 }
 
-const HIERARCHY_SCREENS = `${DIR}/hierarchy-screens.png`
+const HIERARCHY_SCREENS = `${DIR}/account-switchers.png`
 
 const VEHICLES: readonly Screen[] = [
   {
@@ -238,9 +238,10 @@ export default function FleetworthyCaseStudyPage() {
     },
     {
       src: hierarchyScreens ? HIERARCHY_SCREENS : undefined,
-      alt: 'Designs for the switcher, the account filter, and each product sub-filter',
+      alt: 'Connected Accounts, the account filter, and sub-filters for cost centers, groups, and entities',
       caption: 'The same three levels, as they appear on the screens.',
       placeholder: 'Level screens',
+      surface: '#f2f0e2',
       ratio: hierarchyScreens
         ? `${hierarchyScreens.width} / ${hierarchyScreens.height}`
         : '16 / 10',
@@ -369,8 +370,7 @@ export default function FleetworthyCaseStudyPage() {
         </CaseFigure>
         <div className={styles.prose}>
           <p>
-            It was approved, and it handled the large-customer and single-account problems before
-            they could show up as bugs when we embedded CP Suite.
+            It was approved, and it handled both the large-customer and single-account problems before they could show up as bugs.
           </p>
           <h3 className={styles.subhead}>The dashboard is for wayfinding</h3>
           <p>
@@ -386,13 +386,13 @@ export default function FleetworthyCaseStudyPage() {
           <h2 className={styles.chapterTitle}>Managing Tradeoffs</h2>
           <h3 className={styles.subhead}>I shelved the cleaner model when the cost was too high</h3>
           <p>
-            User management is where my framework got tested. The ideal experience required one source of truth, which required data federation. I designed four plain-language
+            User management is where my framework got tested. The ideal experience required one source of truth. I designed four plain-language
             roles, Read only, Worker, Manager, and Admin, that would live in the UI and translate
             into each product’s native permissions on save.
           </p>
           <p>
             It held up on paper. In practice, the Compliance product would have had to rename and tag every role to
-            fit those four buckets. That’s a real operational lift for a team that hadn’t bought into
+            fit those four buckets, since they had already built their own roles and permissions infrastructure. That’s a real operational lift for a team that hadn’t bought into
             the idea yet. I made the case to Product that we should park it until those stakeholders
             were invested, instead of forcing it through in order to not block development.
           </p>
