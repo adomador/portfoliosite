@@ -66,15 +66,15 @@ export const PROJECTS: ProjectNode[] = [
     label: 'Fleetworthy',
     tag: 'Senior Product Designer',
     dates: '2025 – Present',
-    line: 'Made four products behave like one. 700+ qualified upsell leads. Vehicle connection is at 40%.',
+    line: '700+ qualified upsell leads. Vehicle connection is at 40%.',
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
     color: '#ef444a',
     surface: '#101114',
     frames: [
-      { src: '/work/fleetworthy/hero-command-center.png', caption: 'Ranked actions, not a wall of metrics' },
+      { src: '/work/fleetworthy/account-switchers.png', caption: 'One account across the products' },
+      { src: '/work/fleetworthy/hero-command-center.png', caption: 'One list for what needs attention' },
       { src: '/work/fleetworthy/severity-model.png', caption: 'Severity from fleet share and $ per truck' },
-      { src: '/work/fleetworthy/ai-chat.png', caption: 'AI shows its reasoning; the manager decides' },
     ],
   },
   {
