@@ -96,8 +96,57 @@
   margin-top: 10px;
 }
 
+.headed {
+  display: grid;
+  grid-template-columns: var(--label-col) minmax(0, 1fr);
+  gap: var(--col-gap);
+  padding: 48px 0;
+  border-top: 1px solid var(--cs-rule);
+}
+
+.headedBody {
+  grid-column: 2;
+  max-width: 680px;
+}
+
+.headedTitle {
+  margin: 0 0 20px;
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  color: var(--cs-ink);
+}
+
+.headedBody p,
+.headedBody li {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--cs-ink-2);
+  text-wrap: pretty;
+}
+
+.headedBody strong {
+  font-weight: 500;
+  color: var(--cs-ink);
+}
+
+.headedBody p + p,
+.headedBody p + ul,
+.headedBody ul + p {
+  margin-top: 28px;
+}
+
+.headedBody ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 1.25em;
+  list-style: disc;
+}
+
 .layerTitle {
-  margin: 36px 0 16px;
+  margin: 0 0 16px;
   font-size: 1.35rem;
   font-weight: 500;
   letter-spacing: -0.025em;
@@ -121,26 +170,28 @@
 
 /* Pull a diagram or table out to the full case-study measure. */
 .bleed {
-  margin-top: 32px;
+  margin-top: 48px;
+  margin-bottom: 56px;
 }
 
 .bleed figure {
-  margin: 4px 0 0;
+  margin: 0;
 }
 
 .tableWrap {
   overflow-x: auto;
 }
 
-.tableCaption {
-  display: block;
-  width: 100%;
-  margin-bottom: 14px;
-  text-align: left;
+.bleed .tableCaption {
+  margin: 0 0 28px;
   font-size: 0.8125rem;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--cs-ink-3);
   text-wrap: pretty;
+}
+
+.bleed figcaption {
+  margin-top: 20px;
 }
 
 .decisions {
@@ -150,7 +201,7 @@
 
 .decisions th,
 .decisions td {
-  padding: 16px 20px 16px 0;
+  padding: 22px 28px 22px 0;
   vertical-align: top;
   text-align: left;
   border-bottom: 1px solid var(--cs-rule);
@@ -162,7 +213,7 @@
 
 .decisions thead th {
   padding-top: 0;
-  padding-bottom: 12px;
+  padding-bottom: 18px;
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -306,6 +357,14 @@
 }
 
 @media (max-width: 760px) {
+  .headed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .headedBody {
+    grid-column: 1;
+  }
+
   .laneHead {
     flex-direction: column;
     align-items: flex-start;

@@ -253,7 +253,7 @@ export default function FleetworthyCaseStudyPage() {
       <CaseIntro
         text={
           <>
-            I own the parts of Command Center that cut across every product. The backends stay
+            I own the parts of Command Center that cut across every product. The infrastructure stay
             separate. The experience should still read as one.
           </>
         }
@@ -269,7 +269,7 @@ export default function FleetworthyCaseStudyPage() {
           Air running thousands.
         </p>
         <p>
-          Command Center is the bet that ties that mix together. Same login, same account context,
+          Command Center is the bet that ties them all together. Same login, same account context,
           whether the fleet bought one product or all of them.
         </p>
       </CaseSection>
@@ -296,9 +296,8 @@ export default function FleetworthyCaseStudyPage() {
           ))}
         </div>
         <p>
-          Under all of that was a structural break. The account switcher fell apart for the largest
-          customers, and the product screens embedded in Command Center could only handle one
-          account at a time.
+          Under all of that was a structural issue. Not only did we have to connect multiple accounts together into singular object,
+          we had also allow for customers to be able to filter through their data on a per-account & product basis.
         </p>
         <p>
           Merging the backends would have been the clean fix. It was never on the table.
@@ -316,7 +315,7 @@ export default function FleetworthyCaseStudyPage() {
 
       <CaseSection label="Approach">
         <p>
-          <strong>Unify the experience. Leave the backends alone.</strong> And be plain about where
+          <strong>Unify the experience.</strong> And be plain about where
           that holds and where it doesn’t.
         </p>
         <p>
@@ -332,7 +331,7 @@ export default function FleetworthyCaseStudyPage() {
           hierarchy so that question would be answered once, for everything.
         </p>
         <ol>
-          <li>A switcher for picking a set of accounts</li>
+          <li>A switcher for picking a set of connected accounts</li>
           <li>An account filter on each screen</li>
           <li>Sub-filters inside each product’s own view</li>
         </ol>
@@ -345,97 +344,97 @@ export default function FleetworthyCaseStudyPage() {
         </p>
         <p>
           With our engineering lead, I also set the framing the dashboard is still built on.
-          Customers fall into three tiers: single-product, cross-connected, and multi-product. The
+          Customers fall into two tiers: single-product and multi-product. The
           dashboard is for wayfinding. It points you to where the work is. It isn’t another place
-          to do the work.
+          to do the work or consume tons of data.
         </p>
-        <p>
-          <strong>I shelved the cleaner model when the cost was too high.</strong> Permissions is
-          where this got tested. Engineering had ruled out a central permissions backend, and
-          governance wanted one source of truth. I designed four plain-language roles, Read only,
-          Worker, Manager, and Admin, that would live in the UI and translate into each product’s
-          native permissions on save.
-        </p>
-        <p>
-          It held up on paper. In practice, CP Suite would have had to rename and tag every role to
-          fit those four buckets. That’s a real operational lift for a team that hadn’t bought into
-          the idea yet. I made the case to Product that we should park it until those stakeholders
-          were invested, instead of forcing it through.
-        </p>
-        <p>
-          What shipped still does most of the job. You can add a user and set all their permissions
-          on one screen. CP Suite’s 300+ permission configs stay out of the flow, so admins grant
-          roles. The complexity is still underneath. The admin never has to see it.
-        </p>
-        <p>
-          <strong>I didn’t let the richest system win.</strong> CP Suite has the most detailed
-          permission model of the three, and the shared design kept getting pulled toward it. I
-          took its location-tree navigation out of the general flow. I kept Accounting to payments,
-          methods, and statements, instead of folding in disputes just because CP Suite bundles
-          them. When creating accounts in our identity provider crept into scope, I flagged it as a
-          different problem, who exists versus what they’re allowed to do, and handed it to the
-          people who own it.
-        </p>
-        <p>
-          <strong>I picked correct over tidy.</strong> A lot of calls came down to the version that
-          wouldn’t break, rather than the one that looked cleaner.
-        </p>
-        <div className={styles.bleed}>
-          <div className={styles.tableWrap}>
-            <table className={styles.decisions}>
-              <caption className={styles.tableCaption}>
-                Choices where the cleaner option would have failed in use
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Decision</th>
-                  <th scope="col">What I rejected</th>
-                  <th scope="col">Why</th>
-                </tr>
-              </thead>
-              <tbody>
-                {DECISIONS.map((row) => (
-                  <tr key={row.kept} tabIndex={0}>
-                    <th scope="row" data-label="Decision">
-                      {row.kept}
-                    </th>
-                    <td className={styles.rejected} data-label="What I rejected">
-                      {row.rejected}
-                    </td>
-                    <td data-label="Why">{row.why}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <p>
-          <strong>I checked the work against the code.</strong> Before handing off permissions, I
-          checked the role mapping against the codebase instead of trusting my earlier analysis.
-          Two things came out of that.
-        </p>
-        <ul>
-          <li>
-            CP Suite’s “Administrator (Full Access)” role is meant for internal admins only, and it
-            requires approval. My first mapping would have shown it to customers.
-          </li>
-          <li>
-            CP Suite roles aren’t shared. Every client has its own hand-built copy. Lookup logic
-            that assumed a shared role ID would have worked on our reference client and broken for
-            everyone else.
-          </li>
-        </ul>
       </CaseSection>
 
-      <CaseSection label="Solution">
-        <p>
-          What came out of this is a shared foundation, with three layers on top. One layer for
-          each problem.
-        </p>
-        <h3 className={styles.layerTitle}>
-          <span className={styles.layerIndex}>Foundation</span>
-          Account architecture
-        </h3>
+      <section className={styles.headed}>
+        <div className={styles.headedBody}>
+          <h2 className={styles.headedTitle}>Managing Tradeoffs</h2>
+          <p>
+            <strong>I shelved the cleaner model when the cost was too high.</strong> Permissions is
+            where this got tested. Engineering had ruled out a central permissions backend, and
+            governance wanted one source of truth. I designed four plain-language roles, Read only,
+            Worker, Manager, and Admin, that would live in the UI and translate into each product’s
+            native permissions on save.
+          </p>
+          <p>
+            It held up on paper. In practice, CP Suite would have had to rename and tag every role to
+            fit those four buckets. That’s a real operational lift for a team that hadn’t bought into
+            the idea yet. I made the case to Product that we should park it until those stakeholders
+            were invested, instead of forcing it through in order to not block development.
+          </p>
+          <p>
+            What shipped still does most of the job. You can add a user and set all their permissions
+            on one screen. CP Suite’s 300+ permission configs stay out of the flow, so admins grant
+            roles. The complexity is still underneath. The admin never has to see it.
+          </p>
+          <p>
+            <strong>I picked correct over tidy.</strong> A lot of calls came down to the version that
+            wouldn’t break, rather than the one that looked cleaner.
+          </p>
+          <div className={styles.bleed}>
+            <p className={styles.tableCaption}>
+              Choices where the cleaner option would have failed in use
+            </p>
+            <div className={styles.tableWrap}>
+              <table className={styles.decisions}>
+                <thead>
+                  <tr>
+                    <th scope="col">Decision</th>
+                    <th scope="col">What I rejected</th>
+                    <th scope="col">Why</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {DECISIONS.map((row) => (
+                    <tr key={row.kept} tabIndex={0}>
+                      <th scope="row" data-label="Decision">
+                        {row.kept}
+                      </th>
+                      <td className={styles.rejected} data-label="What I rejected">
+                        {row.rejected}
+                      </td>
+                      <td data-label="Why">{row.why}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p>
+            <strong>I checked the work against the code.</strong> Before handing off permissions, I
+            checked the role mapping against the codebase instead of trusting my earlier analysis.
+            Two things came out of that.
+          </p>
+          <ul>
+            <li>
+              CP Suite’s “Administrator (Full Access)” role is meant for internal admins only, and it
+              requires approval. My first mapping would have shown it to customers.
+            </li>
+            <li>
+              CP Suite roles aren’t shared. Every client has its own hand-built copy. Lookup logic
+              that assumed a shared role ID would have worked on our reference client and broken for
+              everyone else.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className={styles.headed}>
+        <div className={styles.headedBody}>
+          <h2 className={styles.headedTitle}>Solution</h2>
+          <p>
+            What came out of this is a shared foundation, with three layers on top. One layer for
+            each problem.
+          </p>
+        </div>
+      </section>
+
+      <CaseSection label="Foundation">
+        <h3 className={styles.layerTitle}>Account architecture</h3>
         <p>
           The three-level hierarchy gives every screen the same answer to whose data this is,
           whether you’re an owner-operator with one account or an internal admin looking at all of
