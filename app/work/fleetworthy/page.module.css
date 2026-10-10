@@ -5,22 +5,106 @@
   object-fit: contain;
 }
 
+.chapter {
+  padding-top: 72px;
+}
+
+.chapterTitle {
+  margin: 0 0 20px;
+  font-size: clamp(1.75rem, 3vw, 2.15rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--cs-ink);
+}
+
+.prose {
+  max-width: 65ch;
+}
+
+.prose p,
+.prose li {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--cs-ink-2);
+  text-wrap: pretty;
+}
+
+.prose strong {
+  font-weight: 500;
+  color: var(--cs-ink);
+}
+
+.prose p + p,
+.prose ul + p,
+.prose ol + p,
+.prose p + ul,
+.prose p + ol {
+  margin-top: 22px;
+}
+
+.prose ul,
+.prose ol {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding-left: 1.2em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.subhead {
+  margin: 48px 0 12px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+  color: var(--cs-ink);
+}
+
+.chapterTitle + .subhead,
+.prose > .subhead:first-child {
+  margin-top: 0;
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cs-accent);
+}
+
+.statBlock {
+  margin: 8px 0 32px;
+}
+
+.statBlock > div > div {
+  border-top: 0;
+  padding-top: 0;
+}
+
 /* Four lane-stripes that close into one bar. Tolls, bypass, safety, compliance. */
 .lanes {
-  margin-top: 8px;
+  display: grid;
+  gap: 32px;
+  max-width: 65ch;
+  margin: 36px 0;
 }
 
 .lane {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
   gap: 18px;
-  padding: 26px 0;
-  border-top: 1px solid var(--cs-rule);
   outline: none;
-}
-
-.lane:last-child {
-  border-bottom: 1px solid var(--cs-rule);
 }
 
 .lane:focus-visible {
@@ -62,16 +146,16 @@
 
 .laneHead {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .laneTitle {
-  font-size: 1.0625rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
   color: var(--cs-ink);
 }
 
@@ -93,105 +177,28 @@
 }
 
 .laneBody {
-  margin-top: 10px;
-}
-
-.headed {
-  display: grid;
-  grid-template-columns: var(--label-col) minmax(0, 1fr);
-  gap: var(--col-gap);
-  padding: 48px 0;
-  border-top: 1px solid var(--cs-rule);
-}
-
-.headedBody {
-  grid-column: 2;
-  max-width: 680px;
-}
-
-.headedTitle {
-  margin: 0 0 20px;
-  font-size: 1.35rem;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1.25;
-  color: var(--cs-ink);
-}
-
-.headedBody p,
-.headedBody li {
+  margin-top: 8px;
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: var(--cs-ink-2);
   text-wrap: pretty;
 }
 
-.headedBody strong {
-  font-weight: 500;
-  color: var(--cs-ink);
-}
-
-.headedBody p + p,
-.headedBody p + ul,
-.headedBody ul + p {
-  margin-top: 28px;
-}
-
-.headedBody ul {
-  display: grid;
-  gap: 12px;
-  margin: 0;
-  padding-left: 1.25em;
-  list-style: disc;
-}
-
-.layerTitle {
-  margin: 0 0 16px;
-  font-size: 1.35rem;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1.25;
-  color: var(--cs-ink);
-}
-
-.layerTitle:first-child {
-  margin-top: 0;
-}
-
-.layerIndex {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--cs-accent);
-}
-
-/* Pull a diagram or table out to the full case-study measure. */
-.bleed {
-  margin-top: 48px;
-  margin-bottom: 56px;
-}
-
-.bleed figure {
-  margin: 0;
+.tableBlock {
+  margin: 28px 0 48px;
 }
 
 .tableWrap {
   overflow-x: auto;
 }
 
-.bleed .tableCaption {
-  margin: 0 0 28px;
+.tableCaption {
+  margin: 0 0 20px;
+  max-width: 65ch;
   font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--cs-ink-3);
   text-wrap: pretty;
-}
-
-.bleed figcaption {
-  margin-top: 20px;
 }
 
 .decisions {
@@ -348,21 +355,9 @@
   color: var(--cs-ink-3);
 }
 
-@media (min-width: 761px) {
-  .bleed {
-    /* Body copy stops at 680px. These blocks line up with the full page measure instead. */
-    width: calc(min(100vw, var(--measure)) - 2 * var(--gutter));
-    margin-left: calc((var(--label-col) + var(--col-gap)) * -1);
-  }
-}
-
 @media (max-width: 760px) {
-  .headed {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .headedBody {
-    grid-column: 1;
+  .chapter {
+    padding-top: 56px;
   }
 
   .laneHead {

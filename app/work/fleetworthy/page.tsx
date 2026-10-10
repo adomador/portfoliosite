@@ -4,7 +4,6 @@ import {
   CaseFigure,
   CaseHero,
   CaseIntro,
-  CaseSection,
   CaseStats,
   CaseStudy,
   type CaseTheme,
@@ -164,7 +163,7 @@ const META = [
   },
   {
     label: 'Impact',
-    lines: ['Vehicle views settled at 80–100%', 'Connect Vehicles conversion 23–40%'],
+    lines: ['Connect Vehicles conversion 23–40%'],
   },
 ] as const
 
@@ -260,25 +259,31 @@ export default function FleetworthyCaseStudyPage() {
         meta={META}
       />
 
-      <CaseSection label="Context">
-        <p>
-          Fleetworthy is made of products that started as separate businesses. Bestpass covers
-          tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
-          Sold separately, that is four products, and a customer might pay for any combination.
-          They range from an owner-operator with one truck to carriers like JB Hunt and Forward
-          Air running thousands.
-        </p>
-        <p>
-          Command Center is the bet that ties them all together. Same login, same account context,
-          whether the fleet bought one product or all of them.
-        </p>
-      </CaseSection>
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Context</h2>
+          <p>
+            Fleetworthy is made of products that started as separate businesses. Bestpass covers
+            tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
+            Sold separately, that is four products, and a customer might pay for any combination.
+            They range from an owner-operator with one truck to carriers like JB Hunt and Forward
+            Air running thousands.
+          </p>
+          <p>
+            Command Center is the bet that ties them all together. Same login, same account context,
+            whether the fleet bought one product or all of them.
+          </p>
+        </div>
+      </section>
 
-      <CaseSection label="Problem">
-        <p>
-          To a fleet admin, Fleetworthy didn’t feel like one product. The gap wasn’t only visual.
-          Each product was built on its own model, and that showed up in three places.
-        </p>
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Problem</h2>
+          <p>
+            To a fleet admin, Fleetworthy didn’t feel like one product. The gap wasn’t only visual.
+            Each product was built on its own model, and that showed up in three places.
+          </p>
+        </div>
         <div className={styles.lanes}>
           {PROBLEMS.map((problem) => (
             <article key={problem.title} className={styles.lane} tabIndex={0}>
@@ -287,78 +292,83 @@ export default function FleetworthyCaseStudyPage() {
               </span>
               <div>
                 <div className={styles.laneHead}>
-                  <h3 className={styles.laneTitle}>{problem.title}</h3>
                   <p className={styles.unify}>{problem.unify}</p>
+                  <h3 className={styles.laneTitle}>{problem.title}</h3>
                 </div>
                 <p className={styles.laneBody}>{problem.body}</p>
               </div>
             </article>
           ))}
         </div>
-        <p>
-          Under all of that was a structural issue. Not only did we have to connect multiple accounts together into singular object,
-          we had also allow for customers to be able to filter through their data on a per-account & product basis.
-        </p>
-        <p>
-          Merging the backends would have been the clean fix. It was never on the table.
-          Engineering had ruled it out, and each product team owns how its own data gets written.
-          Anything I designed also had to hold up when a product wasn’t there, because plenty of
-          customers don’t buy the full set.
-        </p>
-        <p>
-          The problem I worked from: how do we give a fleet admin one coherent picture of their
-          vehicles, their people, and what needs attention, while the backends stay separate?
-        </p>
-      </CaseSection>
+        <div className={styles.prose}>
+          <p>
+            Under all of that was a structural issue. Not only did we have to connect multiple accounts together into singular object,
+            we had also allow for customers to be able to filter through their data on a per-account & product basis.
+          </p>
+          <p>
+            Merging the backends would have been the clean fix. It was never on the table.
+            Engineering had ruled it out, and each product team owns how its own data gets written.
+            Anything I designed also had to hold up when a product wasn’t there, because plenty of
+            customers don’t buy the full set.
+          </p>
+          <p>
+            The problem I worked from: how do we give a fleet admin one coherent picture of their
+            vehicles, their people, and what needs attention, while the backends stay separate?
+          </p>
+        </div>
+      </section>
 
       <Shot {...VEHICLE_RECORDS} />
 
-      <CaseSection label="Approach">
-        <p>
-          <strong>Unify the experience.</strong> And be plain about where
-          that holds and where it doesn’t.
-        </p>
-        <p>
-          <strong>I started from evidence.</strong> Before designing anything, I interviewed
-          enterprise carriers: JB Hunt, Forward Air, Challenger, and White Cap. The same three asks
-          kept coming up. They wanted data sync they could control, a way to enroll one vehicle
-          into several products at once, and a way to know which product a given piece of data came
-          from. Most of the vehicle work traces back to those conversations.
-        </p>
-        <p>
-          <strong>I built the structure before the screens.</strong> Every screen in Command Center
-          has to answer the same question first: whose data am I looking at? I wrote the account
-          hierarchy so that question would be answered once, for everything.
-        </p>
-        <ol>
-          <li>A switcher for picking a set of connected accounts</li>
-          <li>An account filter on each screen</li>
-          <li>Sub-filters inside each product’s own view</li>
-        </ol>
-        <div className={styles.bleed}>
-          <Shot {...HIERARCHY} />
-        </div>
-        <p>
-          It was approved, and it handled the large-customer and single-account problems before
-          they could show up as bugs when we embedded CP Suite.
-        </p>
-        <p>
-          With our engineering lead, I also set the framing the dashboard is still built on.
-          Customers fall into two tiers: single-product and multi-product. The
-          dashboard is for wayfinding. It points you to where the work is. It isn’t another place
-          to do the work or consume tons of data.
-        </p>
-      </CaseSection>
-
-      <section className={styles.headed}>
-        <div className={styles.headedBody}>
-          <h2 className={styles.headedTitle}>Managing Tradeoffs</h2>
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Approach</h2>
+          <h3 className={styles.subhead}>Unify the experience</h3>
+          <p>And be plain about where that holds and where it doesn’t.</p>
+          <h3 className={styles.subhead}>I started from evidence</h3>
           <p>
-            <strong>I shelved the cleaner model when the cost was too high.</strong> Permissions is
-            where this got tested. Engineering had ruled out a central permissions backend, and
-            governance wanted one source of truth. I designed four plain-language roles, Read only,
-            Worker, Manager, and Admin, that would live in the UI and translate into each product’s
-            native permissions on save.
+            Before designing anything, I interviewed enterprise carriers: JB Hunt, Forward Air,
+            Challenger, and White Cap. The same three asks kept coming up. They wanted data sync
+            they could control, a way to enroll one vehicle into several products at once, and a
+            way to know which product a given piece of data came from. Most of the vehicle work
+            traces back to those conversations.
+          </p>
+          <h3 className={styles.subhead}>I built the structure before the screens</h3>
+          <p>
+            Every screen in Command Center has to answer the same question first: whose data am I
+            looking at? I wrote the account hierarchy so that question would be answered once, for
+            everything.
+          </p>
+          <ol>
+            <li>A switcher for picking a set of connected accounts</li>
+            <li>An account filter on each screen</li>
+            <li>Sub-filters inside each product’s own view</li>
+          </ol>
+        </div>
+        <Shot {...HIERARCHY} />
+        <div className={styles.prose}>
+          <p>
+            It was approved, and it handled the large-customer and single-account problems before
+            they could show up as bugs when we embedded CP Suite.
+          </p>
+          <h3 className={styles.subhead}>The dashboard is for wayfinding</h3>
+          <p>
+            With our engineering lead, I also set the framing the dashboard is still built on.
+            Customers fall into two tiers: single-product and multi-product. It points you to where
+            the work is. It isn’t another place to do the work or consume tons of data.
+          </p>
+        </div>
+      </section>
+
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Managing Tradeoffs</h2>
+          <h3 className={styles.subhead}>I shelved the cleaner model when the cost was too high</h3>
+          <p>
+            Permissions is where this got tested. Engineering had ruled out a central permissions
+            backend, and governance wanted one source of truth. I designed four plain-language
+            roles, Read only, Worker, Manager, and Admin, that would live in the UI and translate
+            into each product’s native permissions on save.
           </p>
           <p>
             It held up on paper. In practice, CP Suite would have had to rename and tag every role to
@@ -371,43 +381,46 @@ export default function FleetworthyCaseStudyPage() {
             on one screen. CP Suite’s 300+ permission configs stay out of the flow, so admins grant
             roles. The complexity is still underneath. The admin never has to see it.
           </p>
+          <h3 className={styles.subhead}>I picked correct over tidy</h3>
           <p>
-            <strong>I picked correct over tidy.</strong> A lot of calls came down to the version that
-            wouldn’t break, rather than the one that looked cleaner.
+            A lot of calls came down to the version that wouldn’t break, rather than the one that
+            looked cleaner.
           </p>
-          <div className={styles.bleed}>
-            <p className={styles.tableCaption}>
-              Choices where the cleaner option would have failed in use
-            </p>
-            <div className={styles.tableWrap}>
-              <table className={styles.decisions}>
-                <thead>
-                  <tr>
-                    <th scope="col">Decision</th>
-                    <th scope="col">What I rejected</th>
-                    <th scope="col">Why</th>
+        </div>
+        <div className={styles.tableBlock}>
+          <p className={styles.tableCaption}>
+            Choices where the cleaner option would have failed in use
+          </p>
+          <div className={styles.tableWrap}>
+            <table className={styles.decisions}>
+              <thead>
+                <tr>
+                  <th scope="col">Decision</th>
+                  <th scope="col">What I rejected</th>
+                  <th scope="col">Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DECISIONS.map((row) => (
+                  <tr key={row.kept} tabIndex={0}>
+                    <th scope="row" data-label="Decision">
+                      {row.kept}
+                    </th>
+                    <td className={styles.rejected} data-label="What I rejected">
+                      {row.rejected}
+                    </td>
+                    <td data-label="Why">{row.why}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {DECISIONS.map((row) => (
-                    <tr key={row.kept} tabIndex={0}>
-                      <th scope="row" data-label="Decision">
-                        {row.kept}
-                      </th>
-                      <td className={styles.rejected} data-label="What I rejected">
-                        {row.rejected}
-                      </td>
-                      <td data-label="Why">{row.why}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
+        </div>
+        <div className={styles.prose}>
+          <h3 className={styles.subhead}>I checked the work against the code</h3>
           <p>
-            <strong>I checked the work against the code.</strong> Before handing off permissions, I
-            checked the role mapping against the codebase instead of trusting my earlier analysis.
-            Two things came out of that.
+            Before handing off permissions, I checked the role mapping against the codebase instead
+            of trusting my earlier analysis. Two things came out of that.
           </p>
           <ul>
             <li>
@@ -423,149 +436,143 @@ export default function FleetworthyCaseStudyPage() {
         </div>
       </section>
 
-      <section className={styles.headed}>
-        <div className={styles.headedBody}>
-          <h2 className={styles.headedTitle}>Solution</h2>
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Solution</h2>
           <p>
             What came out of this is a shared foundation, with three layers on top. One layer for
             each problem.
           </p>
+          <h3 className={styles.subhead}>
+            <span className={styles.kicker}>Foundation</span>
+            Account architecture
+          </h3>
+          <p>
+            The three-level hierarchy gives every screen the same answer to whose data this is,
+            whether you’re an owner-operator with one account or an internal admin looking at all of
+            them.
+          </p>
+          <h3 className={styles.subhead}>
+            <span className={styles.kicker}>Vehicles</span>
+            Centralized vehicle management
+          </h3>
+          <p>
+            The full vehicle lifecycle across three products with three write paths: adding,
+            enrolling, connecting, unenrolling, disconnecting, and resolving conflicts. Account
+            views, device management, conflict resolution, unenroll, and the filter improvements have
+            shipped. Disconnect and Bulk Enroll are in progress.
+          </p>
+        </div>
+        <CaseFigure>
+          <CaseCarousel
+            slides={vehicles.slides}
+            ratio={vehicles.ratio}
+            label="Centralized vehicle management screens"
+            tone="dark"
+            brackets
+          />
+        </CaseFigure>
+        <div className={styles.prose}>
+          <h3 className={styles.subhead}>
+            <span className={styles.kicker}>People</span>
+            User permissions
+          </h3>
+          <p>
+            One screen to add a user and set their access, with CP Suite’s 300+ configs hidden behind
+            role grants. I prototyped it in HTML twice: an account picker with a dataset switcher, so
+            I could test it at one account and at 50+, and a review screen that keeps multi-value
+            fields readable at that scale. The four-role framework is designed and parked until CP
+            Suite is ready to map to it.
+          </p>
+        </div>
+        <CaseFigure>
+          <CaseCarousel
+            slides={people.slides}
+            ratio={people.ratio}
+            label="User permissions screens"
+            tone="dark"
+            brackets
+          />
+        </CaseFigure>
+        <div className={styles.prose}>
+          <h3 className={styles.subhead}>
+            <span className={styles.kicker}>Attention</span>
+            Dashboard
+          </h3>
+          <p>
+            I wrote the severity model underneath it. Severity comes from two things, how much of the
+            fleet is affected and how many dollars per vehicle per month are at stake, and either one
+            can escalate an insight on its own. That gives three tiers, Critical, Action Needed, and
+            Monitor, plus time windows and freshness indicators so you know how current a signal is.
+            The model is also explicit about what is defensible today and what still needs discovery.
+          </p>
+          <p>
+            On top of that model: Fleet at a Glance, a Fleet Events map scoped to alert-triggered
+            events, and Dismiss, Ignore, and Snooze, with clear rules for when an insight comes back.
+          </p>
+        </div>
+        <CaseFigure>
+          <CaseCarousel
+            slides={attention.slides}
+            ratio={attention.ratio}
+            label="Command Center dashboard and severity model"
+            tone="light"
+            brackets
+          />
+        </CaseFigure>
+      </section>
+
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Impact</h2>
+          <div className={styles.statBlock}>
+          <CaseStats
+            stacked
+            stats={[
+              {
+                label: 'Connect Vehicles conversion',
+                before: { value: '0%', when: 'Before' },
+                value: '23–40%',
+                when: 'After',
+              },
+            ]}
+          />
+          </div>
+          <p>
+            After launch I went through six recorded sessions in Pendo and found four places the
+            vehicle flow was breaking. The onboarding guide didn’t fire. The banner didn’t show. The
+            account switcher didn’t default to the connected account. The mapping guide came back
+            after the person had already finished. Once those were fixed, Connect Vehicles
+            conversion went from flat zero to 23–40%.
+          </p>
+          <p>
+            On the structural side, the account hierarchy became the model for embedding CP Suite in
+            Command Center, and the severity model is being reused on other surfaces.
+          </p>
+          <p>
+            Some of the impact is in things that never reached customers. An internal-only admin role
+            that would have shown up in their role list. Role lookups that would have broken for
+            every client but one. Partial saves from a combined edit drawer. A “Connect vehicles”
+            name that collided with an existing Connect feature. “Resolve & Sync” button copy that
+            promised more than sync actually does.
+          </p>
         </div>
       </section>
 
-      <CaseSection label="Foundation">
-        <h3 className={styles.layerTitle}>Account architecture</h3>
-        <p>
-          The three-level hierarchy gives every screen the same answer to whose data this is,
-          whether you’re an owner-operator with one account or an internal admin looking at all of
-          them.
-        </p>
-      </CaseSection>
-
-      <CaseSection label="Vehicles">
-        <h3 className={styles.layerTitle}>
-          <span className={styles.layerIndex}>The record</span>
-          Centralized vehicle management
-        </h3>
-        <p>
-          The full vehicle lifecycle across three products with three write paths: adding,
-          enrolling, connecting, unenrolling, disconnecting, and resolving conflicts. Account
-          views, device management, conflict resolution, unenroll, and the filter improvements have
-          shipped. Disconnect and Bulk Enroll are in progress.
-        </p>
-      </CaseSection>
-
-      <CaseFigure>
-        <CaseCarousel
-          slides={vehicles.slides}
-          ratio={vehicles.ratio}
-          label="Centralized vehicle management screens"
-          tone="dark"
-          brackets
-        />
-      </CaseFigure>
-
-      <CaseSection label="People">
-        <h3 className={styles.layerTitle}>
-          <span className={styles.layerIndex}>The answer</span>
-          User permissions
-        </h3>
-        <p>
-          One screen to add a user and set their access, with CP Suite’s 300+ configs hidden behind
-          role grants. I prototyped it in HTML twice: an account picker with a dataset switcher, so
-          I could test it at one account and at 50+, and a review screen that keeps multi-value
-          fields readable at that scale. The four-role framework is designed and parked until CP
-          Suite is ready to map to it.
-        </p>
-      </CaseSection>
-
-      <CaseFigure>
-        <CaseCarousel
-          slides={people.slides}
-          ratio={people.ratio}
-          label="User permissions screens"
-          tone="dark"
-          brackets
-        />
-      </CaseFigure>
-
-      <CaseSection label="Attention">
-        <h3 className={styles.layerTitle}>
-          <span className={styles.layerIndex}>The list</span>
-          Dashboard
-        </h3>
-        <p>
-          I wrote the severity model underneath it. Severity comes from two things, how much of the
-          fleet is affected and how many dollars per vehicle per month are at stake, and either one
-          can escalate an insight on its own. That gives three tiers, Critical, Action Needed, and
-          Monitor, plus time windows and freshness indicators so you know how current a signal is.
-          The model is also explicit about what is defensible today and what still needs discovery.
-        </p>
-        <p>
-          On top of that model: Fleet at a Glance, a Fleet Events map scoped to alert-triggered
-          events, and Dismiss, Ignore, and Snooze, with clear rules for when an insight comes back.
-        </p>
-      </CaseSection>
-
-      <CaseFigure>
-        <CaseCarousel
-          slides={attention.slides}
-          ratio={attention.ratio}
-          label="Command Center dashboard and severity model"
-          tone="light"
-          brackets
-        />
-      </CaseFigure>
-
-      <CaseSection label="Impact">
-        <CaseStats
-          stacked
-          stats={[
-            {
-              label: 'Vehicle management view rate, once the onboarding bugs were fixed',
-              before: { value: '44–80%', when: 'Before' },
-              value: '80–100%',
-              when: 'After',
-            },
-            {
-              label: 'Connect Vehicles conversion',
-              before: { value: '0%', when: 'Before' },
-              value: '23–40%',
-              when: 'After',
-            },
-          ]}
-        />
-        <p>
-          After launch I went through six recorded sessions in Pendo and found four places the
-          vehicle flow was breaking. The onboarding guide didn’t fire. The banner didn’t show. The
-          account switcher didn’t default to the connected account. The mapping guide came back
-          after the person had already finished. Once those were fixed, the view rate and the
-          Connect Vehicles conversion moved to the ranges above.
-        </p>
-        <p>
-          On the structural side, the account hierarchy became the model for embedding CP Suite in
-          Command Center, and the severity model is being reused on other surfaces.
-        </p>
-        <p>
-          Some of the impact is in things that never reached customers. An internal-only admin role
-          that would have shown up in their role list. Role lookups that would have broken for
-          every client but one. Partial saves from a combined edit drawer. A “Connect vehicles”
-          name that collided with an existing Connect feature. “Resolve & Sync” button copy that
-          promised more than sync actually does.
-        </p>
-      </CaseSection>
-
-      <CaseSection label="Next">
-        <p>
-          The biggest open dependency is data. Once events can be joined at the vehicle level
-          across products, the dashboard can go past “these two problems are on the same truck” and
-          start showing how they relate. The cause-and-effect work I set aside is waiting on that.
-        </p>
-        <p>
-          Still open on my side: picking the four-role framework back up once CP Suite is on board,
-          and figuring out who owns creating users in our identity provider.
-        </p>
-      </CaseSection>
+      <section className={styles.chapter}>
+        <div className={styles.prose}>
+          <h2 className={styles.chapterTitle}>Next</h2>
+          <p>
+            The biggest open dependency is data. Once events can be joined at the vehicle level
+            across products, the dashboard can go past “these two problems are on the same truck” and
+            start showing how they relate. The cause-and-effect work I set aside is waiting on that.
+          </p>
+          <p>
+            Still open on my side: picking the four-role framework back up once CP Suite is on board,
+            and figuring out who owns creating users in our identity provider.
+          </p>
+        </div>
+      </section>
     </CaseStudy>
   )
 }
