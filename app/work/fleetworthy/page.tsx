@@ -25,7 +25,7 @@ const THEME: CaseTheme = {
 
 const DIR = '/work/fleetworthy'
 
-type Screen = { src: string; alt: string; caption: string; label: string }
+type Screen = { src: string; alt: string; caption: string; label: string; surface?: string }
 
 const HERO: Screen = {
   src: `${DIR}/hero-command-center.png`,
@@ -37,10 +37,11 @@ const HERO: Screen = {
 
 const VEHICLE_RECORDS: Screen = {
   src: `${DIR}/vehicle-records.png`,
-  alt: 'The same truck stored as three drifted records, one each in tolls, bypass, and compliance',
+  alt: 'The same truck stored as three records, one each for tolls, bypass, and compliance',
   caption:
-    'One truck, three records. Tolls, bypass, and compliance each kept a copy, and the copies drifted.',
+    'One truck, three records. Tolls, bypass, and compliance each kept a copy, and the copies often drifted.',
   label: 'Vehicle records',
+  surface: '#ffffff',
 }
 
 const HIERARCHY_SCREENS = `${DIR}/account-switchers.png`
@@ -195,12 +196,13 @@ function Shot({
   alt,
   caption,
   label,
+  surface,
   priority,
 }: Screen & { priority?: boolean }) {
   const size = pngSize(src)
   return (
     <CaseFigure caption={caption}>
-      <div className={styles.reticle}>
+      <div className={styles.reticle} style={surface ? { background: surface } : undefined}>
         {size ? (
           <Image
             src={src}
