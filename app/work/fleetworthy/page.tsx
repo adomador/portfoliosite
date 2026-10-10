@@ -463,7 +463,7 @@ export default function FleetworthyCaseStudyPage() {
             Centralized vehicle management
           </h3>
           <p>
-            The full vehicle lifecycle across three products with three write paths: adding,
+            The full vehicle lifecycle across four products: adding,
             enrolling, editing, and removing. Connecting, data sync, and conflict resolution have also shipped.
           </p>
         </div>
