@@ -66,7 +66,7 @@ export const PROJECTS: ProjectNode[] = [
     label: 'Fleetworthy',
     tag: 'Senior Product Designer',
     dates: '2025 – Present',
-    line: '700+ qualified upsell leads. Vehicle connection is at 40%.',
+    line: 'Unifying four distinct surfaces into one ',
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
     color: '#ef444a',
@@ -74,15 +74,15 @@ export const PROJECTS: ProjectNode[] = [
     frames: [
       {
         src: '/work/fleetworthy/account-switchers.png',
-        caption: 'Account hierarchy, three levels',
+        caption: 'Foundational account hierarchy logic',
       },
       {
         src: '/work/fleetworthy/v2.png',
-        caption: 'Dashboard: fleet, actions, and the map',
+        caption: 'An intential surface for connected products',
       },
       {
         src: '/work/fleetworthy/severity-model.png',
-        caption: 'Severity from fleet share and $ per truck',
+        caption: 'Insight severity infrastructure defined',
       },
     ],
   },
@@ -107,7 +107,7 @@ export const PROJECTS: ProjectNode[] = [
     id: 'diezl',
     kind: 'project',
     label: 'Diezl',
-    tag: 'Founder',
+    tag: 'Founder & Builder',
     dates: '2025 – Present',
     line: 'Shipped alone. 406 installs, 901 loads evaluated.',
     href: '/work/diezl',
@@ -124,7 +124,7 @@ export const PROJECTS: ProjectNode[] = [
     id: 'trochi',
     kind: 'project',
     label: 'Trochi',
-    tag: 'Freelance Product Designer',
+    tag: 'Product Designer',
     dates: '2025 – Present',
     line: 'An MVP concept that became the pitch to prospective cooperative members.',
     href: '/work/trochi',
@@ -132,9 +132,9 @@ export const PROJECTS: ProjectNode[] = [
     color: '#5abf91',
     surface: '#16181d',
     frames: [
-      { src: '/work/Trochi.png', caption: 'A lane rate with its confidence beside it' },
-      { src: '/work/trochi/screen-1.svg', caption: 'The day opens on a market briefing' },
-      { src: '/work/trochi/screen-2.svg', caption: 'Search as the filter. Find lanes by intent' },
+      { src: '/work/Trochi.png', caption: 'Lead with the important numbers first' },
+      { src: '/work/trochi/screen-1.svg', caption: 'Give people what they need to know, when they need to know it' },
+      { src: '/work/trochi/screen-2.svg', caption: 'Natural language search as the filter.' },
     ],
   },
 ]
