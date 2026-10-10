@@ -66,7 +66,7 @@ export const PROJECTS: ProjectNode[] = [
     label: 'Fleetworthy',
     tag: 'Senior Product Designer',
     dates: '2025 – Present',
-    line: '700+ sales-qualified upsell leads from one connected view.',
+    line: 'Made four products behave like one. Vehicle views settled at 80–100%.',
     href: '/work/fleetworthy',
     logo: '/work/FW.svg',
     color: '#ef444a',
@@ -135,7 +135,7 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'systems-thinking',
     kind: 'concept',
     label: 'Systems thinking',
-    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it surfaced problems no single product could see, and generated 700+ sales-qualified upsell leads.',
+    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it meant one record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
   },
   {
     id: 'initiative',

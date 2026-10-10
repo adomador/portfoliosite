@@ -4,7 +4,6 @@ import {
   CaseFigure,
   CaseHero,
   CaseIntro,
-  CasePlaceholder,
   CaseSection,
   CaseStats,
   CaseStudy,
@@ -26,56 +25,146 @@ const THEME: CaseTheme = {
 
 const DIR = '/work/fleetworthy'
 
-const HERO = {
+type Screen = { src: string; alt: string; caption: string; label: string }
+
+const HERO: Screen = {
   src: `${DIR}/hero-command-center.png`,
-  alt: 'Fleetworthy Command Center showing a ranked list of action items with severity, estimated impact, and fleet-at-a-glance metrics',
+  alt: 'Fleetworthy Command Center with ranked action items, severity, estimated impact, and fleet-at-a-glance metrics',
+  caption:
+    'Command Center. The accounts in view, the shape of the fleet, and what needs a person today.',
+  label: 'Command Center',
 }
 
-const BEFORE_AFTER = [
+const VEHICLE_RECORDS: Screen = {
+  src: `${DIR}/vehicle-records.png`,
+  alt: 'The same truck stored as three drifted records, one each in tolls, bypass, and compliance',
+  caption:
+    'One truck, three records. Tolls, bypass, and compliance each kept a copy, and the copies drifted.',
+  label: 'Vehicle records',
+}
+
+const HIERARCHY: Screen = {
+  src: `${DIR}/account-hierarchy.png`,
+  alt: 'Account hierarchy diagram with a set switcher, a screen-level account filter, and product sub-filters',
+  caption:
+    'Three levels, used on every screen. Pick a set of accounts, filter the screen, then filter inside the product.',
+  label: 'Account hierarchy',
+}
+
+const VEHICLES: readonly Screen[] = [
   {
-    src: `${DIR}/v1.png`,
-    alt: 'V1 Command Center: a merged dashboard of product metrics and charts with no clear next steps',
-    label: 'V1',
+    src: `${DIR}/vehicle-list.png`,
+    alt: 'Centralized vehicle list showing enrollment across tolls, bypass, and compliance on one row',
+    caption:
+      'Account view of the fleet. One row per vehicle, with each product’s enrollment on it.',
+    label: 'Vehicle list',
   },
   {
+    src: `${DIR}/vehicle-conflicts.png`,
+    alt: 'Conflict review grouping mismatched vehicle records into two-field pattern buckets',
+    caption:
+      'Mismatches grouped by pattern, capped at two-field combinations. Ten review buckets instead of a field-by-field list.',
+    label: 'Conflict review',
+  },
+  {
+    src: `${DIR}/vehicle-enroll.png`,
+    alt: 'Enroll flow adding one vehicle to several Fleetworthy products at once',
+    caption:
+      'Enroll one vehicle into several products at once. Disconnect and Bulk Enroll are still in progress.',
+    label: 'Enroll',
+  },
+]
+
+const PEOPLE: readonly Screen[] = [
+  {
+    src: `${DIR}/permissions-user.png`,
+    alt: 'Single screen for adding a user and granting roles across Fleetworthy products',
+    caption:
+      'Add a user and set their access on one screen. CP Suite’s 300+ permission configs stay behind the role grant.',
+    label: 'Add a user',
+  },
+  {
+    src: `${DIR}/permissions-review.png`,
+    alt: 'Permissions review screen keeping multi-value fields readable across 50 or more accounts',
+    caption:
+      'The review prototype, tested at one account and at 50+, so multi-value fields stay readable at scale.',
+    label: 'Permissions review',
+  },
+]
+
+const ATTENTION: readonly Screen[] = [
+  {
     src: `${DIR}/v2.png`,
-    alt: 'V2 Command Center: a ranked list of Critical, Action Needed and Monitor items with estimated impact',
-    label: 'V2',
+    alt: 'Command Center dashboard with ranked action items, fleet at a glance, and a fleet events map',
+    caption:
+      'Fleet at a Glance, the action list, and a Fleet Events map limited to alert-triggered events.',
+    label: 'Dashboard',
+  },
+  {
+    src: `${DIR}/severity-model.png`,
+    alt: 'Insight severity model with percent of fleet affected and dollars per vehicle per month as the two inputs',
+    caption:
+      'Severity from two inputs. How much of the fleet is affected, and dollars per vehicle per month. Either one can escalate it.',
+    label: 'Severity model',
+  },
+]
+
+const PROBLEMS = [
+  {
+    title: 'A vehicle wasn’t one thing',
+    unify: 'One record',
+    body: 'Every product kept its own vehicle record. Putting a truck on tolls, bypass, and compliance meant entering it three times, and over time the copies drifted into near-matches nobody could reconcile.',
+  },
+  {
+    title: 'Access wasn’t one thing',
+    unify: 'One answer',
+    body: 'Three products, three permission systems. CP Suite layers permission strings on a separate data-access tree. Drivewyze uses roles, further gated by subscription and reseller rules. Bestpass uses a flat 1 to 6 scale. A support rep or customer success manager had to know all three just to answer what a person can do.',
+  },
+  {
+    title: 'Attention wasn’t one thing',
+    unify: 'One list',
+    body: 'Safety events, toll exceptions, and compliance gaps each lived in their own product. There was no single place to answer what needs me today.',
   },
 ] as const
 
-const APPROACH_IMAGE = {
-  src: `${DIR}/severity-model.png`,
-  alt: 'Insight severity model showing two inputs, percent of fleet affected and financial impact per vehicle per month, with Critical and Action Needed thresholds',
-  caption:
-    'Severity from two inputs: how much of the fleet is affected, and dollars lost per vehicle per month. Either one crossing its threshold is enough to escalate.',
-}
-
-const SOLUTION_SCREENS = [
+const DECISIONS = [
   {
-    src: `${DIR}/v2.png`,
-    alt: 'Full V2 Command Center with ranked action items above and a fleet events map with toll spend, bypass visits and safety alerts below',
-    caption:
-      'The full V2 dashboard: ranked actions up top, fleet events map and spend below so managers see what to do and where it is happening.',
+    kept: 'Rows a user can’t fully access stay clickable and show a message',
+    rejected: 'Disabling them, which looks cleaner',
+    why: 'Disabling would block access they legitimately have in other products. Checking every row up front would also mean a toll API call per row on load.',
   },
   {
-    src: `${DIR}/ai-chat.png`,
-    alt: 'Vantage AI chat open on a high plate tolls insight, with key findings, top vehicles and why it matters',
-    caption:
-      'Vantage opens on an insight: AI pulls the report, shows the reasoning, and leaves the decision with the manager.',
+    kept: 'Vehicle details and product settings save to separate places',
+    rejected: 'One combined edit drawer',
+    why: 'Each product owns its own write path, and a combined save could half-fail.',
+  },
+  {
+    kept: 'Mismatched records grouped by pattern, capped at two-field combinations',
+    rejected: 'Reviewing field by field',
+    why: 'Ten review buckets instead of an endless list.',
+  },
+  {
+    kept: 'Cross-product insights shown as simple tags on the same vehicle',
+    rejected: 'Cause-and-effect treatments. I explored five.',
+    why: 'We hadn’t confirmed we could join events at the vehicle level.',
+  },
+  {
+    kept: 'Confirmation only on Ignore',
+    rejected: 'Confirmation on Dismiss too',
+    why: 'Dismiss is fully reversible. The friction belongs on the bigger commitment.',
   },
 ] as const
 
 const META = [
-  { label: 'Product', lines: ['Fleetworthy Command Center (V2 dashboard)'] },
+  { label: 'Product', lines: ['Fleetworthy Command Center'] },
   { label: 'My role', lines: ['Senior Product Designer'] },
   {
+    label: 'Scope',
+    lines: ['Vehicles, permissions, the insights dashboard, and the account model under them'],
+  },
+  {
     label: 'Impact',
-    lines: [
-      '700+ sales-qualified upsell leads',
-      "Severity model adopted as the insight platform's foundation",
-      'Design language for how AI works in the product',
-    ],
+    lines: ['Vehicle views settled at 80–100%', 'Connect Vehicles conversion 23–40%'],
   },
 ] as const
 
@@ -85,94 +174,87 @@ const MORE = [
   { eyebrow: 'Diezl · Solo design and build', title: 'Diezl', href: '/work/diezl' },
 ] as const
 
-function CaseImage({
-  src,
-  alt,
-  caption,
-  priority,
-}: {
-  src: string
-  alt: string
-  caption?: string
-  priority?: boolean
-}) {
-  const size = pngSize(src)
-  if (!size) {
-    return <CasePlaceholder label={path.basename(src)} alt={alt} caption={caption} />
+function slidesFor(screens: readonly Screen[]) {
+  const built = toSlides(screens)
+  return {
+    ratio: built.ratio,
+    slides: built.slides.map((slide, i) => ({
+      ...slide,
+      placeholder: screens[i].label,
+    })),
   }
+}
+
+function Marks() {
   return (
-    <CaseFigure caption={caption}>
-      <Image
-        src={src}
-        alt={alt}
-        width={size.width}
-        height={size.height}
-        quality={90}
-        sizes="(max-width: 1080px) 100vw, 1016px"
-        className={styles.cover}
-        priority={priority}
-      />
-    </CaseFigure>
+    <>
+      <span className={`${styles.mark} ${styles.markTl}`} aria-hidden="true" />
+      <span className={`${styles.mark} ${styles.markTr}`} aria-hidden="true" />
+      <span className={`${styles.mark} ${styles.markBl}`} aria-hidden="true" />
+      <span className={`${styles.mark} ${styles.markBr}`} aria-hidden="true" />
+    </>
   )
 }
 
-function BeforeAfter({
-  images,
+function Shot({
+  src,
+  alt,
   caption,
-}: {
-  images: readonly { src: string; alt: string; label: string }[]
-  caption: string
-}) {
+  label,
+  priority,
+}: Screen & { priority?: boolean }) {
+  const size = pngSize(src)
   return (
     <CaseFigure caption={caption}>
-      <div className={styles.compare}>
-        {images.map((image) => {
-          const size = pngSize(image.src)
-          return (
-            <div key={image.src} className={styles.compareItem}>
-              <span className={styles.compareLabel}>{image.label}</span>
-              {size ? (
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  width={size.width}
-                  height={size.height}
-                  quality={90}
-                  sizes="(max-width: 760px) 100vw, 500px"
-                  className={styles.cover}
-                />
-              ) : (
-                <div className={styles.comparePlaceholder} role="img" aria-label={image.alt}>
-                  {path.basename(image.src)}
-                </div>
-              )}
-            </div>
-          )
-        })}
+      <div className={styles.reticle}>
+        {size ? (
+          <Image
+            src={src}
+            alt={alt}
+            width={size.width}
+            height={size.height}
+            quality={90}
+            sizes="(max-width: 1080px) 100vw, 1016px"
+            className={styles.cover}
+            priority={priority}
+          />
+        ) : (
+          <div className={styles.plate} role="img" aria-label={alt}>
+            <span className={styles.plateLabel}>{label}</span>
+            <span className={styles.plateFile}>{path.basename(src)}</span>
+          </div>
+        )}
+        <Marks />
       </div>
     </CaseFigure>
   )
 }
 
 export default function FleetworthyCaseStudyPage() {
-  const solution = toSlides(SOLUTION_SCREENS)
+  const vehicles = slidesFor(VEHICLES)
+  const people = slidesFor(PEOPLE)
+  const attention = slidesFor(ATTENTION)
 
   return (
     <CaseStudy theme={THEME} more={MORE}>
       <CaseHero
-        eyebrow="Fleetworthy · Research & product design"
-        title="Tell fleets what to do next"
-        lead={<>Translating siloed data into a dashboard that actually knows what to surface and cuts the noise. </>}
+        eyebrow="Fleetworthy · Product design"
+        title="Making four products behave like one"
+        lead={
+          <>
+            Command Center is one login, one account, and one place to manage a fleet’s vehicles,
+            its people, and what needs attention.
+          </>
+        }
       />
 
-      <CaseImage src={HERO.src} alt={HERO.alt} priority />
+      <Shot {...HERO} priority />
 
       <CaseIntro
         text={
           <>
-            One command center connects tolling, bypass, safety and compliance around each vehicle,
-            then tells fleet managers what needs attention and what to do about it. Along the way it
-            surfaced 700+ sales-qualified upsell&nbsp;leads.
+            I own the parts of Command Center that cut across every product. The backends stay
+            separate. The experience should still read as one.
           </>
         }
         meta={META}
@@ -180,144 +262,309 @@ export default function FleetworthyCaseStudyPage() {
 
       <CaseSection label="Context">
         <p>
-          Fleetworthy is built from acquired products that each kept their own portal: Bestpass for
-          tolls, Drivewyze for bypass and safety, and CP Suite for compliance. Customers repeated
-          the same tasks, like adding vehicles and managing users, in every portal. Large fleets had
-          no shared source of truth, and each product team rebuilt the same features. My team was
-          formed to fix that with one platform shell, starting with a shared vehicle record
-          everything else could depend&nbsp;on.
+          Fleetworthy is made of products that started as separate businesses. Bestpass covers
+          tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
+          Sold separately, that is four products, and a customer might pay for any combination.
+          They range from an owner-operator with one truck to carriers like JB Hunt and Forward
+          Air running thousands.
+        </p>
+        <p>
+          Command Center is the bet that ties that mix together. Same login, same account context,
+          whether the fleet bought one product or all of them.
         </p>
       </CaseSection>
 
       <CaseSection label="Problem">
         <p>
-          There were two problems, and the second one only showed up after we solved the&nbsp;first.
+          To a fleet admin, Fleetworthy didn’t feel like one product. The gap wasn’t only visual.
+          Each product was built on its own model, and that showed up in three places.
+        </p>
+        <div className={styles.lanes}>
+          {PROBLEMS.map((problem) => (
+            <article key={problem.title} className={styles.lane} tabIndex={0}>
+              <span className={styles.ticks} aria-hidden="true">
+                <span className={styles.ticksSolid} />
+              </span>
+              <div>
+                <div className={styles.laneHead}>
+                  <h3 className={styles.laneTitle}>{problem.title}</h3>
+                  <p className={styles.unify}>{problem.unify}</p>
+                </div>
+                <p className={styles.laneBody}>{problem.body}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p>
+          Under all of that was a structural break. The account switcher fell apart for the largest
+          customers, and the product screens embedded in Command Center could only handle one
+          account at a time.
         </p>
         <p>
-          <strong>The data was split.</strong> A fleet&apos;s tolls, bypass, safety and compliance
-          data lived in separate portals. At most large fleets, the compliance team and the bypass
-          team never talk, so nobody could see how one truck&apos;s issues connected across
-          services. An expired registration on a truck that keeps getting pulled into weigh
-          stations. A truck paying tolls by plate while running bypass routes without a
-          subscription. Each product saw half the&nbsp;story.
+          Merging the backends would have been the clean fix. It was never on the table.
+          Engineering had ruled it out, and each product team owns how its own data gets written.
+          Anything I designed also had to hold up when a product wasn’t there, because plenty of
+          customers don’t buy the full set.
         </p>
         <p>
-          <strong>Even merged, the data did not help.</strong> The first version of the dashboard
-          pulled every product&apos;s data onto one screen, and customers still told us the same
-          thing: they did not know what they needed to do on the platform. They could see numbers
-          but not next steps. Every customer got the same layout regardless of which services they
-          used, so a compliance-only fleet saw a tolling-heavy view. Consolidation alone just moved
-          the tab-switching onto one&nbsp;page.
-        </p>
-        <p>
-          The bet for V2 was that unified data only matters if it tells you what to do with&nbsp;it.
+          The problem I worked from: how do we give a fleet admin one coherent picture of their
+          vehicles, their people, and what needs attention, while the backends stay separate?
         </p>
       </CaseSection>
 
-      <BeforeAfter
-        images={BEFORE_AFTER}
-        caption="V1 put every product on one screen. V2 leads with what to do next."
-      />
+      <Shot {...VEHICLE_RECORDS} />
 
       <CaseSection label="Approach">
         <p>
-          I started researching before the project formally existed. Interviews with four enterprise
-          fleets, internal experts, and 16 survey responses showed the value was not in only providing a single source of truth for fleet data, but in reducing the noise and providing a clear next step for fleet managers.
+          <strong>Unify the experience. Leave the backends alone.</strong> And be plain about where
+          that holds and where it doesn’t.
         </p>
         <p>
-          Because the answer involved AI, I ran a separate survey of 60 customers on it. Three
-          findings shaped everything&nbsp;after:
+          <strong>I started from evidence.</strong> Before designing anything, I interviewed
+          enterprise carriers: JB Hunt, Forward Air, Challenger, and White Cap. The same three asks
+          kept coming up. They wanted data sync they could control, a way to enroll one vehicle
+          into several products at once, and a way to know which product a given piece of data came
+          from. Most of the vehicle work traces back to those conversations.
+        </p>
+        <p>
+          <strong>I built the structure before the screens.</strong> Every screen in Command Center
+          has to answer the same question first: whose data am I looking at? I wrote the account
+          hierarchy so that question would be answered once, for everything.
+        </p>
+        <ol>
+          <li>A switcher for picking a set of accounts</li>
+          <li>An account filter on each screen</li>
+          <li>Sub-filters inside each product’s own view</li>
+        </ol>
+        <div className={styles.bleed}>
+          <Shot {...HIERARCHY} />
+        </div>
+        <p>
+          It was approved, and it handled the large-customer and single-account problems before
+          they could show up as bugs when we embedded CP Suite.
+        </p>
+        <p>
+          With our engineering lead, I also set the framing the dashboard is still built on.
+          Customers fall into three tiers: single-product, cross-connected, and multi-product. The
+          dashboard is for wayfinding. It points you to where the work is. It isn’t another place
+          to do the work.
+        </p>
+        <p>
+          <strong>I shelved the cleaner model when the cost was too high.</strong> Permissions is
+          where this got tested. Engineering had ruled out a central permissions backend, and
+          governance wanted one source of truth. I designed four plain-language roles, Read only,
+          Worker, Manager, and Admin, that would live in the UI and translate into each product’s
+          native permissions on save.
+        </p>
+        <p>
+          It held up on paper. In practice, CP Suite would have had to rename and tag every role to
+          fit those four buckets. That’s a real operational lift for a team that hadn’t bought into
+          the idea yet. I made the case to Product that we should park it until those stakeholders
+          were invested, instead of forcing it through.
+        </p>
+        <p>
+          What shipped still does most of the job. You can add a user and set all their permissions
+          on one screen. CP Suite’s 300+ permission configs stay out of the flow, so admins grant
+          roles. The complexity is still underneath. The admin never has to see it.
+        </p>
+        <p>
+          <strong>I didn’t let the richest system win.</strong> CP Suite has the most detailed
+          permission model of the three, and the shared design kept getting pulled toward it. I
+          took its location-tree navigation out of the general flow. I kept Accounting to payments,
+          methods, and statements, instead of folding in disputes just because CP Suite bundles
+          them. When creating accounts in our identity provider crept into scope, I flagged it as a
+          different problem, who exists versus what they’re allowed to do, and handed it to the
+          people who own it.
+        </p>
+        <p>
+          <strong>I picked correct over tidy.</strong> A lot of calls came down to the version that
+          wouldn’t break, rather than the one that looked cleaner.
+        </p>
+        <div className={styles.bleed}>
+          <div className={styles.tableWrap}>
+            <table className={styles.decisions}>
+              <caption className={styles.tableCaption}>
+                Choices where the cleaner option would have failed in use
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Decision</th>
+                  <th scope="col">What I rejected</th>
+                  <th scope="col">Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DECISIONS.map((row) => (
+                  <tr key={row.kept} tabIndex={0}>
+                    <th scope="row" data-label="Decision">
+                      {row.kept}
+                    </th>
+                    <td className={styles.rejected} data-label="What I rejected">
+                      {row.rejected}
+                    </td>
+                    <td data-label="Why">{row.why}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p>
+          <strong>I checked the work against the code.</strong> Before handing off permissions, I
+          checked the role mapping against the codebase instead of trusting my earlier analysis.
+          Two things came out of that.
         </p>
         <ul>
           <li>
-            Customers were open to AI, but preferred suggestions they could review over actions
-            taken for&nbsp;them.
+            CP Suite’s “Administrator (Full Access)” role is meant for internal admins only, and it
+            requires approval. My first mapping would have shown it to customers.
           </li>
-          <li>Data trust was the main&nbsp;concern.</li>
           <li>
-            Toll users were the most enthusiastic and compliance users the most cautious, so one
-            default behavior would not fit&nbsp;everyone.
+            CP Suite roles aren’t shared. Every client has its own hand-built copy. Lookup logic
+            that assumed a shared role ID would have worked on our reference client and broken for
+            everyone else.
           </li>
         </ul>
-        <p>From that I wrote three rules for how AI would work in the&nbsp;product:</p>
-        <ol>
-          <li>
-            AI suggests, the user decides. Nothing happens without a person confirming&nbsp;it.
-          </li>
-          <li>
-            Every suggestion shows its reasoning. If a customer cannot see why something was
-            flagged, they will not trust&nbsp;it.
-          </li>
-          <li>
-            Match the effort to the task. Small actions happen in place. Larger ones get a guided
-            flow.
-          </li>
-        </ol>
-        <p>
-          I then explored ten concepts in Figma and converged on the simplest defensible version.
-          Two carried the most weight. The first making sure every insight had a clear cause, effect, cost, and recommended action.
-          The second was putting the action list first,
-          so the dashboard leads with what to do instead of relying on the user to interpret the data. In order to keep the action list focused and useful, we needed to be intentional about the insights that were surfaced. 
-          I created a severity model that would help us decide which insights to surface based on the impact they had on the fleet.
-        </p>
       </CaseSection>
-
-      <CaseImage
-        src={APPROACH_IMAGE.src}
-        alt={APPROACH_IMAGE.alt}
-        caption={APPROACH_IMAGE.caption}
-      />
 
       <CaseSection label="Solution">
         <p>
-          <strong>A ranked list of actions, not a wall of metrics.</strong> Each insight gets a
-          severity based on two inputs: how much of the fleet is affected, and dollars lost per
-          vehicle per month. If either crosses its threshold, it escalates into Critical, Action
-          Needed or Monitor. Each insight has its own thresholds and time window, plus a freshness
-          indicator so customers know how current the data is. Below the list, a fleet events map
-          and spend summary show where alert-triggered activity is happening. A fleet manager opens
-          the dashboard and sees what to do first, and where to look&nbsp;next.
+          What came out of this is a shared foundation, with three layers on top. One layer for
+          each problem.
         </p>
+        <h3 className={styles.layerTitle}>
+          <span className={styles.layerIndex}>Foundation</span>
+          Account architecture
+        </h3>
         <p>
-          <strong>Every action explains itself.</strong> Each item follows the causal chain: what
-          happened, what it is causing, what it costs, and what to do. A manager does not have to
-          trust a score. They can read the reasoning and judge&nbsp;it.
+          The three-level hierarchy gives every screen the same answer to whose data this is,
+          whether you’re an owner-operator with one account or an internal admin looking at all of
+          them.
         </p>
+      </CaseSection>
+
+      <CaseSection label="Vehicles">
+        <h3 className={styles.layerTitle}>
+          <span className={styles.layerIndex}>The record</span>
+          Centralized vehicle management
+        </h3>
         <p>
-          <strong>The details that build trust.</strong> Dismiss, ignore and snooze states for every
-          insight, so the list stays useful instead of becoming noise. A state model for every
-          module and row. A rule that the map only shows alert-triggered&nbsp;events.
+          The full vehicle lifecycle across three products with three write paths: adding,
+          enrolling, connecting, unenrolling, disconnecting, and resolving conflicts. Account
+          views, device management, conflict resolution, unenroll, and the filter improvements have
+          shipped. Disconnect and Bulk Enroll are in progress.
         </p>
       </CaseSection>
 
       <CaseFigure>
         <CaseCarousel
-          slides={solution.slides}
-          ratio={solution.ratio}
-          label="Fleetworthy Command Center screens"
+          slides={vehicles.slides}
+          ratio={vehicles.ratio}
+          label="Centralized vehicle management screens"
+          tone="dark"
+          brackets
+        />
+      </CaseFigure>
+
+      <CaseSection label="People">
+        <h3 className={styles.layerTitle}>
+          <span className={styles.layerIndex}>The answer</span>
+          User permissions
+        </h3>
+        <p>
+          One screen to add a user and set their access, with CP Suite’s 300+ configs hidden behind
+          role grants. I prototyped it in HTML twice: an account picker with a dataset switcher, so
+          I could test it at one account and at 50+, and a review screen that keeps multi-value
+          fields readable at that scale. The four-role framework is designed and parked until CP
+          Suite is ready to map to it.
+        </p>
+      </CaseSection>
+
+      <CaseFigure>
+        <CaseCarousel
+          slides={people.slides}
+          ratio={people.ratio}
+          label="User permissions screens"
+          tone="dark"
+          brackets
+        />
+      </CaseFigure>
+
+      <CaseSection label="Attention">
+        <h3 className={styles.layerTitle}>
+          <span className={styles.layerIndex}>The list</span>
+          Dashboard
+        </h3>
+        <p>
+          I wrote the severity model underneath it. Severity comes from two things, how much of the
+          fleet is affected and how many dollars per vehicle per month are at stake, and either one
+          can escalate an insight on its own. That gives three tiers, Critical, Action Needed, and
+          Monitor, plus time windows and freshness indicators so you know how current a signal is.
+          The model is also explicit about what is defensible today and what still needs discovery.
+        </p>
+        <p>
+          On top of that model: Fleet at a Glance, a Fleet Events map scoped to alert-triggered
+          events, and Dismiss, Ignore, and Snooze, with clear rules for when an insight comes back.
+        </p>
+      </CaseSection>
+
+      <CaseFigure>
+        <CaseCarousel
+          slides={attention.slides}
+          ratio={attention.ratio}
+          label="Command Center dashboard and severity model"
           tone="light"
+          brackets
         />
       </CaseFigure>
 
       <CaseSection label="Impact">
         <CaseStats
-          stats={[{ value: '700+', label: 'sales-qualified upsell leads to date' }]}
           stacked
+          stats={[
+            {
+              label: 'Vehicle management view rate, once the onboarding bugs were fixed',
+              before: { value: '44–80%', when: 'Before' },
+              value: '80–100%',
+              when: 'After',
+            },
+            {
+              label: 'Connect Vehicles conversion',
+              before: { value: '0%', when: 'Before' },
+              value: '23–40%',
+              when: 'After',
+            },
+          ]}
         />
         <p>
-          Unifying every product into one Command Center let us surface the full suite in context,
-          with smartly placed upsells where a fleet was already feeling the gap. That exposure
-          turned into 700+ sales-qualified leads. 
+          After launch I went through six recorded sessions in Pendo and found four places the
+          vehicle flow was breaking. The onboarding guide didn’t fire. The banner didn’t show. The
+          account switcher didn’t default to the connected account. The mapping guide came back
+          after the person had already finished. Once those were fixed, the view rate and the
+          Connect Vehicles conversion moved to the ranges above.
         </p>
         <p>
-          <strong>A severity model the platform was built on.</strong> Every insight now escalates
-          through the same logic. It became the first layer of the insight platform that powers the
-          dashboard.
+          On the structural side, the account hierarchy became the model for embedding CP Suite in
+          Command Center, and the severity model is being reused on other surfaces.
         </p>
         <p>
-          <strong>The design language for AI.</strong> The three rules from my research set the
-          boundary between inline actions and guided flows, and shaped how the product&apos;s
-          architecture treats&nbsp;AI.
+          Some of the impact is in things that never reached customers. An internal-only admin role
+          that would have shown up in their role list. Role lookups that would have broken for
+          every client but one. Partial saves from a combined edit drawer. A “Connect vehicles”
+          name that collided with an existing Connect feature. “Resolve & Sync” button copy that
+          promised more than sync actually does.
+        </p>
+      </CaseSection>
+
+      <CaseSection label="Next">
+        <p>
+          The biggest open dependency is data. Once events can be joined at the vehicle level
+          across products, the dashboard can go past “these two problems are on the same truck” and
+          start showing how they relate. The cause-and-effect work I set aside is waiting on that.
+        </p>
+        <p>
+          Still open on my side: picking the four-role framework back up once CP Suite is on board,
+          and figuring out who owns creating users in our identity provider.
         </p>
       </CaseSection>
     </CaseStudy>

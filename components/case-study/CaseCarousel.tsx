@@ -15,6 +15,17 @@ export type CaseSlide = {
   ratio?: string
 }
 
+function SelectionMarks() {
+  return (
+    <>
+      <span className={`${styles.bracket} ${styles.bracketTl}`} aria-hidden="true" />
+      <span className={`${styles.bracket} ${styles.bracketTr}`} aria-hidden="true" />
+      <span className={`${styles.bracket} ${styles.bracketBl}`} aria-hidden="true" />
+      <span className={`${styles.bracket} ${styles.bracketBr}`} aria-hidden="true" />
+    </>
+  )
+}
+
 export default function CaseCarousel({
   slides,
   ratio,
@@ -22,53 +33,69 @@ export default function CaseCarousel({
   /** Light frame for light product screenshots (Trochi). Dark frame for phone mockups (Diezl). */
   tone = 'light',
   onExpand,
+  /** Fleetworthy-style selection corners. They draw in on hover. */
+  brackets = false,
 }: {
   slides: readonly CaseSlide[]
   ratio: string
   label: string
   tone?: 'light' | 'dark'
   onExpand?: (image: { src: string; alt: string }) => void
+  brackets?: boolean
 }) {
   const [index, setIndex] = useState(0)
   const slide = slides[index]
   const go = (next: number) => setIndex((next + slides.length) % slides.length)
   const canExpand = Boolean(slide.src && onExpand)
   const frameRatio = slide.ratio ?? ratio
+  const frameClass = `${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`
+
+  const frameBody = (
+    <>
+      {slides.map((s, i) =>
+        s.src ? (
+          <Image
+            key={s.src}
+            src={s.src}
+            alt={i === index ? s.alt : ''}
+            fill
+            sizes="(max-width: 1080px) 100vw, 1016px"
+            className={`${styles.frameImg} ${i === index ? styles.frameImgActive : ''}`}
+            priority={i === 0}
+          />
+        ) : (
+          <span
+            key={s.alt}
+            className={`${styles.placeholder} ${i === index ? styles.placeholderActive : ''}`}
+            aria-hidden={i !== index}
+          >
+            {s.placeholder ?? s.alt}
+          </span>
+        )
+      )}
+      {brackets && <SelectionMarks />}
+    </>
+  )
 
   return (
     <div className={styles.carousel} role="group" aria-roledescription="carousel" aria-label={label}>
-      <button
-        type="button"
-        className={`${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`}
-        style={{ aspectRatio: frameRatio }}
-        onClick={() => {
-          if (slide.src && onExpand) onExpand({ src: slide.src, alt: slide.alt })
-        }}
-        disabled={!canExpand}
-        aria-label={canExpand ? `${slide.alt}. Click to expand` : slide.alt}
-      >
-        {slides.map((s, i) =>
-          s.src ? (
-            <Image
-              key={s.src}
-              src={s.src}
-              alt={i === index ? s.alt : ''}
-              fill
-              sizes="(max-width: 1080px) 100vw, 1016px"
-              className={`${styles.frameImg} ${i === index ? styles.frameImgActive : ''}`}
-              priority={i === 0}
-            />
-          ) : (
-            <span
-              key={s.alt}
-              className={`${styles.placeholder} ${i === index ? styles.placeholderActive : ''}`}
-              aria-hidden={i !== index}
-            >
-              {s.placeholder ?? s.alt}
-            </span>
-          )
-        )}
-      </button>
+      {canExpand ? (
+        <button
+          type="button"
+          className={frameClass}
+          style={{ aspectRatio: frameRatio }}
+          onClick={() => {
+            if (slide.src && onExpand) onExpand({ src: slide.src, alt: slide.alt })
+          }}
+          aria-label={`${slide.alt}. Click to expand`}
+        >
+          {frameBody}
+        </button>
+      ) : (
+        <div className={frameClass} style={{ aspectRatio: frameRatio }}>
+          {frameBody}
+        </div>
+      )}
 
       <div className={styles.controls}>
         <button

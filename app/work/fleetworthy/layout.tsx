@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { NAME } from '@/lib/profile'
 
 export const metadata: Metadata = {
-  title: `Tell fleets what to do next, ${NAME}`,
+  title: `Making four products behave like one, ${NAME}`,
   description:
-    'One command center connects tolling, bypass, safety and compliance around each vehicle, then tells fleet managers what needs attention and what to do about it.',
+    'Command Center gives a fleet one account, one vehicle record, and one place to see what needs attention, while tolls, bypass, safety, and compliance keep their own backends.',
 }
 
 export default function FleetworthyLayout({ children }: { children: React.ReactNode }) {
