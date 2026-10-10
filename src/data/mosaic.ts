@@ -72,9 +72,10 @@ export const PROJECTS: ProjectNode[] = [
     color: '#ef444a',
     surface: '#101114',
     frames: [
-      { src: '/work/fleetworthy/account-switchers.png', caption: 'One account across the products' },
-      { src: '/work/fleetworthy/hero-command-center.png', caption: 'One list for what needs attention' },
-      { src: '/work/fleetworthy/severity-model.png', caption: 'Severity from fleet share and $ per truck' },
+      {
+        src: '/work/fleetworthy/account-switchers.png',
+        caption: 'Account hierarchy, three levels',
+      },
     ],
   },
   {
