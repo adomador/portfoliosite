@@ -280,7 +280,7 @@ export default function FleetworthyCaseStudyPage() {
         <div className={styles.prose}>
           <h2 className={styles.chapterTitle}>Context</h2>
           <p>
-            Fleetworthy is a B2B SaaS company built for the trucking industry, a fragmented ecosystem of vendors, relationships, and data. It's made of products that started as separate businesses. Bestpass covers tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
+            Fleetworthy is a B2B SaaS company built for the trucking industry, a fragmented ecosystem of vendors, relationships, and data. It’s made of products that started as separate businesses. Bestpass covers tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
             Sold separately, that is four products from three companies, and a customer might pay
             for any combination. They range from an owner-operator with one truck to carriers like
             JB Hunt and Forward Air running thousands.
