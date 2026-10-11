@@ -71,7 +71,7 @@ export const PROJECTS: Project[] = [
     logo: '/work/FW.svg',
     scope: 'Research & product design',
     summary:
-      'Turned a merged dashboard into a ranked list of actions for fleet managers, and surfaced 700+ sales-qualified upsell leads.',
+      'Made four products behave like one Command Center: vehicles, permissions, and what needs attention, without merging the backends.',
     href: '/work/fleetworthy',
     visual: {
       src: '/work/fleetworthy/hero-command-center.png',
