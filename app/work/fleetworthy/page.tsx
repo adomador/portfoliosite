@@ -113,7 +113,7 @@ const PROBLEMS = [
   {
     title: 'Access wasn’t one thing',
     unify: 'One answer',
-    body: 'Three products, three permission systems. CP Suite layers permission strings on a separate data-access tree. Drivewyze uses roles, further gated by subscription and reseller rules. Bestpass uses a flat 1 to 6 scale. A support rep or customer success manager had to know all three just to answer what a person can do.',
+    body: 'Three companies, three permission systems. CP Suite layers permission strings on a separate data-access tree. Drivewyze uses roles, further gated by subscription and reseller rules. Bestpass uses a flat 1 to 6 scale. A support rep or customer success manager had to know all three just to answer what a person can do.',
   },
   {
     title: 'Attention wasn’t one thing',
@@ -124,29 +124,19 @@ const PROBLEMS = [
 
 const DECISIONS = [
   {
-    kept: 'Rows a user can’t fully access stay clickable and show a message',
-    rejected: 'Disabling them, which looks cleaner',
-    why: 'Disabling would block access they legitimately have in other products. Checking every row up front would also mean a toll API call per row on load.',
+    kept: 'Don’t hide access they still have in another product',
+    rejected: 'Disabling rows they can’t fully access, which looks cleaner',
+    why: 'Disabling would block access they legitimately have elsewhere. Checking every row up front would also mean a toll API call per row on load.',
   },
   {
-    kept: 'Vehicle details and product settings save to separate places',
+    kept: 'Save vehicle details and product settings on separate paths',
     rejected: 'One combined edit drawer',
     why: 'Each product owns its own write path, and a combined save could half-fail.',
   },
   {
-    kept: 'Mismatched records grouped by pattern, capped at two-field combinations',
-    rejected: 'Reviewing field by field',
-    why: 'Ten review buckets instead of an endless list.',
-  },
-  {
-    kept: 'Cross-product insights shown as simple tags on the same vehicle',
+    kept: 'Show cross-product insights as tags on the same vehicle',
     rejected: 'Cause-and-effect treatments. I explored five.',
     why: 'We hadn’t confirmed we could join events at the vehicle level.',
-  },
-  {
-    kept: 'Confirmation only on Ignore',
-    rejected: 'Confirmation on Dismiss too',
-    why: 'Dismiss is fully reversible. The friction belongs on the bigger commitment.',
   },
 ] as const
 
@@ -160,8 +150,8 @@ const META = [
   {
     label: 'Impact',
     lines: [
-      'Vehicle connection rate 40%',
       '700+ qualified upsell leads',
+      'Vehicle connection rate 40%',
     ],
   },
 ] as const
@@ -260,8 +250,8 @@ export default function FleetworthyCaseStudyPage() {
         title="Making four products behave like one"
         lead={
           <>
-            Command Center is one login, one account, and one place to manage a fleet’s vehicles,
-            its people, and what needs attention.
+            Command Center is one login, one account context, and one place to manage a fleet’s
+            vehicles, its people, and what needs attention.
           </>
         }
       />
@@ -271,8 +261,8 @@ export default function FleetworthyCaseStudyPage() {
       <CaseIntro
         text={
           <>
-            I own the parts of Command Center that cut across every product. The infrastructure stay
-            separate. The experience should still read as one.
+            I own the parts of Command Center that cut across every product. The infrastructure
+            stays separate. The experience should still read as one.
           </>
         }
         meta={META}
@@ -284,9 +274,9 @@ export default function FleetworthyCaseStudyPage() {
           <p>
             Fleetworthy is made of products that started as separate businesses. Bestpass covers
             tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
-            Sold separately, that is four products, and a customer might pay for any combination.
-            They range from an owner-operator with one truck to carriers like JB Hunt and Forward
-            Air running thousands.
+            Sold separately, that is four products from three companies, and a customer might pay
+            for any combination. They range from an owner-operator with one truck to carriers like
+            JB Hunt and Forward Air running thousands.
           </p>
           <p>
             Command Center is the bet that ties them all together. Same login, same account context,
@@ -320,9 +310,11 @@ export default function FleetworthyCaseStudyPage() {
           ))}
         </div>
         <div className={styles.prose}>
+          <h3 className={styles.subhead}>The accounts weren’t one thing</h3>
           <p>
-            Under all of that was a structural issue. Not only did we have to connect multiple accounts together into singular object,
-            we had to also allow for customers to be able to filter through their data on a per-account & product basis.
+            A customer is not one account. They hold several, across products, and every screen has
+            to know whose data this is. We had to connect those accounts into one mapped set, then
+            still let people filter by account and by product.
           </p>
           <p>
             Merging the backends would have been the clean fix. It was never on the table.
@@ -344,16 +336,18 @@ export default function FleetworthyCaseStudyPage() {
           <h2 className={styles.chapterTitle}>Approach</h2>
           <h3 className={styles.subhead}>I started from evidence</h3>
           <p>
-            Before designing anything, I interviewed our customers, includingenterprise carriers like JB Hunt, Forward Air,
-            Challenger, and White Cap. The same three asks kept coming up. They wanted data sync
-           between all Fleetworthy products, a way to enroll one vehicle into several products at once, and a
-            way to know which product a given piece of data came from. Most of the vehicle work
-            traces back to those conversations.
+            Before designing anything, I interviewed our customers, including enterprise carriers
+            like JB Hunt, Forward Air, Challenger, and White Cap. The same three asks kept coming
+            up. They wanted data sync between all Fleetworthy products, a way to enroll one vehicle
+            into several products at once, and a way to know which product a given piece of data
+            came from. Most of the vehicle work traces back to those conversations. Access and
+            attention came from the models themselves: three permission systems no one person could
+            hold in their head, and no shared list of what needed a person today.
           </p>
-          <h3 className={styles.subhead}>I built the structure before the screens</h3>
+          <h3 className={styles.subhead}>I defined the structure before designing the screens</h3>
           <p>
             Every screen in Command Center has to answer the same question first: whose data am I
-            looking at? I wrote the account hierarchy so that question would be answered once, for
+            looking at? I defined the account hierarchy so that question would be answered once, for
             everything.
           </p>
           <ol>
@@ -373,13 +367,10 @@ export default function FleetworthyCaseStudyPage() {
         </CaseFigure>
         <div className={styles.prose}>
           <p>
-            It was approved, and it handled both the large-customer and single-account problems before they could show up as bugs.
-          </p>
-          <h3 className={styles.subhead}>A non-negotiable: The dashboard is for wayfinding</h3>
-          <p>
-            In collaboration with Product and Engineering, I set the framing the dashboard is still built on.
-            Customers would fall into two tiers: single-product and multi-product. And crucially, it points you to where
-            the work needs to be done. It isn’t a place to consume tons of data. 
+            A mapped set of thousands of trucks and a one-account owner-operator have to use the
+            same three levels. The switcher holds the set, the filter narrows the screen, and the
+            sub-filters stay inside the product. That split is what keeps a large-customer view from
+            leaking into a single-account one, and the other way around.
           </p>
         </div>
       </section>
@@ -389,20 +380,23 @@ export default function FleetworthyCaseStudyPage() {
           <h2 className={styles.chapterTitle}>Managing Tradeoffs</h2>
           <h3 className={styles.subhead}>I shelved the cleaner model when the cost was too high</h3>
           <p>
-            User management is where my framework got tested. The ideal experience required one source of truth, so I designed four plain-language
-            roles, Read only, Worker, Manager, and Admin, that would live in the UI and translate
-            into each product’s native permissions on save.
+            User management is where my framework got tested. The ideal experience required one
+            source of truth, so I designed four plain-language roles, Read only, Worker, Manager,
+            and Admin, that would live in the UI and translate into each product’s native
+            permissions on save.
           </p>
           <p>
-            It held up on paper. In practice, the Compliance product would have had to rename and tag every role to
-            fit those four buckets, since they had already built their own roles and permissions infrastructure. That’s a real operational lift for a team that hadn’t bought into
-            the idea and needed more time to get invested. I made the case to Product that we should park it until those stakeholders
-            were invested, instead of forcing it through in order to not block development.
+            It held up on paper. In practice, the Compliance product would have had to rename and
+            tag every role to fit those four buckets, since they had already built their own roles
+            and permissions infrastructure. That’s a real operational lift for a team that hadn’t
+            bought into the idea and needed more time to get invested. I made the case to Product
+            that we should park it until those stakeholders were aligned, instead of forcing it
+            through in order to not block development.
           </p>
           <p>
-            What shipped still does most of the job. You can add a user and set all their permissions
-            on one screen. 300+ permission configs for Compliance stay out of the flow, so admins grant only
-            roles. The complexity remains hidden. The admin never has to see it.
+            What shipped still does the job. You can add a user and set all their
+            permissions on one screen. Permission configs for Compliance stay out of the flow,
+            so admins grant only roles instead of fiddling with 300+ permissions. 
           </p>
           <h3 className={styles.subhead}>I picked correct over tidy</h3>
           <p>
@@ -446,25 +440,17 @@ export default function FleetworthyCaseStudyPage() {
         <div className={styles.prose}>
           <h2 className={styles.chapterTitle}>Solution</h2>
           <p>
-            What came out of this is a shared foundation, with three layers on top. One layer for
-            each problem.
-          </p>
-          <h3 className={styles.subhead}>
-            <span className={styles.kicker}>Foundation</span>
-            Account architecture
-          </h3>
-          <p>
-            The three-level hierarchy gives every screen the same answer to whose data this is,
-            whether you’re an owner-operator with one account or an internal admin looking at all of
-            them.
+            The account model underneath, then one layer for each problem. Every screen uses the
+            same three-level answer to whose data this is.
           </p>
           <h3 className={styles.subhead}>
             <span className={styles.kicker}>Vehicles</span>
             Centralized vehicle management
           </h3>
           <p>
-            The full vehicle lifecycle across four products: adding,
-            enrolling, editing, and removing. Connecting, data sync, and conflict resolution have also shipped.
+            One row per vehicle, with each product’s enrollment on it, and mismatches grouped so
+            someone can actually reconcile them. Connecting, data sync, and conflict resolution have
+            shipped. Disconnect and Bulk Enroll are still in progress.
           </p>
         </div>
         <CaseFigure>
@@ -482,9 +468,9 @@ export default function FleetworthyCaseStudyPage() {
             User permissions
           </h3>
           <p>
-            One screen to add a user and set their access. I prototyped the experience using Claude: an account picker with a dataset switcher, so
-            I could test it at one account and at 50+, and a review screen that keeps multi-value
-            fields readable at that scale. The four-role framework is designed and parked until Compliance is ready to map to it.
+            One screen to add a user and set their access, shipped. I prototyped the review at one
+            account and at 50+, so multi-value fields stay readable at that scale. The four-role
+            framework is designed and parked until Compliance is ready to map to it.
           </p>
         </div>
         <CaseFigure>
@@ -502,15 +488,16 @@ export default function FleetworthyCaseStudyPage() {
             Dashboard
           </h3>
           <p>
-            I wrote the severity model underneath it. Severity comes from two things, how much of the
-            fleet is affected and how many dollars per vehicle per month are at stake, and either one
-            can escalate an insight on its own. That gives three tiers, Critical, Action Needed, and
-            Monitor, plus time windows and freshness indicators so you know how current a signal is.
-            The model is also explicit about what is defensible today and what still needs discovery.
+            The dashboard is for wayfinding. It points you to where the work needs to be done. It
+            isn’t a place to consume tons of data. With Product and Engineering, I set that framing and designed for it.
+            Customers fall into two tiers, single-product and multi-product, and no matter the tier, the dashboard points them to where the work needs to be done.
           </p>
           <p>
-            On top of that model: Fleet at a Glance, a Fleet Events map scoped to alert-triggered
-            events, and Dismiss, Ignore, and Snooze, with clear rules for when an insight comes back.
+            I defined the severity model for out action item insights. Severity comes from how much of the fleet is
+            affected and how many dollars per vehicle per month are at stake. Either one can
+            escalate an insight on its own: a small dollar problem on most of the fleet, or a large
+            one on two trucks. That gives three tiers, Critical, Action Needed, and Monitor. The
+            model is explicit about what is defensible today and what still needs discovery.
           </p>
         </div>
         <CaseFigure>
@@ -531,22 +518,31 @@ export default function FleetworthyCaseStudyPage() {
             <CaseStats
               stacked
               stats={[
-                { value: '40%', label: 'Vehicle connection rate' },
                 { value: '700+', label: 'Qualified upsell leads' },
+                { value: '40%', label: 'Vehicle connection rate' },
               ]}
             />
           </div>
-          <p>
-            Vehicle connection is at a flat 40%. We are continuously doing outreach and improving
-            onboarding so more people connect their accounts and their vehicles.  Until the rest of
-            the products are actually embedded in Command Center, that number will likely not go
-            much higher because customers are still accustomed to managing their fleet in each product separately.
-          </p>
           <p>
             The 700+ qualified upsell leads come from customers noticing the consolidation. Once the
             products started behaving like one place, they were interested in the ones they didn’t
             already have.
           </p>
+          <p>
+            Vehicle connection is at a flat 40%. We are continuously doing outreach and improving
+            onboarding so more people connect their accounts and their vehicles. Until the rest of
+            the products are actually embedded in Command Center, that number will likely not go
+            much higher because customers are still accustomed to managing their fleet in each
+            product separately.
+          </p>
+          
+          <h3 className={styles.subhead}>What’s next</h3>
+          <p>
+            Connection stays at this ceiling until the rest of the products actually live in
+            Command Center. That embedding is the next pressure, and so is unparking the four-role
+            model once Compliance is ready to map.
+          </p>
+          <br></br>
         </div>
       </section>
 

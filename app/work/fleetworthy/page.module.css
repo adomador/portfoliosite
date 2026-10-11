@@ -73,6 +73,10 @@
   margin-top: 0;
 }
 
+.lanes + .prose > .subhead:first-child {
+  margin-top: 48px;
+}
+
 .kicker {
   display: block;
   margin-bottom: 8px;
