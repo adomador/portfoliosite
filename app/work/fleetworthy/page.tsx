@@ -261,8 +261,8 @@ export default function FleetworthyCaseStudyPage() {
       <CaseIntro
         text={
           <>
-            I own the parts of Command Center that cut across every product. The infrastructure
-            stays separate. The experience should still read as one.
+            I own the parts of Command Center that every user, no matter the role, interacts with. The infrastructure
+            for every productstays separate. The experience should still read as one.
           </>
         }
         meta={META}
@@ -310,10 +310,10 @@ export default function FleetworthyCaseStudyPage() {
           ))}
         </div>
         <div className={styles.prose}>
-          <h3 className={styles.subhead}>The accounts weren’t one thing</h3>
+          <h3 className={styles.subhead}>The foundation needed to centralized</h3>
           <p>
-            A customer is not one account. They hold several, across products, and every screen has
-            to know whose data this is. We had to connect those accounts into one mapped set, then
+            A multi-product customer is not one account. They hold several, across products, and every screen has
+            to know the source of that data. We had to connect those accounts into one mapped set, then
             still let people filter by account and by product.
           </p>
           <p>
@@ -324,7 +324,7 @@ export default function FleetworthyCaseStudyPage() {
           </p>
           <p>
             The problem I worked from: how do we give a fleet admin one coherent picture of their
-            vehicles, their people, and what needs attention, while the backends stay separate?
+            vehicles, their users, and what needs attention, while the backends stay separate?
           </p>
         </div>
       </section>
