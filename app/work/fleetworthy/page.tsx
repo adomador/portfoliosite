@@ -51,7 +51,7 @@ const VEHICLES: readonly Screen[] = [
     src: `${DIR}/vehicle-list.png`,
     alt: 'Centralized vehicle list showing enrollment across tolls, bypass, and compliance on one row',
     caption:
-      'Account view of the fleet. One row per vehicle, with each product’s enrollment on it.',
+      'Unified vehicle records. One row per vehicle, with each product’s enrollment on it.',
     label: 'Vehicle list',
     surface: '#121518',
   },
@@ -59,9 +59,9 @@ const VEHICLES: readonly Screen[] = [
     src: `${DIR}/vehicle-conflicts.png`,
     alt: 'Conflict review grouping mismatched vehicle records into two-field pattern buckets',
     caption:
-      'Mismatches grouped by pattern, capped at two-field combinations. Ten review buckets instead of a field-by-field list.',
+      'Conflict resolution for when data drifts between products.',
     label: 'Conflict review',
-    surface: '#ffffff',
+    surface: '#121518',
   },
   {
     src: `${DIR}/vehicle-enroll.png`,
@@ -69,7 +69,7 @@ const VEHICLES: readonly Screen[] = [
     caption:
       'Enroll one vehicle into several products at once. Disconnect and Bulk Enroll are still in progress.',
     label: 'Enroll',
-    surface: '#ffffff',
+    surface: '#121518',
   },
 ]
 
@@ -78,17 +78,17 @@ const PEOPLE: readonly Screen[] = [
     src: `${DIR}/permissions-user.png`,
     alt: 'Single screen for adding a user and granting roles across Fleetworthy products',
     caption:
-      'Add a user and set their access on one screen. CP Suite’s 300+ permission configs stay behind the role grant.',
+      'Add a user once, grant permissions, and done.',
     label: 'Add a user',
-    surface: '#ffffff',
+    surface: '#121518',
   },
   {
     src: `${DIR}/permissions-review.png`,
     alt: 'Permissions review screen keeping multi-value fields readable across 50 or more accounts',
     caption:
-      'The review prototype, tested at one account and at 50+, so multi-value fields stay readable at scale.',
+      'Permissions bundled into one flow for multi-product customers.',
     label: 'Permissions review',
-    surface: '#ffffff',
+    surface: '#121518',
   },
 ]
 
@@ -229,7 +229,7 @@ function Shot({
 
 export default function FleetworthyCaseStudyPage() {
   const vehicles = slidesFor(VEHICLES, '16 / 9')
-  const people = slidesFor(PEOPLE, '8 / 9')
+  const people = slidesFor(PEOPLE, '16 / 9')
   const attention = slidesFor(ATTENTION, '3000 / 2716')
   const hierarchyScreens = pngSize(HIERARCHY_SCREENS)
   const hierarchyRatio = hierarchyScreens
@@ -269,8 +269,8 @@ export default function FleetworthyCaseStudyPage() {
       <CaseIntro
         text={
           <>
-            I own the parts of Command Center that every user, no matter the role, interacts with. The infrastructure
-            for every productstays separate. The experience should still read as one.
+            I own the parts of Command Center that every user, no matter the role, interacts with. The infrastructure 
+            for every product stays separate. The experience should still read as one.
           </>
         }
         meta={META}
@@ -280,8 +280,7 @@ export default function FleetworthyCaseStudyPage() {
         <div className={styles.prose}>
           <h2 className={styles.chapterTitle}>Context</h2>
           <p>
-            Fleetworthy is made of products that started as separate businesses. Bestpass covers
-            tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
+            Fleetworthy is a B2B SaaS company built for the trucking industry, a fragmented ecosystem of vendors, relationships, and data. It's made of products that started as separate businesses. Bestpass covers tolls. Drivewyze covers weigh-station bypass and safety. CP Suite covers compliance.
             Sold separately, that is four products from three companies, and a customer might pay
             for any combination. They range from an owner-operator with one truck to carriers like
             JB Hunt and Forward Air running thousands.
