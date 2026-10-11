@@ -51,11 +51,9 @@ export default function CaseCarousel({
   const slide = slides[index]
   const go = (next: number) => setIndex((next + slides.length) % slides.length)
   const canExpand = Boolean(slide.src && onExpand)
-  const frameRatio = slide.ratio ?? ratio
-  const fit = Boolean(slide.content)
-  const frameClass = `${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${fit ? styles.frameFit : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`
+  const frameClass = `${styles.frame} ${tone === 'dark' ? styles.frameDark : ''} ${canExpand ? styles.frameExpandable : styles.frameStatic}`
   const frameStyle = {
-    ...(fit ? {} : { aspectRatio: frameRatio }),
+    aspectRatio: ratio,
     ...(slide.surface ? { backgroundColor: slide.surface } : {}),
   }
 
@@ -76,6 +74,7 @@ export default function CaseCarousel({
             src={s.src}
             alt={i === index ? s.alt : ''}
             fill
+            quality={90}
             sizes="(max-width: 1080px) 100vw, 1016px"
             className={`${styles.frameImg} ${i === index ? styles.frameImgActive : ''}`}
             priority={i === 0}

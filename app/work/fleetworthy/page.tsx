@@ -53,6 +53,7 @@ const VEHICLES: readonly Screen[] = [
     caption:
       'Account view of the fleet. One row per vehicle, with each product’s enrollment on it.',
     label: 'Vehicle list',
+    surface: '#121518',
   },
   {
     src: `${DIR}/vehicle-conflicts.png`,
@@ -60,6 +61,7 @@ const VEHICLES: readonly Screen[] = [
     caption:
       'Mismatches grouped by pattern, capped at two-field combinations. Ten review buckets instead of a field-by-field list.',
     label: 'Conflict review',
+    surface: '#ffffff',
   },
   {
     src: `${DIR}/vehicle-enroll.png`,
@@ -67,6 +69,7 @@ const VEHICLES: readonly Screen[] = [
     caption:
       'Enroll one vehicle into several products at once. Disconnect and Bulk Enroll are still in progress.',
     label: 'Enroll',
+    surface: '#ffffff',
   },
 ]
 
@@ -77,6 +80,7 @@ const PEOPLE: readonly Screen[] = [
     caption:
       'Add a user and set their access on one screen. CP Suite’s 300+ permission configs stay behind the role grant.',
     label: 'Add a user',
+    surface: '#ffffff',
   },
   {
     src: `${DIR}/permissions-review.png`,
@@ -84,6 +88,7 @@ const PEOPLE: readonly Screen[] = [
     caption:
       'The review prototype, tested at one account and at 50+, so multi-value fields stay readable at scale.',
     label: 'Permissions review',
+    surface: '#ffffff',
   },
 ]
 
@@ -94,6 +99,7 @@ const ATTENTION: readonly Screen[] = [
     caption:
       'Fleet at a Glance, the action list, and a Fleet Events map limited to alert-triggered events.',
     label: 'Dashboard',
+    surface: '#121518',
   },
   {
     src: `${DIR}/severity-model.png`,
@@ -101,6 +107,7 @@ const ATTENTION: readonly Screen[] = [
     caption:
       'Severity from two inputs. How much of the fleet is affected, and dollars per vehicle per month. Either one can escalate it.',
     label: 'Severity model',
+    surface: '#ffffff',
   },
 ]
 
@@ -162,13 +169,14 @@ const MORE = [
   { eyebrow: 'Diezl · Solo design and build', title: 'Diezl', href: '/work/diezl' },
 ] as const
 
-function slidesFor(screens: readonly Screen[]) {
-  const built = toSlides(screens)
+function slidesFor(screens: readonly Screen[], stage?: string) {
+  const built = toSlides(screens, stage)
   return {
     ratio: built.ratio,
     slides: built.slides.map((slide, i) => ({
       ...slide,
       placeholder: screens[i].label,
+      surface: screens[i].surface ?? slide.surface,
     })),
   }
 }
@@ -220,10 +228,13 @@ function Shot({
 }
 
 export default function FleetworthyCaseStudyPage() {
-  const vehicles = slidesFor(VEHICLES)
-  const people = slidesFor(PEOPLE)
-  const attention = slidesFor(ATTENTION)
+  const vehicles = slidesFor(VEHICLES, '16 / 9')
+  const people = slidesFor(PEOPLE, '8 / 9')
+  const attention = slidesFor(ATTENTION, '3000 / 2716')
   const hierarchyScreens = pngSize(HIERARCHY_SCREENS)
+  const hierarchyRatio = hierarchyScreens
+    ? `${hierarchyScreens.width} / ${hierarchyScreens.height}`
+    : '3000 / 2180'
   const hierarchySlides = [
     {
       alt: 'Account hierarchy from the global switcher down to product sub-filters',
@@ -237,9 +248,6 @@ export default function FleetworthyCaseStudyPage() {
       caption: 'The same three levels, as they appear on the screens.',
       placeholder: 'Level screens',
       surface: '#f2f0e2',
-      ratio: hierarchyScreens
-        ? `${hierarchyScreens.width} / ${hierarchyScreens.height}`
-        : '16 / 10',
     },
   ]
 
@@ -359,7 +367,7 @@ export default function FleetworthyCaseStudyPage() {
         <CaseFigure>
           <CaseCarousel
             slides={hierarchySlides}
-            ratio="16 / 10"
+            ratio={hierarchyRatio}
             label="Account hierarchy"
             tone="dark"
             brackets
@@ -505,7 +513,7 @@ export default function FleetworthyCaseStudyPage() {
             slides={attention.slides}
             ratio={attention.ratio}
             label="Command Center dashboard and severity model"
-            tone="light"
+            tone="dark"
             brackets
           />
         </CaseFigure>

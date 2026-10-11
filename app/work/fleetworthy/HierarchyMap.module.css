@@ -5,7 +5,7 @@
   --card-ink-3: #7a8088;
   --line: color-mix(in srgb, var(--cs-ink) 34%, transparent);
 
-  padding: 40px 32px 32px;
+  padding: 24px 28px 20px;
 }
 
 .spine {

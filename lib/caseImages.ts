@@ -2,7 +2,7 @@ import { closeSync, openSync, readSync } from 'node:fs'
 import path from 'node:path'
 import type { CaseSlide } from '@/components/case-study/CaseCarousel'
 
-export type CaseScreen = { src: string; alt: string; caption: string }
+export type CaseScreen = { src: string; alt: string; caption: string; surface?: string }
 
 /** Reads a PNG's size from its header at build time. Null means the file isn't in /public yet. */
 export function pngSize(src: string): { width: number; height: number } | null {
@@ -20,7 +20,8 @@ export function pngSize(src: string): { width: number; height: number } | null {
   }
 }
 
-export function toSlides(screens: readonly CaseScreen[]) {
+/** One shared frame ratio for the set, so cycling cannot change page height. */
+export function toSlides(screens: readonly CaseScreen[], stage?: string) {
   const sizes = screens.map((s) => pngSize(s.src))
   const first = sizes.find(Boolean)
   const slides: CaseSlide[] = screens.map((s, i) => {
@@ -30,8 +31,8 @@ export function toSlides(screens: readonly CaseScreen[]) {
       alt: s.alt,
       caption: s.caption,
       placeholder: path.basename(s.src),
-      ratio: size ? `${size.width} / ${size.height}` : undefined,
+      surface: s.surface,
     }
   })
-  return { slides, ratio: first ? `${first.width} / ${first.height}` : '16 / 10' }
+  return { slides, ratio: stage ?? (first ? `${first.width} / ${first.height}` : '16 / 10') }
 }

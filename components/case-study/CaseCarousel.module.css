@@ -11,7 +11,6 @@
   border: 1px solid var(--cs-rule);
   border-radius: 12px;
   background: #f6f7f9;
-  transition: aspect-ratio 420ms var(--ease-out-quart);
 }
 
 .frameDark {
@@ -84,6 +83,7 @@
 
 .frameImg {
   object-fit: contain;
+  object-position: center center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 420ms var(--ease-out-quart);
@@ -94,26 +94,19 @@
   pointer-events: auto;
 }
 
-.frameFit {
-  height: auto;
-}
-
 .custom {
   position: absolute;
   inset: 0;
+  overflow: auto;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 420ms var(--ease-out-quart);
 }
 
 .customActive {
-  opacity: 1;
-}
-
-.frameFit .customActive {
-  position: relative;
-  inset: auto;
   visibility: visible;
+  opacity: 1;
   pointer-events: auto;
 }
 
@@ -172,8 +165,10 @@
 .controlsCaption {
   flex: 1;
   min-width: 0;
+  min-height: 2.7em;
   margin-left: 8px;
   font-size: 0.8125rem;
+  line-height: 1.35;
   color: var(--cs-ink-2);
   text-wrap: pretty;
 }
@@ -218,6 +213,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .frameImg,
+  .custom,
+  .placeholder {
+    transition: none;
+  }
+
   .bracket {
     transition: none;
   }
