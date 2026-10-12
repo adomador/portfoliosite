@@ -86,6 +86,8 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const panelLead = useRef<string | null>(null)
   const scrollToAbout = useRef(false)
+  const pathPrefixRef = useRef(pathPrefix)
+  pathPrefixRef.current = pathPrefix
 
   const [activeId, setActiveId] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -225,7 +227,7 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
     const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
-    PROJECTS.forEach((p) => router.prefetch(scopeHref(p.href, pathPrefix)))
+    PROJECTS.forEach((p) => router.prefetch(scopeHref(p.href, pathPrefixRef.current)))
 
     return () => {
       clearTimeout(hintTimer)
