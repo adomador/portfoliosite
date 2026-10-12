@@ -111,13 +111,13 @@ const MORE = [
   { eyebrow: 'Diezl · Solo design and build', title: 'Diezl', href: '/work/diezl' },
 ] as const
 
-export default function TriumphCaseStudyPage() {
+export default function TriumphCaseStudyPage({ pathPrefix = '' }: { pathPrefix?: string }) {
   const hero = pngSize(HERO.src)
   const approach = toSlides(APPROACH_SCREENS)
   const solution = toSlides(SOLUTION_SCREENS)
 
   return (
-    <CaseStudy theme={THEME} more={MORE}>
+    <CaseStudy theme={THEME} more={MORE} pathPrefix={pathPrefix}>
       <CaseHero
         eyebrow="Triumph · End-to-end design & research"
         title="A better customer service experience leads to improved business outcomes"

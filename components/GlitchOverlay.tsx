@@ -6,15 +6,15 @@ import styles from './GlitchOverlay.module.css'
 
 const DURATION_MS = 1000
 
-export default function GlitchOverlay() {
+export default function GlitchOverlay({ href = '/art' }: { href?: string }) {
   const router = useRouter()
 
   useEffect(() => {
     const t = setTimeout(() => {
-      router.push('/art')
+      router.push(href)
     }, DURATION_MS)
     return () => clearTimeout(t)
-  }, [router])
+  }, [router, href])
 
   return (
     <div

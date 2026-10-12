@@ -64,9 +64,9 @@ const MORE = [
   { eyebrow: 'Trochi · Product design, 0 to 1', title: 'Trochi', href: '/work/trochi' },
 ] as const
 
-export default function DiezlCaseStudyPage() {
+export default function DiezlCaseStudyPage({ pathPrefix = '' }: { pathPrefix?: string }) {
   return (
-    <CaseStudy theme={THEME} more={MORE}>
+    <CaseStudy theme={THEME} more={MORE} pathPrefix={pathPrefix}>
       <CaseHero
         eyebrow="Diezl · Solo design and build"
         title="Take the load or pass"

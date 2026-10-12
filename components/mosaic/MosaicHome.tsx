@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
 import { useSoftDissolve } from './SoftDissolve'
 import { EMAIL, GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
+import { scopeHref } from '@/lib/reviewHref'
 import {
   AMBIENT,
   CONCEPTS,
@@ -73,7 +74,7 @@ function copyFor(node: MosaicNode): Copy {
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-export default function MosaicHome() {
+export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string }) {
   const router = useRouter()
   const { dissolve } = useSoftDissolve()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -108,9 +109,9 @@ export default function MosaicHome() {
   const navigate = useCallback(
     (href: string) => {
       engineRef.current?.stop()
-      dissolve(href)
+      dissolve(scopeHref(href, pathPrefix))
     },
-    [dissolve]
+    [dissolve, pathPrefix]
   )
 
   const openAbout = useCallback(() => {
@@ -224,7 +225,7 @@ export default function MosaicHome() {
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
     const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
-    PROJECTS.forEach((p) => router.prefetch(p.href))
+    PROJECTS.forEach((p) => router.prefetch(scopeHref(p.href, pathPrefix)))
 
     return () => {
       clearTimeout(hintTimer)
@@ -385,7 +386,7 @@ export default function MosaicHome() {
               {PROJECTS.map((project, i) => (
                 <li key={project.id}>
                   <Link
-                    href={project.href}
+                    href={scopeHref(project.href, pathPrefix)}
                     className={`${styles.indexItem} ${
                       activeId === project.id ? styles.indexItemOn : ''
                     }`}
@@ -557,7 +558,12 @@ export default function MosaicHome() {
       </p>
 
       <footer className={styles.bar}>
-        <Link href="/art" className={styles.leaf} onClick={onLeaf} aria-label="A leaf. Follow it.">
+        <Link
+          href={scopeHref('/art', pathPrefix)}
+          className={styles.leaf}
+          onClick={onLeaf}
+          aria-label="A leaf. Follow it."
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/fall-leaf.svg" alt="" draggable={false} />
         </Link>
@@ -591,7 +597,7 @@ export default function MosaicHome() {
 
       {aboutOpen && <AboutPanel onClose={closeAbout} />}
 
-      {glitching && <GlitchOverlay />}
+      {glitching && <GlitchOverlay href={scopeHref('/art', pathPrefix)} />}
     </div>
   )
 }

@@ -227,7 +227,7 @@ function Shot({
   )
 }
 
-export default function FleetworthyCaseStudyPage() {
+export default function FleetworthyCaseStudyPage({ pathPrefix = '' }: { pathPrefix?: string }) {
   const vehicles = slidesFor(VEHICLES, '16 / 9')
   const people = slidesFor(PEOPLE, '16 / 9')
   const attention = slidesFor(ATTENTION, '3000 / 2716')
@@ -252,7 +252,7 @@ export default function FleetworthyCaseStudyPage() {
   ]
 
   return (
-    <CaseStudy theme={THEME} more={MORE}>
+    <CaseStudy theme={THEME} more={MORE} pathPrefix={pathPrefix}>
       <CaseHero
         eyebrow="Fleetworthy · Product design"
         title="Making four products behave like one"

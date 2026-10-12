@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Reveal from '@/components/Reveal'
 import { SoftDissolveLink } from '@/components/mosaic/SoftDissolve'
 import { EMAIL, NAME } from '@/lib/profile'
+import { scopeHref } from '@/lib/reviewHref'
 import styles from './CaseStudy.module.css'
 
 /** Colors a case study. Every value is optional; unset ones fall back to the Diezl palette. */
@@ -34,19 +35,23 @@ export function CaseStudy({
   theme,
   more,
   children,
+  pathPrefix = '',
 }: {
   theme?: CaseTheme
   more: readonly MoreLink[]
   children: ReactNode
+  /** Set on the /dive review copy so in-site links stay under that path. */
+  pathPrefix?: string
 }) {
+  const homeHref = scopeHref('/?section=work', pathPrefix)
   return (
     <main className={styles.page} style={themeVars(theme)}>
       <header className={styles.bar}>
         <div className={styles.barInner}>
-          <SoftDissolveLink href="/?section=work" className={styles.barName}>
+          <SoftDissolveLink href={homeHref} className={styles.barName}>
             {NAME}
           </SoftDissolveLink>
-          <SoftDissolveLink href="/?section=work" className={styles.barBack}>
+          <SoftDissolveLink href={homeHref} className={styles.barBack}>
             <span aria-hidden="true">‹</span> All work
           </SoftDissolveLink>
         </div>
@@ -59,7 +64,7 @@ export function CaseStudy({
           <h2 className={styles.label}>More case studies</h2>
           <div className={styles.moreGrid}>
             {more.map((item) => (
-              <Link key={item.href} href={item.href} className={styles.moreCard}>
+              <Link key={item.href} href={scopeHref(item.href, pathPrefix)} className={styles.moreCard}>
                 <span className={styles.moreEyebrow}>{item.eyebrow}</span>
                 <span className={styles.moreTitle}>
                   {item.title} <span aria-hidden="true">→</span>

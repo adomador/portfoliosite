@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { NAME, ROLE } from '@/lib/profile'
 import { SoftDissolveProvider } from '@/components/mosaic/SoftDissolve'
-import './globals.css'
+import '../globals.css'
 
 export const metadata: Metadata = {
   title: `${NAME} — ${ROLE}`,

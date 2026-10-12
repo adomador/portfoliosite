@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { scopeHref } from '@/lib/reviewHref'
 
 const VIMEO_VIDEOS = [
   { id: '124853430', title: 'Cut' },
@@ -6,7 +7,8 @@ const VIMEO_VIDEOS = [
   { id: '226504773', title: '.p0rtal x2' },
 ]
 
-export default function ArtPage() {
+export default function ArtPage({ pathPrefix = '' }: { pathPrefix?: string }) {
+  const backHref = scopeHref('/?section=work', pathPrefix)
   return (
     <main
       style={{
@@ -22,7 +24,7 @@ export default function ArtPage() {
       }}
     >
       <Link
-        href="/?section=work"
+        href={backHref}
         style={{
           position: 'absolute',
           top: '2rem',
