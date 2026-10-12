@@ -162,7 +162,7 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'details',
     kind: 'concept',
     label: 'Sweating the details',
-    line: 'I care a lot about craft, especially in enterprise tools where people stare at dense data all day. A screen can be beautiful and but difficult to read, and getting that balance right is most of the work. In Trochi, every surface leads with a plain-language takeaway and the number a broker actually needs, the rate, is always the biggest thing on the screen.',
+    line: 'I care a lot about craft, especially in enterprise tools where people stare at dense data all day. A screen can be beautiful but difficult to parse, and getting that balance right is most of the work. In Trochi, every surface leads with a plain-language takeaway and the number a broker actually needs, the rate, is always the biggest thing on the screen.',
   },
 ]
 
