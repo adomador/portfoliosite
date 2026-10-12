@@ -10,7 +10,7 @@ export const EMAIL = 'alfredo.domador13@gmail.com'
 export const LINKEDIN = 'https://www.linkedin.com/in/adomador13/'
 export const GITHUB = 'https://github.com/adomador'
 export const RESUME_URL =
-  'https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0'
+  'https://www.dropbox.com/scl/fi/9tba24aefkbz8z302hnd8/Domador_Resume_2026_v2.pdf?rlkey=y8a9wyrajtmjnaca1sd0wu9nt&st=5xy4fgxr&dl=0'
 
 export const HEADLINE =
   'I design and build software for industries still stuck on spreadsheets.'

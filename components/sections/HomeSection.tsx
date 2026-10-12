@@ -8,7 +8,7 @@ import ResumeBook from '@/components/ResumeBook'
 import AmbientLayer from '@/components/AmbientLayer'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCanvasNavigation } from '@/contexts/CanvasNavigationContext'
-import { ROLE } from '@/lib/profile'
+import { RESUME_URL, ROLE } from '@/lib/profile'
 
 /* Nav row: About left, Work middle, Resume right. Leaf stays haphazard (varied spots in LabyrinthContext). */
 const SPOTS_DESKTOP = {
@@ -138,7 +138,7 @@ export default function HomeSection() {
           startX={75}
           startY={110}
           label="Resume"
-          href="https://www.dropbox.com/scl/fi/yonshebxqboon6p12u4ik/Domador_Alfredo_Resume_2026.pdf?rlkey=6mvifz3mmb4ornjde3stjkfsv&st=g1c0hajh&dl=0"
+          href={RESUME_URL}
           className={`${styles.navButton} ${styles.resumeButton}`}
         >
           <ResumeBook bookClassName={styles.resumeBook} />
