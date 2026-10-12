@@ -100,7 +100,7 @@ const ZOOM_STEP = 0.25
 
 type ExpandedImage = { src: string; alt: string }
 
-export function TrochiCaseStudyPage({ pathPrefix = '' }: { pathPrefix?: string }) {
+export default function TrochiCaseStudyPage() {
   const [expandedImage, setExpandedImage] = useState<ExpandedImage | null>(null)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -171,7 +171,7 @@ export function TrochiCaseStudyPage({ pathPrefix = '' }: { pathPrefix?: string }
 
   return (
     <>
-      <CaseStudy theme={THEME} more={MORE} pathPrefix={pathPrefix}>
+      <CaseStudy theme={THEME} more={MORE}>
         <CaseHero
           logo={
             <Image

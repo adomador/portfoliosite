@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import GlitchOverlay from '@/components/GlitchOverlay'
 import { useSoftDissolve } from './SoftDissolve'
 import { EMAIL, GITHUB, LINKEDIN, RESUME_URL } from '@/lib/profile'
-import { scopeHref } from '@/lib/reviewHref'
 import {
   AMBIENT,
   CONCEPTS,
@@ -74,7 +73,7 @@ function copyFor(node: MosaicNode): Copy {
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string }) {
+export default function MosaicHome() {
   const router = useRouter()
   const { dissolve } = useSoftDissolve()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -86,8 +85,6 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const panelLead = useRef<string | null>(null)
   const scrollToAbout = useRef(false)
-  const pathPrefixRef = useRef(pathPrefix)
-  pathPrefixRef.current = pathPrefix
 
   const [activeId, setActiveId] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -111,9 +108,9 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
   const navigate = useCallback(
     (href: string) => {
       engineRef.current?.stop()
-      dissolve(scopeHref(href, pathPrefix))
+      dissolve(href)
     },
-    [dissolve, pathPrefix]
+    [dissolve]
   )
 
   const openAbout = useCallback(() => {
@@ -227,7 +224,7 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
 
     const hintTimer = setTimeout(() => setHint((h) => (h === 'hidden' ? 'shown' : h)), HINT_DELAY_MS)
     const primeTimer = setTimeout(() => setPrimed(true), PRIME_MS)
-    PROJECTS.forEach((p) => router.prefetch(scopeHref(p.href, pathPrefixRef.current)))
+    PROJECTS.forEach((p) => router.prefetch(p.href))
 
     return () => {
       clearTimeout(hintTimer)
@@ -388,7 +385,7 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
               {PROJECTS.map((project, i) => (
                 <li key={project.id}>
                   <Link
-                    href={scopeHref(project.href, pathPrefix)}
+                    href={project.href}
                     className={`${styles.indexItem} ${
                       activeId === project.id ? styles.indexItemOn : ''
                     }`}
@@ -560,12 +557,7 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
       </p>
 
       <footer className={styles.bar}>
-        <Link
-          href={scopeHref('/art', pathPrefix)}
-          className={styles.leaf}
-          onClick={onLeaf}
-          aria-label="A leaf. Follow it."
-        >
+        <Link href="/art" className={styles.leaf} onClick={onLeaf} aria-label="A leaf. Follow it.">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/fall-leaf.svg" alt="" draggable={false} />
         </Link>
@@ -599,7 +591,7 @@ export default function MosaicHome({ pathPrefix = '' }: { pathPrefix?: string })
 
       {aboutOpen && <AboutPanel onClose={closeAbout} />}
 
-      {glitching && <GlitchOverlay href={scopeHref('/art', pathPrefix)} />}
+      {glitching && <GlitchOverlay />}
     </div>
   )
 }
