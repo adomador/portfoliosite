@@ -108,7 +108,7 @@ export type EngineOptions = {
 
 /** Must match the panel layout in Mosaic.module.css. */
 export const PANEL_W = 372
-export const PANEL_H = 408
+export const PANEL_H = 428
 /** Clear space other nodes keep from an open panel: sides, above (their label hangs below), below. */
 const PANEL_CLEAR = { x: 96, top: 78, bottom: 30 }
 

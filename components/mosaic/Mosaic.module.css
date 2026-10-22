@@ -1260,7 +1260,7 @@
   display: flex;
   flex-direction: column;
   width: 372px;
-  height: 408px;
+  height: 428px;
   padding: 18px;
   opacity: 0;
   will-change: transform, opacity;
@@ -1395,15 +1395,18 @@
 
 .panelCaption {
   display: flex;
+  align-items: flex-start;
   gap: 10px;
   margin-top: 8px;
+  min-height: 32px;
   font-size: 0.75rem;
   line-height: 16px;
   color: var(--mz-ink-2);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   animation: panelCaption 420ms var(--ease-out-quart) both;
+}
+
+.panelCaptionText {
+  min-width: 0;
 }
 
 @keyframes panelCaption {

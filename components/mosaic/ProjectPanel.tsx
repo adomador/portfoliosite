@@ -88,7 +88,7 @@ const ProjectPanel = memo(
           <span className={styles.panelCount}>
             {String(index + 1).padStart(2, '0')}/{String(count).padStart(2, '0')}
           </span>
-          {frames[index]?.caption}
+          <span className={styles.panelCaptionText}>{frames[index]?.caption}</span>
         </p>
 
         <p className={styles.panelTitle}>{project.label}</p>
