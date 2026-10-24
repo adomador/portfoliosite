@@ -150,13 +150,13 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'systems-thinking',
     kind: 'concept',
     label: 'Systems thinking',
-    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it meant one record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
+    line: 'In freight, almost nothing happens in isolation. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, unifying four products around it meant one record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
   },
   {
     id: 'initiative',
     kind: 'concept',
     label: 'Initiative & ownership',
-    line: 'I like early, ambiguous problems where nobody has told me what to build yet. I use the latest tools to get from idea to working code fast, and I know when to move fast and when to slow down. I solo-built an entire native mobile application, Diezl, that currently helps over 400 owner operators make better decisions.',
+    line: 'I like early, ambiguous problems where nobody has told me what to build yet. I use the latest tools to get from idea to working code fast. I also know when to slow down when appropriate and untangle complexity. I solo-built an entire native mobile application, Diezl, that currently helps over 400 owner operators make better decisions.',
   },
   {
     id: 'love-the-problem',
