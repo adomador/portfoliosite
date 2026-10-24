@@ -57,7 +57,7 @@ type Copy = { eyebrow: string; title: string; line: string; href?: string }
 
 function copyFor(node: MosaicNode): Copy {
   if (node.kind === 'project') {
-    return { eyebrow: node.tag, title: node.label, line: node.line, href: node.href }
+    return { eyebrow: node.outcome, title: node.label, line: node.line, href: node.href }
   }
   if (node.kind === 'nucleus') {
     return { eyebrow: node.tag, title: MOSAIC_COPY.name, line: node.line }

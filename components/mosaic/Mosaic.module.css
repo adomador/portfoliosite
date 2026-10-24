@@ -1259,8 +1259,8 @@
   left: 0;
   display: flex;
   flex-direction: column;
-  width: 372px;
-  height: 428px;
+  width: 465px;
+  height: 535px;
   padding: 18px;
   opacity: 0;
   will-change: transform, opacity;
@@ -1291,7 +1291,7 @@
 
 .panelMedia {
   position: relative;
-  height: 196px;
+  height: 245px;
   margin-top: 12px;
   overflow: hidden;
   border-radius: 3px;
@@ -1353,7 +1353,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate3d(0, 196px, 0);
+    transform: translate3d(0, 245px, 0);
   }
 }
 

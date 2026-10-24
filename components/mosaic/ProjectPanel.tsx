@@ -52,7 +52,7 @@ const ProjectPanel = memo(
         aria-hidden
       >
         <div className={styles.panelHead}>
-          <span className={styles.panelTag}>{project.tag}</span>
+          <span className={styles.panelTag}>{project.outcome}</span>
           <Image className={styles.panelLogo} src={project.logo} alt="" width={22} height={22} />
         </div>
 
@@ -64,7 +64,7 @@ const ProjectPanel = memo(
                   src={frame.src}
                   alt=""
                   fill
-                  sizes="340px"
+                  sizes="430px"
                   className={styles.panelImg}
                 />
               </div>

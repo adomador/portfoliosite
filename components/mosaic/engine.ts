@@ -107,8 +107,8 @@ export type EngineOptions = {
 }
 
 /** Must match the panel layout in Mosaic.module.css. */
-export const PANEL_W = 372
-export const PANEL_H = 428
+export const PANEL_W = 465
+export const PANEL_H = 535
 /** Clear space other nodes keep from an open panel: sides, above (their label hangs below), below. */
 const PANEL_CLEAR = { x: 96, top: 78, bottom: 30 }
 
@@ -346,7 +346,12 @@ export class MosaicEngine {
     let projectIndex = 0
     let conceptIndex = 0
     for (const item of nodes) {
-      const n = this.makeNode(item.id, item.kind, item.label, 'tag' in item ? item.tag : '')
+      const n = this.makeNode(
+        item.id,
+        item.kind,
+        item.label,
+        item.kind === 'project' ? item.outcome : 'tag' in item ? item.tag : ''
+      )
       if (item.kind === 'nucleus') n.bloomDelay = 0
       if (item.kind === 'project') {
         n.bloomDelay = 0.12 + projectIndex++ * 0.07
@@ -803,7 +808,7 @@ export class MosaicEngine {
 
   private labelBox(n: SimNode) {
     const width =
-      n.kind === 'project' ? (this.compact ? 116 : 160) : n.kind === 'nucleus' ? 90 : this.compact ? 100 : 168
+      n.kind === 'project' ? (this.compact ? 220 : 260) : n.kind === 'nucleus' ? 90 : this.compact ? 100 : 168
     const height =
       n.kind === 'project' ? 44 : n.kind === 'nucleus' ? 36 : 8 + Math.max(1, n.labelLines) * (this.compact ? 14 : 16)
     return { x: n.px - width / 2, y: n.py + n.r + 6, w: width, h: height }
