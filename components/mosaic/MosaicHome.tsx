@@ -493,11 +493,9 @@ export default function MosaicHome() {
                   Drag to move
                 </span>
               </div>
-            ) : (
-              <p className={styles.cardHint}>
-                {cardNode?.kind === 'project' ? 'Open case study →' : 'Click to read more'}
-              </p>
-            )}
+            ) : cardNode?.kind === 'project' ? (
+              <p className={styles.cardHint}>Open case study →</p>
+            ) : null}
           </div>
         </div>
       )}
