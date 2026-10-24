@@ -15,6 +15,8 @@ export type ProjectNode = {
   label: string
   /** Role on the engagement. Shown under the name in Selected work and on the sheet. */
   tag: string
+  /** Outcome metric. Shown under the name on the mosaic. */
+  outcome: string
   /** Tenure, shown under the role in Selected work. */
   dates: string
   /** One-line result, shown in the hover card and the list view. */
@@ -65,6 +67,7 @@ export const PROJECTS: ProjectNode[] = [
     kind: 'project',
     label: 'Fleetworthy',
     tag: 'Senior Product Designer',
+    outcome: '700 qualified leads',
     dates: '2025 – Present',
     line: 'Unifying four distinct surfaces into one. 700+ qualified upsell leads.',
     href: '/work/fleetworthy',
@@ -91,6 +94,7 @@ export const PROJECTS: ProjectNode[] = [
     kind: 'project',
     label: 'Triumph Financial',
     tag: 'Product Designer',
+    outcome: '49% handle time reduction',
     dates: '2022 – 2025',
     line: 'Cut chat handle time from 8:52 to 4:32.',
     href: '/work/triumph',
@@ -108,6 +112,7 @@ export const PROJECTS: ProjectNode[] = [
     kind: 'project',
     label: 'Diezl',
     tag: 'Founder & Builder',
+    outcome: '400 downloads, 900 evaluations',
     dates: '2026 – Present',
     line: 'Shipped alone. 400+ installs, 900+ loads evaluated.',
     href: '/work/diezl',
@@ -125,6 +130,7 @@ export const PROJECTS: ProjectNode[] = [
     kind: 'project',
     label: 'Trochi',
     tag: 'Product Designer',
+    outcome: '5 contracts signed',
     dates: '2025',
     line: 'An MVP concept that became the pitch to prospective cooperative members.',
     href: '/work/trochi',
@@ -144,13 +150,13 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'systems-thinking',
     kind: 'concept',
     label: 'Systems thinking',
-    line: 'In freight, almost nothing happens in isolation. An expired registration, a weigh station pull-in and a toll bill can all trace back to the same truck. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, that was the vehicle. Unifying four products around it meant one record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
+    line: 'In freight, almost nothing happens in isolation. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, unifying four products meant establishing one vehicle record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
   },
   {
     id: 'initiative',
     kind: 'concept',
     label: 'Initiative & ownership',
-    line: 'I like early, ambiguous problems where nobody has told me what to build yet. I use the latest tools to get from idea to working code fast, and I know when to move fast and when to slow down. I solo-built an entire native mobile application, Diezl, that currently helps over 400 owner operators make better decisions.',
+    line: 'I like early, ambiguous problems where nobody has told me what to build yet. I use the latest tools to get from idea to working code fast. I also know when to slow down when appropriate and untangle complexity. I solo-built an entire native mobile application, Diezl, that currently helps over 400 owner operators make better decisions.',
   },
   {
     id: 'love-the-problem',

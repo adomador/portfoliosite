@@ -57,7 +57,7 @@ type Copy = { eyebrow: string; title: string; line: string; href?: string }
 
 function copyFor(node: MosaicNode): Copy {
   if (node.kind === 'project') {
-    return { eyebrow: node.tag, title: node.label, line: node.line, href: node.href }
+    return { eyebrow: node.outcome, title: node.label, line: node.line, href: node.href }
   }
   if (node.kind === 'nucleus') {
     return { eyebrow: node.tag, title: MOSAIC_COPY.name, line: node.line }
@@ -493,11 +493,9 @@ export default function MosaicHome() {
                   Drag to move
                 </span>
               </div>
-            ) : (
-              <p className={styles.cardHint}>
-                {cardNode?.kind === 'project' ? 'Open case study →' : 'Click to read more'}
-              </p>
-            )}
+            ) : cardNode?.kind === 'project' ? (
+              <p className={styles.cardHint}>Open case study →</p>
+            ) : null}
           </div>
         </div>
       )}
