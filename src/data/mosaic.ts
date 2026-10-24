@@ -150,7 +150,7 @@ export const CONCEPTS: ConceptNode[] = [
     id: 'systems-thinking',
     kind: 'concept',
     label: 'Systems thinking',
-    line: 'In freight, almost nothing happens in isolation. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, unifying four products around it meant one record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
+    line: 'In freight, almost nothing happens in isolation. So before I design a screen, I map how the pieces connect and find what everything hangs off of. At Fleetworthy, unifying four products meant establishing one vehicle record, one set of permissions, and one place to see what needed attention, while each product kept its own backend.',
   },
   {
     id: 'initiative',
